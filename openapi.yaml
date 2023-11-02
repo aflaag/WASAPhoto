@@ -46,7 +46,7 @@ paths:
               type: object
               properties:
                 name:
-                  type: string
+                  type: string # TODO RENDILO SCHEMA
                   example: Maria
                   pattern: 'ˆ.*?$'
                   minLength: 3
@@ -64,25 +64,22 @@ paths:
                     example: "abcdef012345"
   # /user/{uid}/ban:
   /user/{uid}/ban/{bannedid}:
+    parameters:
+      - { $ref: "#/components/parameters/user" }
+      - name: bannedid # TODO RENDILO COMPONENT
+        in: path
+        description: TODO
+        required: true
+        schema:
+          $ref: "#/components/schemas/User"
     delete:
+      security:
+      - bearerAuth: []
       tags: ["Ban"]
       summary: Remove the ban from a user
       description: |-
         TODO
       operationId: unbanUser
-      parameters:
-        - name: uid
-          in: path
-          description: User ID who does the ban
-          required: true
-          schema:
-            $ref: "#/components/schemas/User"
-        - name: bannedid
-          in: path
-          description: TODO
-          required: true
-          schema:
-            $ref: "#/components/schemas/User"
       responses:
         "200":
           description: User unbanned successfully
@@ -90,10 +87,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "400": { $ref: "#/components/responses/BadRequest" } # TODO DESC
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     User:
       title: User
       description: The component that represents the user
       type: integer
-      example: 1234 
+      example: 1234
+  parameters:
+    user:
+      name: uid
+      in: path
+      description: User ID who does the ban
+      required: true
+      schema:
+        $ref: "#/components/schemas/User"
+  responses:
+    BadRequest:
+      description: TODO
+    Unauthorized:
+      description: TODO
+    InternalServerError:
+      description: TODO
