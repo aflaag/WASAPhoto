@@ -22,11 +22,15 @@ info:
     user detail contains user’s photos (in reverse chronological order), their followers and following, and how many
     photos have been uploaded. Each user can change his/her own username, upload photos,
     remove photos, and follow/unfollow other users. Removal of a photo will also remove likes and comments.
+
 tags:
   - name : "Login"
     description: "Endpoints for the user login"
   - name: "Ban"
     description: "Endpoints for banning users"
+  - name: "Follow"
+    description: "Endpoints for folllowing users"
+
 paths:
   /session:
     post:
@@ -42,19 +46,11 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string # TODO RENDILO SCHEMA
-                  example: Maria
-                  pattern: 'ˆ.*?$'
-                  minLength: 3
-                  maxLength: 16
+            schema: { $ref: "#/components/schemas/user" }
       responses:
         '201':
           description: User log-in action successful
-          content:
+          content: # TODO WHAT IS THIS???
             application/json:
               schema:
                 type: object
@@ -62,21 +58,35 @@ paths:
                   identifier:
                     type: string
                     example: "abcdef012345"
+  
   # /user/{uid}/ban:
+  
   /user/{uid}/ban/{bannedid}:
     parameters:
-      - { $ref: "#/components/parameters/user" }
-      - name: bannedid # TODO RENDILO COMPONENT
-        in: path
-        description: TODO
-        required: true
-        schema:
-          $ref: "#/components/schemas/User"
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/bannedid" }
+    
+    put:
+      security:
+        - bearerAuth: []
+      tags: ["Ban"]
+      summary: Ban a user
+      description: |-
+        TODO
+      operationId: banUser
+      responses:
+        "200":
+          description: User banned successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/user" }
+        # TODO OTHER RESPONSES
+      
     delete:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       tags: ["Ban"]
-      summary: Remove the ban from a user
+      summary: Unban a user
       description: |-
         TODO
       operationId: unbanUser
@@ -85,30 +95,118 @@ paths:
           description: User unbanned successfully
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400": { $ref: "#/components/responses/BadRequest" } # TODO DESC
+              schema: { $ref: "#/components/schemas/user" }
+        "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
+  
+  /user/{uid}/follow/{followid}:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/followid" }
+      
+    put:
+      security:
+        - bearerAuth: []
+      tags: ["Follow"]
+      summary: Follow a user  
+      description: |-
+        TODO
+      operationId: followUser
+      responses:
+        "200":
+          description: User followed successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/user" }
+      # TODO OTHER RESPONSES
+      
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Follow"]
+      summary: Unnfollow a user
+      description: |-
+        TODO
+      operationId: unfollowUser
+      responses:
+        "200":
+          description: User unfollowed successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/user" }
+  
+  /user/{uid}/upload:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+    
+    post:
+      security:
+        - bearerAuth: []
+      tags: ["Photos"]
+      summary: Upload a photo
+      description: |-
+        TODO
+      operationId: uploadPhoto
+      requestBody:
+        description: The photo to be uploaded
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/photo" }
+      responses:
+        "200":
+          description: Photo uploaded successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/user" }
+              
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
   schemas:
-    User:
-      title: User
-      description: The component that represents the user
-      type: integer
-      example: 1234
-  parameters:
     user:
+      title: User
+      description: The component that represents a user
+      type: object
+      properties:
+        name:
+          type: string
+          example: Maria
+          pattern: 'ˆ.*?$'
+          minLength: 3
+          maxLength: 16
+    photo:
+      title: Photo
+      description: The component that represents a photo
+      type: object
+      properties:
+        TODO: # TODO NON CAPISCO DOVE ANDARE A PRENDERE QUESTI BOH
+          TODO: todo
+  parameters:
+    uid:
       name: uid
       in: path
-      description: User ID who does the ban
+      description: The parameter that represents the user performing the operation
       required: true
       schema:
-        $ref: "#/components/schemas/User"
+        $ref: "#/components/schemas/user"
+    bannedid:
+      name: bannedid
+      in: path
+      description: The parameter that represents the banned user
+      required: true
+      schema:
+        $ref: "#/components/schemas/user"
+    followid:
+      name: followid
+      in: path
+      description: The parameter that represents the user to be followed
+      required: true
+      schema:
+        $ref: "#/components/schemas/user"
   responses:
     BadRequest:
       description: TODO
