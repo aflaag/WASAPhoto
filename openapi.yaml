@@ -30,6 +30,8 @@ tags:
     description: "Endpoints for banning users"
   - name: "Follow"
     description: "Endpoints for folllowing users"
+  - name: "Like"
+    description: "Endpoints for liking photos"
 
 paths:
   /session:
@@ -61,7 +63,7 @@ paths:
   
   # /user/{uid}/ban:
   
-  /user/{uid}/ban/{bannedid}:
+  /{uid}/ban/{bannedid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/bannedid" }
@@ -100,7 +102,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/follow/{followid}:
+  /{uid}/follow/{followid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/followid" }
@@ -116,10 +118,6 @@ paths:
       responses:
         "200":
           description: User followed successfully
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/user" }
-      # TODO OTHER RESPONSES
       
     delete:
       security:
@@ -136,7 +134,7 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/user" }
   
-  /user/{uid}/upload:
+  /{uid}/upload:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -157,9 +155,31 @@ paths:
       responses:
         "200":
           description: Photo uploaded successfully
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/user" }
+  
+  /{uid}/{photoid}/like:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/photoid" }
+      
+    put:
+      security:
+        - bearerAuth: []
+      tags: ["Like"]
+      summary: Like a photo
+      operationId: likePhoto
+      responses:
+        "200":
+          description: Photo liked successfully
+    
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Like"]
+      summary: Remove a like to a photo
+      operationId: unlikePhoto
+      responses:
+        "200":
+          description: Like removed successfully
               
 components:
   securitySchemes:
@@ -191,22 +211,25 @@ components:
       in: path
       description: The parameter that represents the user performing the operation
       required: true
-      schema:
-        $ref: "#/components/schemas/user"
+      schema: { $ref: "#/components/schemas/user" }
     bannedid:
       name: bannedid
       in: path
       description: The parameter that represents the banned user
       required: true
-      schema:
-        $ref: "#/components/schemas/user"
+      schema: { $ref: "#/components/schemas/user" }
     followid:
       name: followid
       in: path
       description: The parameter that represents the user to be followed
       required: true
-      schema:
-        $ref: "#/components/schemas/user"
+      schema: { $ref: "#/components/schemas/user" }
+    photoid:
+      name: photoid
+      in: path
+      description: The parameter that represents the photo
+      required: true
+      schema: { $ref: "#/components/schemas/photo" }
   responses:
     BadRequest:
       description: TODO

@@ -2,6 +2,8 @@
 
 ## TODO list
 
+- fai le altre response dappertutto
+
 ## Domande
 
 - è good practice ritornare sempre le cose?
