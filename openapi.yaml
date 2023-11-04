@@ -246,10 +246,10 @@ paths:
       operationId: getUserProfile
       responses:
         "200":
-          description: The requested user info
+          description: The requested user profile information
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/user" }
+              schema: { $ref: "#/components/schemas/profile" }
 
   /{uid}/username:
     parameters:
@@ -279,11 +279,11 @@ paths:
       security:
         - bearerAuth: []
       tags: ["Stream"]
-      summary: Comment a photo
+      summary: Retrieve the user stream
       operationId: getMyStream
       responses:
         "200":
-          description: TODO
+          description: The user stream
           content:
             application/json:
               schema: { $ref: "#/components/schemas/stream" }
@@ -350,6 +350,28 @@ components:
           description: TODO
           example: TODO
         user: { $ref: "#/components/schemas/user" }
+  
+    profile:
+      title: Profile
+      description: The components that represents a user profile
+      type: object
+      properties:
+        user: { $ref: "#/components/schemas/user" }
+        photoCounter:
+          type: integer
+          description: TODO
+          example: 1000
+        followers:
+          type: array
+          items: { $ref: "#/components/schemas/user" }
+          description: TODO
+        following:
+          type: array
+          items: { $ref: "#/components/schemas/user" }
+          description: TODO
+        photos:
+          type: array
+          items: { $ref: "#/components/schemas/photo" }
   
     stream:
       title: Stream
