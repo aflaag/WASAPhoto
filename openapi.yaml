@@ -30,8 +30,12 @@ tags:
     description: "Endpoints for banning users"
   - name: "Follow"
     description: "Endpoints for folllowing users"
+  - name: "Photos"
+    description: "Endpoints for uploading photos"
   - name: "Like"
     description: "Endpoints for liking photos"
+  - name: "Comment"
+    description: "Endpoints for commenting photos"
 
 paths:
   /session:
@@ -41,7 +45,6 @@ paths:
       description: |-
         If the user does not exist, it will be created,
         and an identifier is returned.
-        If the user exists, the user identifier is returned.
       operationId: doLogin
       requestBody:
         description: User details
@@ -52,14 +55,9 @@ paths:
       responses:
         '201':
           description: User log-in action successful
-          content: # TODO WHAT IS THIS???
+          content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  identifier:
-                    type: string
-                    example: "abcdef012345"
+              schema: { $ref: "#/components/schemas/user" }
   
   # /user/{uid}/ban:
   
@@ -156,10 +154,28 @@ paths:
         "200":
           description: Photo uploaded successfully
   
-  /{uid}/{photoid}/like:
+  /{uid}/{photoid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
+    
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Photos"]
+      summary: Delete a photo
+      description: |-
+        TODO
+      operationId: deletePhoto
+      responses:
+        "200":
+          description: Photo deleted successfully
+  
+  /{uid}/{photoid}/like/{likeuid}:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/photoid" }
+      - { $ref: "#/components/parameters/likeuid" }
       
     put:
       security:
@@ -175,17 +191,109 @@ paths:
       security:
         - bearerAuth: []
       tags: ["Like"]
-      summary: Remove a like to a photo
+      summary: Remove a like from a photo
       operationId: unlikePhoto
       responses:
         "200":
           description: Like removed successfully
-              
+  
+  /{uid}/{photoid}/comment:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/photoid" }
+      
+    post:
+      security:
+        - bearerAuth: []
+      tags: ["Comment"]
+      summary: Comment a photo
+      operationId: commentPhoto
+      requestBody:
+        description: The comment to be posted
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/comment" }
+      responses:
+        "200":
+          description: Comment posted successfully
+  
+  /{uid}/{photoid}/{commentid}:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/photoid" }
+      - { $ref: "#/components/parameters/commentid" }
+    
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Comment"]
+      summary: Remove a comment from a photo
+      operationId: uncommentPhoto
+      responses:
+        "200":
+          description: Comment removed successfully
+
+  /{uid}:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+    
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["User"]
+      summary: Get a user profile information
+      operationId: getUserProfile
+      responses:
+        "200":
+          description: The requested user info
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/user" }
+
+  /{uid}/username:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+    
+    put:
+      security:
+        - bearerAuth: []
+      tags: ["User"]
+      summary: Change username
+      operationId: setMyUserName
+      requestBody:
+        description: The new username
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/user" }
+      responses:
+        "200":
+          description: TODO
+
+  /{uid}/stream:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+    
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["Stream"]
+      summary: Comment a photo
+      operationId: getMyStream
+      responses:
+        "200":
+          description: TODO
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/stream" }
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+  
   schemas:
     user:
       title: User
@@ -198,13 +306,57 @@ components:
           pattern: 'ˆ.*?$'
           minLength: 3
           maxLength: 16
+    
     photo:
       title: Photo
       description: The component that represents a photo
       type: object
       properties:
-        TODO: # TODO NON CAPISCO DOVE ANDARE A PRENDERE QUESTI BOH
-          TODO: todo
+        id:
+          type: integer
+          description: TODO
+          example: 1234
+        url:
+          type: string
+          description: TODO
+          example: "TODO"
+        date:
+          type: string
+          description: TODO
+          example: "TODO"
+        likeCounter:
+          type: integer
+          description: TODO
+          minimum: 0
+          example: 1000
+        commentCounter:
+          type: integer
+          description: TODO
+          minimum: 0
+          example: 1000
+        user: { $ref: "#/components/schemas/user" }
+    
+    comment:
+      title: Comment
+      description: The component that represents a comment
+      type: object
+      properties:
+        id:
+          type: integer
+          description: TODO
+          example: 1234
+        commentBody:
+          type: string
+          description: TODO
+          example: TODO
+        user: { $ref: "#/components/schemas/user" }
+  
+    stream:
+      title: Stream
+      description: The components that represents the user stream
+      type: array
+      items: { $ref: "#/components/schemas/photo" }
+  
   parameters:
     uid:
       name: uid
@@ -224,12 +376,25 @@ components:
       description: The parameter that represents the user to be followed
       required: true
       schema: { $ref: "#/components/schemas/user" }
+    likeuid:
+      name: likeuid
+      in: path
+      description: TODO
+      required: true
+      schema: { $ref: "#/components/schemas/user" }
     photoid:
       name: photoid
       in: path
       description: The parameter that represents the photo
       required: true
       schema: { $ref: "#/components/schemas/photo" }
+    commentid:
+      name: commentid
+      in: path
+      description: TODO
+      required: true
+      schema: { $ref: "#/components/schemas/comment" }
+  
   responses:
     BadRequest:
       description: TODO
