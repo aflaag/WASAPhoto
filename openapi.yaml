@@ -43,8 +43,7 @@ paths:
       tags: ["Login"]
       summary: Logs in the user
       description: |-
-        If the user does not exist, it will be created,
-        and an identifier is returned.
+        TODO
       operationId: doLogin
       requestBody:
         description: User details
@@ -55,16 +54,30 @@ paths:
       responses:
         '201':
           description: User log-in action successful
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/user" }
   
-  # /user/{uid}/ban:
-  
-  /{uid}/ban/{bannedid}:
+  /user/{uid}/ban:
     parameters:
       - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/bannedid" }
+    
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["Ban"]
+      summary: List of banned users
+      description: |-
+        TODO
+      operationId: getBanList
+      responses:
+        "200":
+          description: TODO
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/userlist" }
+  
+  /{uid}/ban/{banneduid}:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/banneduid" }
     
     put:
       security:
@@ -77,10 +90,6 @@ paths:
       responses:
         "200":
           description: User banned successfully
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/user" }
-        # TODO OTHER RESPONSES
       
     delete:
       security:
@@ -93,17 +102,14 @@ paths:
       responses:
         "200":
           description: User unbanned successfully
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/user" }
         "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/follow/{followid}:
+  /{uid}/follow/{followuid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/followid" }
+      - { $ref: "#/components/parameters/followuid" }
       
     put:
       security:
@@ -128,9 +134,40 @@ paths:
       responses:
         "200":
           description: User unfollowed successfully
+  
+  /{uid}/followers:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+    
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["Follow"]
+      summary: List of user followers
+      operationId: getFollowers
+      responses:
+        "200":
+          description: TODO
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/user" }
+              schema: { $ref: "#/components/schemas/userlist" }
+  
+  /{uid}/following:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+    
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["Follow"]
+      summary: List of users followed
+      operationId: getFollowing
+      responses:
+        "200":
+          description: TODO
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/userlist" }
   
   /{uid}/upload:
     parameters:
@@ -312,6 +349,7 @@ components:
       description: The component that represents a photo
       type: object
       properties:
+        user: { $ref: "#/components/schemas/user" }
         id:
           type: integer
           description: TODO
@@ -334,13 +372,13 @@ components:
           description: TODO
           minimum: 0
           example: 1000
-        user: { $ref: "#/components/schemas/user" }
     
     comment:
       title: Comment
       description: The component that represents a comment
       type: object
       properties:
+        user: { $ref: "#/components/schemas/user" }
         id:
           type: integer
           description: TODO
@@ -349,7 +387,6 @@ components:
           type: string
           description: TODO
           example: TODO
-        user: { $ref: "#/components/schemas/user" }
   
     profile:
       title: Profile
@@ -378,6 +415,12 @@ components:
       description: The components that represents the user stream
       type: array
       items: { $ref: "#/components/schemas/photo" }
+    
+    userlist:
+      title: UserList
+      description: TODO
+      type: array
+      items: { $ref: "#/components/schemas/user" }
   
   parameters:
     uid:
@@ -386,14 +429,14 @@ components:
       description: The parameter that represents the user performing the operation
       required: true
       schema: { $ref: "#/components/schemas/user" }
-    bannedid:
-      name: bannedid
+    banneduid:
+      name: banneduid
       in: path
       description: The parameter that represents the banned user
       required: true
       schema: { $ref: "#/components/schemas/user" }
-    followid:
-      name: followid
+    followuid:
+      name: followuid
       in: path
       description: The parameter that represents the user to be followed
       required: true
