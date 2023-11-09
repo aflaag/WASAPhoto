@@ -7,4 +7,4 @@ rules:
   ibm-operationid-naming-convention: off
   oas3-valid-schema-example: off
   ibm-success-response-example: off # TODO RIMUOVI
-  ibm-request-and-response-content: off # TODO RIMUOVI
+  # ibm-request-and-response-content: off # TODO RIMUOVI

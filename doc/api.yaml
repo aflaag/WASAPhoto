@@ -104,7 +104,7 @@ paths:
         TODO
       operationId: unbanUser
       responses:
-        "200":
+        "204":
           description: User unbanned successfully
         "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
@@ -136,7 +136,7 @@ paths:
         TODO
       operationId: unfollowUser
       responses:
-        "200":
+        "204":
           description: User unfollowed successfully
   
   /{uid}/followers:
@@ -215,6 +215,9 @@ paths:
       responses:
         "200":
           description: Photo deleted successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Photo" }
   
   /{uid}/photos/{photoid}/likes/{likeuid}:
     parameters:
@@ -243,7 +246,7 @@ paths:
       summary: Remove a like from a photo
       operationId: unlikePhoto
       responses:
-        "200":
+        "204":
           description: Like removed successfully
   
   /{uid}/photos/{photoid}/comment:
@@ -286,6 +289,9 @@ paths:
       responses:
         "200":
           description: Comment removed successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Comment" }
 
   /{uid}:
     parameters:
