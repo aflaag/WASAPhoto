@@ -36,6 +36,10 @@ tags:
     description: "Endpoints for liking photos"
   - name: "Comment"
     description: "Endpoints for commenting photos"
+  - name: "User"
+    description: "Endpoints for the user profile"
+  - name: "Stream"
+    description: "Endpoints for the user stream"
 
 paths:
   /session:
@@ -50,9 +54,9 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/user" }
+            schema: { $ref: "#/components/schemas/User" }
       responses:
-        '201':
+        "201":
           description: User log-in action successful
   
   /user/{uid}/ban:
@@ -72,7 +76,7 @@ paths:
           description: TODO
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/userlist" }
+              schema: { $ref: "#/components/schemas/UserList" }
   
   /{uid}/ban/{banneduid}:
     parameters:
@@ -127,7 +131,7 @@ paths:
       security:
         - bearerAuth: []
       tags: ["Follow"]
-      summary: Unnfollow a user
+      summary: Unfollow a user
       description: |-
         TODO
       operationId: unfollowUser
@@ -144,13 +148,15 @@ paths:
         - bearerAuth: []
       tags: ["Follow"]
       summary: List of user followers
+      description: |-
+        TODO
       operationId: getFollowers
       responses:
         "200":
           description: TODO
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/userlist" }
+              schema: { $ref: "#/components/schemas/UserList" }
   
   /{uid}/following:
     parameters:
@@ -161,13 +167,15 @@ paths:
         - bearerAuth: []
       tags: ["Follow"]
       summary: List of users followed
+      description: |-
+        TODO
       operationId: getFollowing
       responses:
         "200":
           description: TODO
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/userlist" }
+              schema: { $ref: "#/components/schemas/UserList" }
   
   /{uid}/upload:
     parameters:
@@ -186,9 +194,9 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/photo" }
+            schema: { $ref: "#/components/schemas/Photo" }
       responses:
-        "200":
+        "201":
           description: Photo uploaded successfully
   
   /{uid}/photos/{photoid}:
@@ -218,6 +226,8 @@ paths:
       security:
         - bearerAuth: []
       tags: ["Like"]
+      description: |-
+        TODO
       summary: Like a photo
       operationId: likePhoto
       responses:
@@ -228,6 +238,8 @@ paths:
       security:
         - bearerAuth: []
       tags: ["Like"]
+      description: |-
+        TODO
       summary: Remove a like from a photo
       operationId: unlikePhoto
       responses:
@@ -243,6 +255,8 @@ paths:
       security:
         - bearerAuth: []
       tags: ["Comment"]
+      description: |-
+        TODO
       summary: Comment a photo
       operationId: commentPhoto
       requestBody:
@@ -250,7 +264,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/comment" }
+            schema: { $ref: "#/components/schemas/Comment" }
       responses:
         "200":
           description: Comment posted successfully
@@ -266,6 +280,8 @@ paths:
         - bearerAuth: []
       tags: ["Comment"]
       summary: Remove a comment from a photo
+      description: |-
+        TODO
       operationId: uncommentPhoto
       responses:
         "200":
@@ -280,13 +296,15 @@ paths:
         - bearerAuth: []
       tags: ["User"]
       summary: Get a user profile information
+      description: |-
+        TODO
       operationId: getUserProfile
       responses:
         "200":
           description: The requested user profile information
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/profile" }
+              schema: { $ref: "#/components/schemas/Profile" }
 
   /{uid}/username:
     parameters:
@@ -297,13 +315,15 @@ paths:
         - bearerAuth: []
       tags: ["User"]
       summary: Change username
+      description: |-
+        TODO
       operationId: setMyUserName
       requestBody:
         description: The new username
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/user" }
+            schema: { $ref: "#/components/schemas/User" }
       responses:
         "200":
           description: TODO
@@ -317,13 +337,15 @@ paths:
         - bearerAuth: []
       tags: ["Stream"]
       summary: Retrieve the user stream
+      description: |-
+        TODO
       operationId: getMyStream
       responses:
         "200":
           description: The user stream
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/stream" }
+              schema: { $ref: "#/components/schemas/Stream" }
 
 components:
   securitySchemes:
@@ -332,24 +354,25 @@ components:
       scheme: bearer
   
   schemas:
-    user:
+    User:
       title: User
       description: The component that represents a user
       type: object
       properties:
         name:
           type: string
-          example: Maria
+          description: TODO
           pattern: 'ˆ.*?$'
           minLength: 3
           maxLength: 16
+          example: Mario
     
-    photo:
+    Photo:
       title: Photo
       description: The component that represents a photo
       type: object
       properties:
-        user: { $ref: "#/components/schemas/user" }
+        user: { $ref: "#/components/schemas/User" }
         id:
           type: integer
           description: TODO
@@ -357,11 +380,17 @@ components:
         url:
           type: string
           description: TODO
-          example: "TODO"
+          pattern: "https:\\/\\/ph04.github.io\\/WASAPhoto\\/Mario\\/photos\\/\\d+"
+          minLength: 32
+          maxLength: 100
+          example: "https://ph04.github.io/WASAPhoto/Mario/photos/1234"
         date:
           type: string
           description: TODO
-          example: "TODO"
+          pattern: "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)((-(\\d{2}):(\\d{2})|Z)?)$"
+          minLength: 20
+          maxLength: 30
+          example: "2023-11-21T00:28:28Z"
         like_counter:
           type: integer
           description: TODO
@@ -373,12 +402,12 @@ components:
           minimum: 0
           example: 1000
     
-    comment:
+    Comment:
       title: Comment
       description: The component that represents a comment
       type: object
       properties:
-        user: { $ref: "#/components/schemas/user" }
+        user: { $ref: "#/components/schemas/User" }
         id:
           type: integer
           description: TODO
@@ -386,47 +415,61 @@ components:
         comment_body:
           type: string
           description: TODO
+          pattern: 'ˆ.*?$'
+          minLength: 3
+          maxLength: 1000
           example: TODO
   
-    profile:
+    Profile:
       title: Profile
       description: The components that represents a user profile
       type: object
       properties:
-        user: { $ref: "#/components/schemas/user" }
+        user: { $ref: "#/components/schemas/User" }
         photo_counter:
           type: integer
           description: TODO
+          minimum: 0
           example: 1000
-        followers:
-          type: array
-          items: { $ref: "#/components/schemas/user" }
+        followers_counter:
+          type: integer
           description: TODO
-        following:
-          type: array
-          items: { $ref: "#/components/schemas/user" }
+          minimum: 0
+          example: 1000
+        following_counter:
+          type: integer
           description: TODO
-        photos:
-          type: array
-          items: { $ref: "#/components/schemas/photo" }
+          minimum: 0
+          example: 1000
+        photos_counter:
+          type: integer
+          description: TODO
+          minimum: 0
+          example: 1000
   
-    stream:
+    Stream:
       title: Stream
       description: The components that represents the user stream
       type: object
       properties:
         photos:
           type: array
-          items: { $ref: "#/components/schemas/photo" }
+          description: TODO
+          items: { $ref: "#/components/schemas/Photo" }
+          minItems: 0
+          maxItems: 1000
     
-    userlist:
+    UserList:
       title: UserList
       description: TODO
       type: object
       properties:
         users:
           type: array
-          items: { $ref: "#/components/schemas/user" }
+          description: TODO
+          items: { $ref: "#/components/schemas/User" }
+          minItems: 0
+          maxItems: 1000
   
   parameters:
     uid:
@@ -434,42 +477,42 @@ components:
       in: path
       description: The parameter that represents the user performing the operation
       required: true
-      schema: { $ref: "#/components/schemas/user" }
+      schema: { $ref: "#/components/schemas/User" }
     banneduid:
       name: banneduid
       in: path
       description: The parameter that represents the banned user
       required: true
-      schema: { $ref: "#/components/schemas/user" }
+      schema: { $ref: "#/components/schemas/User" }
     followuid:
       name: followuid
       in: path
       description: The parameter that represents the user to be followed
       required: true
-      schema: { $ref: "#/components/schemas/user" }
+      schema: { $ref: "#/components/schemas/User" }
     likeuid:
       name: likeuid
       in: path
       description: TODO
       required: true
-      schema: { $ref: "#/components/schemas/user" }
+      schema: { $ref: "#/components/schemas/User" }
     photoid:
       name: photoid
       in: path
       description: The parameter that represents the photo
       required: true
-      schema: { $ref: "#/components/schemas/photo" }
+      schema: { $ref: "#/components/schemas/Photo" }
     commentid:
       name: commentid
       in: path
       description: TODO
       required: true
-      schema: { $ref: "#/components/schemas/comment" }
+      schema: { $ref: "#/components/schemas/Comment" }
   
   responses:
     BadRequest:
-      description: TODO
+      description: The request was not compliant with the documentation (eg. missing fields, etc).
     Unauthorized:
-      description: TODO
+      description: Access token is missing or invalid
     InternalServerError:
-      description: TODO
+      description: The server encountered an internal error. Further info in server logs.
