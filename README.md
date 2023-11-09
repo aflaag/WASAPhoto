@@ -3,6 +3,7 @@
 ## TODO list
 
 - fai le altre response dappertutto
+- ricontrolla tutte le descrizioni
 
 ## Domande
 

@@ -15,7 +15,7 @@ info:
     Users can place
     (and later remove) a “like” to photos from other users. Also, users can add comments to any photo
     (even those uploaded by themself). Comments can be removed by the author only. Users can ban other users.
-    If Alice (user) bans Eve (user), Eve won’t be able tosee any information about Alice. Alice can decide to
+    If Alice (user) bans Eve (user), Eve won’t be able to see any information about Alice. Alice can decide to
     remove the ban at any moment.
     
     Users will have their own personal profiles. The personal profile page for
@@ -47,7 +47,8 @@ paths:
       tags: ["Login"]
       summary: Logs in the user
       description: |-
-        TODO
+        If the user does not exist, it will be created.
+        If the user exists, it gets returned back.
       operationId: doLogin
       requestBody:
         description: User details
@@ -57,7 +58,13 @@ paths:
             schema: { $ref: "#/components/schemas/User" }
       responses:
         "201":
-          description: User log-in action successful
+          description: User log-in action successful.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /user/{uid}/ban:
     parameters:
@@ -69,14 +76,17 @@ paths:
       tags: ["Ban"]
       summary: List of banned users
       description: |-
-        TODO
+        Retrieves the list of banned users.
       operationId: getBanList
       responses:
         "200":
-          description: TODO
+          description: Banned users retrieved successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UserList" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /{uid}/ban/{banneduid}:
     parameters:
@@ -89,11 +99,17 @@ paths:
       tags: ["Ban"]
       summary: Ban a user
       description: |-
-        TODO
+        If the user exists, it gets banned.
       operationId: banUser
       responses:
         "200":
-          description: User banned successfully
+          description: User banned successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
       
     delete:
       security:
@@ -101,11 +117,11 @@ paths:
       tags: ["Ban"]
       summary: Unban a user
       description: |-
-        TODO
+        If the user exists, it gets unbanned.
       operationId: unbanUser
       responses:
         "204":
-          description: User unbanned successfully
+          description: User unbanned successfully.
         "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
@@ -121,11 +137,17 @@ paths:
       tags: ["Follow"]
       summary: Follow a user  
       description: |-
-        TODO
+        If the user exists, it gets followed.
       operationId: followUser
       responses:
-        "200":
-          description: User followed successfully
+        "201":
+          description: User followed successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
       
     delete:
       security:
@@ -133,11 +155,14 @@ paths:
       tags: ["Follow"]
       summary: Unfollow a user
       description: |-
-        TODO
+        If the user exists, it gets unfollowed.
       operationId: unfollowUser
       responses:
         "204":
-          description: User unfollowed successfully
+          description: User unfollowed successfully.
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /{uid}/followers:
     parameters:
@@ -149,11 +174,11 @@ paths:
       tags: ["Follow"]
       summary: List of user followers
       description: |-
-        TODO
+        Retrieves the liest of followed users.
       operationId: getFollowers
       responses:
         "200":
-          description: TODO
+          description: Followed users retrieved successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UserList" }
@@ -168,11 +193,11 @@ paths:
       tags: ["Follow"]
       summary: List of users followed
       description: |-
-        TODO
+        Retrieves the users followed by the client.
       operationId: getFollowing
       responses:
         "200":
-          description: TODO
+          description: Followed users retrieved successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UserList" }
@@ -187,17 +212,20 @@ paths:
       tags: ["Photos"]
       summary: Upload a photo
       description: |-
-        TODO
+        If the user exists, the given photo gets uploaded on its profile.
       operationId: uploadPhoto
       requestBody:
-        description: The photo to be uploaded
+        description: The photo to be uploaded.
         required: true
         content:
           application/json:
             schema: { $ref: "#/components/schemas/Photo" }
       responses:
         "201":
-          description: Photo uploaded successfully
+          description: Photo uploaded successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Photo" }
   
   /{uid}/photos/{photoid}:
     parameters:
@@ -210,11 +238,11 @@ paths:
       tags: ["Photos"]
       summary: Delete a photo
       description: |-
-        TODO
+        If both the photo and the user exist, its photo gets removed.
       operationId: deletePhoto
       responses:
         "200":
-          description: Photo deleted successfully
+          description: Photo deleted successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Photo" }
@@ -230,24 +258,27 @@ paths:
         - bearerAuth: []
       tags: ["Like"]
       description: |-
-        TODO
+        If both the photo and the user exist, it gets liked.
       summary: Like a photo
       operationId: likePhoto
       responses:
-        "200":
-          description: Photo liked successfully
+        "201":
+          description: Photo liked successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
     
     delete:
       security:
         - bearerAuth: []
       tags: ["Like"]
       description: |-
-        TODO
+        If both the photo and the user exist, its like gets removed.
       summary: Remove a like from a photo
       operationId: unlikePhoto
       responses:
         "204":
-          description: Like removed successfully
+          description: Like removed successfully.
   
   /{uid}/photos/{photoid}/comment:
     parameters:
@@ -259,18 +290,21 @@ paths:
         - bearerAuth: []
       tags: ["Comment"]
       description: |-
-        TODO
+        If both the photo and the user exist, the given comment gets posted.
       summary: Comment a photo
       operationId: commentPhoto
       requestBody:
-        description: The comment to be posted
+        description: The comment to be posted.
         required: true
         content:
           application/json:
             schema: { $ref: "#/components/schemas/Comment" }
       responses:
-        "200":
-          description: Comment posted successfully
+        "201":
+          description: Comment posted successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Comment" }
   
   /{uid}/photos/{photoid}/comments/{commentid}:
     parameters:
@@ -284,11 +318,11 @@ paths:
       tags: ["Comment"]
       summary: Remove a comment from a photo
       description: |-
-        TODO
+        If the user, the photo and the comment exist, the comment gets removed.
       operationId: uncommentPhoto
       responses:
         "200":
-          description: Comment removed successfully
+          description: Comment removed successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Comment" }
@@ -303,11 +337,11 @@ paths:
       tags: ["User"]
       summary: Get a user profile information
       description: |-
-        TODO
+        If the user exists, returns the user profile.
       operationId: getUserProfile
       responses:
         "200":
-          description: The requested user profile information
+          description: The requested user profile information.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Profile" }
@@ -320,19 +354,22 @@ paths:
       security:
         - bearerAuth: []
       tags: ["User"]
-      summary: Change username
+      summary: Change user username
       description: |-
-        TODO
+        If the user exists, it changes its username with the given one.
       operationId: setMyUserName
       requestBody:
-        description: The new username
+        description: The new username of the user.
         required: true
         content:
           application/json:
             schema: { $ref: "#/components/schemas/User" }
       responses:
-        "200":
-          description: TODO
+        "201":
+          description: User changed successfully.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
 
   /{uid}/stream:
     parameters:
@@ -344,11 +381,11 @@ paths:
       tags: ["Stream"]
       summary: Retrieve the user stream
       description: |-
-        TODO
+        If the user exists, it returns its stream.
       operationId: getMyStream
       responses:
         "200":
-          description: The user stream
+          description: The user stream.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Stream" }
@@ -362,12 +399,12 @@ components:
   schemas:
     User:
       title: User
-      description: The component that represents a user
+      description: The component that represents a user.
       type: object
       properties:
         name:
           type: string
-          description: TODO
+          description: The username of the user.
           pattern: 'ˆ.*?$'
           minLength: 3
           maxLength: 16
@@ -375,104 +412,99 @@ components:
     
     Photo:
       title: Photo
-      description: The component that represents a photo
+      description: The component that represents a photo.
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
         id:
           type: integer
-          description: TODO
+          description: The ID of the photo.
           example: 1234
         url:
           type: string
-          description: TODO
+          description: The url of the photo.
           pattern: "https:\\/\\/ph04.github.io\\/WASAPhoto\\/Mario\\/photos\\/\\d+"
           minLength: 32
           maxLength: 100
           example: "https://ph04.github.io/WASAPhoto/Mario/photos/1234"
         date:
           type: string
-          description: TODO
+          description: The date of the publishing of the photo.
           pattern: "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)((-(\\d{2}):(\\d{2})|Z)?)$"
           minLength: 20
           maxLength: 30
           example: "2023-11-21T00:28:28Z"
         like_counter:
           type: integer
-          description: TODO
+          description: The amount of likes of the photo.
           minimum: 0
           example: 1000
         comment_counter:
           type: integer
-          description: TODO
+          description: The amount of comments of the photo.
           minimum: 0
           example: 1000
     
     Comment:
       title: Comment
-      description: The component that represents a comment
+      description: The component that represents a comment.
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
         id:
           type: integer
-          description: TODO
+          description: The id of the comment.
           example: 1234
         comment_body:
           type: string
-          description: TODO
+          description: The content of the comment.
           pattern: 'ˆ.*?$'
           minLength: 3
           maxLength: 1000
-          example: TODO
+          example: This is a beautiful comment.
   
     Profile:
       title: Profile
-      description: The components that represents a user profile
+      description: The component that represents a user profile
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
-        photo_counter:
+        photos_counter:
           type: integer
-          description: TODO
+          description: The amount of photos the user has posted.
           minimum: 0
           example: 1000
         followers_counter:
           type: integer
-          description: TODO
+          description: The amount of followers the user has.
           minimum: 0
           example: 1000
         following_counter:
           type: integer
-          description: TODO
-          minimum: 0
-          example: 1000
-        photos_counter:
-          type: integer
-          description: TODO
+          description: The amount of users the user follows.
           minimum: 0
           example: 1000
   
     Stream:
       title: Stream
-      description: The components that represents the user stream
+      description: The component that represents the user stream.
       type: object
       properties:
         photos:
           type: array
-          description: TODO
+          description: The photos of the user stream.
           items: { $ref: "#/components/schemas/Photo" }
           minItems: 0
           maxItems: 1000
     
     UserList:
       title: UserList
-      description: TODO
+      description: The component that represents a list of users.
       type: object
       properties:
         users:
           type: array
-          description: TODO
+          description: The list of users.
           items: { $ref: "#/components/schemas/User" }
           minItems: 0
           maxItems: 1000
@@ -481,37 +513,37 @@ components:
     uid:
       name: uid
       in: path
-      description: The parameter that represents the user performing the operation
+      description: The parameter that represents the user performing the operation.
       required: true
       schema: { $ref: "#/components/schemas/User" }
     banneduid:
       name: banneduid
       in: path
-      description: The parameter that represents the banned user
+      description: The parameter that represents the banned user.
       required: true
       schema: { $ref: "#/components/schemas/User" }
     followuid:
       name: followuid
       in: path
-      description: The parameter that represents the user to be followed
+      description: The parameter that represents the user to be followed.
       required: true
       schema: { $ref: "#/components/schemas/User" }
     likeuid:
       name: likeuid
       in: path
-      description: TODO
+      description: The parameter that represents the user who liked.
       required: true
       schema: { $ref: "#/components/schemas/User" }
     photoid:
       name: photoid
       in: path
-      description: The parameter that represents the photo
+      description: The parameter that represents the photo.
       required: true
       schema: { $ref: "#/components/schemas/Photo" }
     commentid:
       name: commentid
       in: path
-      description: TODO
+      description: The parameter that represents the posted comment.
       required: true
       schema: { $ref: "#/components/schemas/Comment" }
   
@@ -519,6 +551,6 @@ components:
     BadRequest:
       description: The request was not compliant with the documentation (eg. missing fields, etc).
     Unauthorized:
-      description: Access token is missing or invalid
+      description: Access token is missing or invalid.
     InternalServerError:
       description: The server encountered an internal error. Further info in server logs.
