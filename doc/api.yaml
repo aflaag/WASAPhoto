@@ -24,7 +24,7 @@ info:
     remove photos, and follow/unfollow other users. Removal of a photo will also remove likes and comments.
 
 tags:
-  - name : "Login"
+  - name: "Login"
     description: "Endpoints for the user login"
   - name: "Ban"
     description: "Endpoints for banning users"
@@ -191,7 +191,7 @@ paths:
         "200":
           description: Photo uploaded successfully
   
-  /{uid}/{photoid}:
+  /{uid}/photos/{photoid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -208,7 +208,7 @@ paths:
         "200":
           description: Photo deleted successfully
   
-  /{uid}/{photoid}/like/{likeuid}:
+  /{uid}/photos/{photoid}/likes/{likeuid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -234,7 +234,7 @@ paths:
         "200":
           description: Like removed successfully
   
-  /{uid}/{photoid}/comment:
+  /{uid}/photos/{photoid}/comment:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -255,7 +255,7 @@ paths:
         "200":
           description: Comment posted successfully
   
-  /{uid}/{photoid}/{commentid}:
+  /{uid}/photos/{photoid}/comments/{commentid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -362,12 +362,12 @@ components:
           type: string
           description: TODO
           example: "TODO"
-        likeCounter:
+        like_counter:
           type: integer
           description: TODO
           minimum: 0
           example: 1000
-        commentCounter:
+        comment_counter:
           type: integer
           description: TODO
           minimum: 0
@@ -383,7 +383,7 @@ components:
           type: integer
           description: TODO
           example: 1234
-        commentBody:
+        comment_body:
           type: string
           description: TODO
           example: TODO
@@ -394,7 +394,7 @@ components:
       type: object
       properties:
         user: { $ref: "#/components/schemas/user" }
-        photoCounter:
+        photo_counter:
           type: integer
           description: TODO
           example: 1000
@@ -413,14 +413,20 @@ components:
     stream:
       title: Stream
       description: The components that represents the user stream
-      type: array
-      items: { $ref: "#/components/schemas/photo" }
+      type: object
+      properties:
+        photos:
+          type: array
+          items: { $ref: "#/components/schemas/photo" }
     
     userlist:
       title: UserList
       description: TODO
-      type: array
-      items: { $ref: "#/components/schemas/user" }
+      type: object
+      properties:
+        users:
+          type: array
+          items: { $ref: "#/components/schemas/user" }
   
   parameters:
     uid:
