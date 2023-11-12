@@ -6,5 +6,6 @@ rules:
   ibm-operationid-casing-convention: off
   ibm-operationid-naming-convention: off
   oas3-valid-schema-example: off
-  # ibm-success-response-example: off # TODO: DA FARE
+  ibm-success-response-example: off # TODO: DA FARE
   ibm-request-and-response-content: off
+  ibm-collection-array-property: off

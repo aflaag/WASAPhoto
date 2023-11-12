@@ -140,7 +140,7 @@ paths:
         If the user exists, it gets followed.
       operationId: followUser
       responses:
-        "201":
+        "200":
           description: User followed successfully.
           content:
             application/json:
@@ -182,6 +182,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UserList" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /{uid}/following:
     parameters:
@@ -201,6 +204,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UserList" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /{uid}/upload:
     parameters:
@@ -226,6 +232,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Photo" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /{uid}/photos/{photoid}:
     parameters:
@@ -246,7 +255,33 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Photo" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
+  /{uid}/photos/{photoid}/likes:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/photoid" }
+
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["Like"]
+      description: |-
+        TODO
+      summary: TODO
+      operationId: getPhotoLikes
+      responses:
+        "200":
+          description: TODO
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UserList" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
   /{uid}/photos/{photoid}/likes/{likeuid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
@@ -262,11 +297,14 @@ paths:
       summary: Like a photo
       operationId: likePhoto
       responses:
-        "201":
+        "200":
           description: Photo liked successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
     
     delete:
       security:
@@ -279,7 +317,33 @@ paths:
       responses:
         "204":
           description: Like removed successfully.
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
+  /{uid}/photos/{photoid}/comments:
+    parameters:
+      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/photoid" }
+
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["Comment"]
+      description: |-
+        TODO
+      summary: TODO
+      operationId: getPhotoComments
+      responses:
+        "200":
+          description: TODO
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UserList" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
   /{uid}/photos/{photoid}/comment:
     parameters:
       - { $ref: "#/components/parameters/uid" }
@@ -305,6 +369,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Comment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   
   /{uid}/photos/{photoid}/comments/{commentid}:
     parameters:
@@ -326,6 +393,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Comment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
 
   /{uid}:
     parameters:
@@ -345,6 +415,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Profile" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
 
   /{uid}/username:
     parameters:
@@ -365,11 +438,14 @@ paths:
           application/json:
             schema: { $ref: "#/components/schemas/User" }
       responses:
-        "201":
+        "200":
           description: User changed successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
 
   /{uid}/stream:
     parameters:
@@ -389,6 +465,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Stream" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
 
 components:
   securitySchemes:
