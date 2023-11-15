@@ -484,10 +484,10 @@ components:
         name:
           type: string
           description: The username of the user.
-          pattern: 'ˆ.*?$'
+          pattern: '^.*?$'
           minLength: 3
           maxLength: 16
-          example: Mario
+          example: "Mario"
     
     Photo:
       title: Photo
@@ -537,7 +537,7 @@ components:
         comment_body:
           type: string
           description: The content of the comment.
-          pattern: 'ˆ.*?$'
+          pattern: '^.*?$'
           minLength: 3
           maxLength: 1000
           example: This is a beautiful comment.
