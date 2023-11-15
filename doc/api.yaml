@@ -487,7 +487,7 @@ components:
           pattern: '^.*?$'
           minLength: 3
           maxLength: 16
-          example: "Mario"
+          example: Mario
     
     Photo:
       title: Photo
