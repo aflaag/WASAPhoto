@@ -66,7 +66,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/ban:
+  /user/{uid}/ban:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -88,7 +88,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/ban/{banneduid}:
+  /user/{uid}/ban/{banneduid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/banneduid" }
@@ -126,7 +126,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/follow/{followuid}:
+  /user/{uid}/follow/{followuid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/followuid" }
@@ -164,7 +164,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/followers:
+  /user/{uid}/followers:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -186,7 +186,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/following:
+  /user/{uid}/following:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -208,7 +208,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/upload:
+  /user/{uid}/upload:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -236,7 +236,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/photos/{photoid}:
+  /user/{uid}/photos/{photoid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -259,7 +259,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/photos/{photoid}/likes:
+  /user/{uid}/photos/{photoid}/likes:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -282,7 +282,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /{uid}/photos/{photoid}/likes/{likeuid}:
+  /user/{uid}/photos/{photoid}/likes/{likeuid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -321,7 +321,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/photos/{photoid}/comments:
+  /user/{uid}/photos/{photoid}/comments:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -344,7 +344,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /{uid}/photos/{photoid}/comment:
+  /user/{uid}/photos/{photoid}/comment:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -373,7 +373,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /{uid}/photos/{photoid}/comments/{commentid}:
+  /user/{uid}/photos/{photoid}/comments/{commentid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
       - { $ref: "#/components/parameters/photoid" }
@@ -397,7 +397,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /{uid}:
+  /user/{uid}:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -419,7 +419,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /{uid}/username:
+  /user/{uid}/username:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
@@ -447,7 +447,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /{uid}/stream:
+  /user/{uid}/stream:
     parameters:
       - { $ref: "#/components/parameters/uid" }
     
