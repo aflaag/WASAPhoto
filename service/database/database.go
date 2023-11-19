@@ -59,8 +59,86 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var tableName string
 	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
+		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL);`
 		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		userTable := `
+			CREATE TABLE User (
+				name TEXT NOT NULL
+			);
+		`
+		_, err = db.Exec(userTable)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+		
+		photoTable := `
+			CREATE TABLE Photo (
+				id INTEGER NOT NULL PRIMARY KEY,
+				user TEXT NOT NULL,
+				url TEXT NOT NULL,
+				date DATE,
+				FOREIGN KEY (user) REFERENCES User(name)
+			);
+		`
+		_, err = db.Exec(photoTable)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		commentTable := `
+			CREATE TABLE Comment (
+				id INTEGER NOT NULL PRIMARY KEY,
+				user TEXT NOT NULL,
+				photo INTEGER NOT NULL,
+				comment_body TEXT NOT NULL,
+				FOREIGN KEY (user) REFERENCES User(name),
+				FOREIGN KEY (photo) REFERENCES Photo(id)
+			);
+		`
+		_, err = db.Exec(commentTable)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		followTable := `
+			CREATE TABLE follow (
+				first_user TEXT NOT NULL,
+				second_user TEXT NOT NULL,
+				FOREIGN KEY (first_user) REFERENCES User(name),
+				FOREIGN KEY (second_user) REFERENCES User(name)
+			);
+		`
+		_, err = db.Exec(followTable)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		banTable := `
+			CREATE TABLE ban (
+				first_user TEXT NOT NULL,
+				second_user TEXT NOT NULL,
+				FOREIGN KEY (first_user) REFERENCES User(name),
+				FOREIGN KEY (second_user) REFERENCES User(name)
+			);
+		`
+		_, err = db.Exec(banTable)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		likeTable := `
+			CREATE TABLE like (
+				user TEXT NOT NULL,
+				photo INTEGER NOT NULL,
+				FOREIGN KEY (user) REFERENCES User(name),
+				FOREIGN KEY (photo) REFERENCES Photo(id)
+			);
+		`
+		_, err = db.Exec(likeTable)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)
 		}
