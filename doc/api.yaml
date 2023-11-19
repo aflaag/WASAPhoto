@@ -513,12 +513,12 @@ components:
           minLength: 20
           maxLength: 30
           example: "2023-11-21T00:28:28Z"
-        like_counter:
+        like_count:
           type: integer
           description: The amount of likes of the photo.
           minimum: 0
           example: 1000
-        comment_counter:
+        comment_count:
           type: integer
           description: The amount of comments of the photo.
           minimum: 0
@@ -548,17 +548,17 @@ components:
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
-        photos_counter:
+        photos_count:
           type: integer
           description: The amount of photos the user has posted.
           minimum: 0
           example: 1000
-        followers_counter:
+        followers_count:
           type: integer
           description: The amount of followers the user has.
           minimum: 0
           example: 1000
-        following_counter:
+        following_count:
           type: integer
           description: The amount of users the user follows.
           minimum: 0
@@ -644,4 +644,4 @@ components:
     Unauthorized:
       description: Access token is missing or invalid.
     InternalServerError:
-      description: The server encountered an internal error. Further info in server logs.
+      description: The server encounted an internal error. Further info in server logs.

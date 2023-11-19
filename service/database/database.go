@@ -67,7 +67,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 			id INTEGER NOT NULL PRIMARY KEY,
 			user TEXT NOT NULL,
 			url TEXT NOT NULL,
-			date DATE,
+			date TEXT NOT NULL,
 			FOREIGN KEY (user) REFERENCES User(name)
 		);
 	`
