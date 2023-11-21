@@ -41,6 +41,9 @@ type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
 
+	GetUserFromUsername(userUsername string) (DatabaseUser, error)
+	SetFollow(user DatabaseUser, followedUser DatabaseUser) error
+
 	Ping() error
 }
 

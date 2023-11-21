@@ -4,9 +4,20 @@ import (
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/database"
 )
 
+// type Default[T any] interface {
+// 	Default() 
+// }
+
 type User struct {
 	Id uint64 `json:"id"`
 	Username string `json:"username"`
+}
+
+func UserDefault() User {
+	return User {
+		Id: 0,
+		Username: "",
+	}
 }
 
 func UserFromDatabaseUser(dbUser database.DatabaseUser) User {
@@ -29,6 +40,16 @@ type Photo struct {
 	Date string `json:"date"`
 	LikeCount uint64 `json:"like_count"`
 	CommentCount uint64 `json:"comment_count"`
+}
+
+func PhotoDefault() Photo {
+	return Photo {
+		Id: 0,
+		Url: "",
+		Date: "",
+		LikeCount: 0,
+		CommentCount: 0,
+	}
 }
 
 func PhotoFromDatabasePhoto(dbPhoto database.DatabasePhoto) Photo {
@@ -56,6 +77,13 @@ type Comment struct {
 	CommentBody string `json:"comment_body"`
 }
 
+func CommentDefault() Comment {
+	return Comment {
+		Id: 0,
+		CommentBody: "",
+	}
+}
+
 func CommentFromDatabaseComment(dbComment database.DatabaseComment) Comment {
 	return Comment {
 		Id: dbComment.Id,
@@ -75,6 +103,15 @@ type Profile struct {
 	PhotosCount uint64 `json:"photos_count"`
 	FollowersCount uint64 `json:"followers_count"`
 	FollowingCount uint64 `json:"following_count"`
+}
+
+func ProfileDefault() Profile {
+	return Profile {
+		User: UserDefault(),
+		PhotosCount: 0,
+		FollowersCount: 0,
+		FollowingCount: 0,
+	}
 }
 
 func ProfileFromDatabaseProfile(dbProfile database.DatabaseProfile) Profile {
@@ -97,6 +134,14 @@ func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
 
 type Stream struct {
 	Photos []Photo `json:"photos"`
+}
+
+func StreamDefault() Stream {
+	emptyArray := [0]Photo{}
+
+	return Stream {
+		Photos: emptyArray[:],
+	}
 }
 
 // TODO: INVECE DI FARLA 3 VOLTE FAI LE INTERFACCE E FALLA GENERICS

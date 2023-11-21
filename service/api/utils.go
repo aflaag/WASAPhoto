@@ -1,27 +1,22 @@
 package api
 
 import (
-	"net/http"
-	"strconv"
+	// "net/http"
+	// "strconv"
+	"errors"
 
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
-	"github.com/julienschmidt/httprouter"
+	// "git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
+	// "github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) getUserId(userUsername string) (uint64, error) {
-	userUsername := ps.ByName("uid")
-
-	userIdString, err := rt.db.GetUserId(userUsername)
+func (rt *_router) GetUserFromUsername(userUsername string) (User, error) {
+	dbUser, err := rt.db.GetUserFromUsername(userUsername)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return UserDefault(), errors.New("TODO")
 	}
 
-	userId := strconv.ParseInt(userIdString, 10, 64)
+	user := UserFromDatabaseUser(dbUser)
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	return user, nil
 }

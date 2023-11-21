@@ -2,7 +2,7 @@ package api
 
 import (
 	"net/http"
-	"strconv"
+	// "strconv"
 
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -11,20 +11,26 @@ import (
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	userUsername := ps.ByName("uid")
 
-	userIdString, err := rt.db.GetUserId(userUsername)
+	user, err := rt.GetUserFromUsername(userUsername)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	userId := strconv.ParseInt(userIdString, 10, 64)
+	followedUserUsername := ps.ByName("followuid")
+
+	followedUser, err := rt.GetUserFromUsername(followedUserUsername)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	err = rt.db.SetFollow(user.UserIntoDatabaseUser(), followedUser.UserIntoDatabaseUser())
 
-	// rt.db.SetFollow()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
