@@ -59,13 +59,14 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 	userTable := `
 		CREATE TABLE IF NOT EXISTS User (
-			name TEXT NOT NULL
+			id INTEGER NOT NULL PRIMARY KEY,
+			username TEXT NOT NULL UNIQUE
 		);
 	`
 	photoTable := `
 		CREATE TABLE IF NOT EXISTS Photo (
 			id INTEGER NOT NULL PRIMARY KEY,
-			user TEXT NOT NULL,
+			user INTEGER NOT NULL,
 			url TEXT NOT NULL,
 			date TEXT NOT NULL,
 			FOREIGN KEY (user) REFERENCES User(name)
@@ -74,7 +75,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	commentTable := `
 		CREATE TABLE IF NOT EXISTS Comment (
 			id INTEGER NOT NULL PRIMARY KEY,
-			user TEXT NOT NULL,
+			user INTEGER NOT NULL,
 			photo INTEGER NOT NULL,
 			comment_body TEXT NOT NULL,
 			FOREIGN KEY (user) REFERENCES User(name),
@@ -83,23 +84,25 @@ func New(db *sql.DB) (AppDatabase, error) {
 	`
 	followTable := `
 		CREATE TABLE IF NOT EXISTS follow (
-			first_user TEXT NOT NULL,
-			second_user TEXT NOT NULL,
+			first_user INTEGER NOT NULL,
+			second_user INTEGER NOT NULL,
+			PRIMARY KEY (first_user, second_user),
 			FOREIGN KEY (first_user) REFERENCES User(name),
 			FOREIGN KEY (second_user) REFERENCES User(name)
 		);
 	`
 	banTable := `
 		CREATE TABLE IF NOT EXISTS ban (
-			first_user TEXT NOT NULL,
-			second_user TEXT NOT NULL,
+			first_user INTEGER NOT NULL,
+			second_user INTEGER NOT NULL,
+			PRIMARY KEY (first_user, second_user),
 			FOREIGN KEY (first_user) REFERENCES User(name),
 			FOREIGN KEY (second_user) REFERENCES User(name)
 		);
 	`
 	likeTable := `
 		CREATE TABLE IF NOT EXISTS like (
-			user TEXT NOT NULL,
+			user INTEGER NOT NULL,
 			photo INTEGER NOT NULL,
 			FOREIGN KEY (user) REFERENCES User(name),
 			FOREIGN KEY (photo) REFERENCES Photo(id)
