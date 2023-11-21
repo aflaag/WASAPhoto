@@ -2,8 +2,8 @@
 
 ## TODO list
 
-- fai le altre response dappertutto
-- ricontrolla tutte le descrizioni
+- RICONTROLLA CHE SIA GIUSTO L'USER CON L'ID
+- RICONTROLLA OPENAPI COL LINTER
 
 ## Domande
 

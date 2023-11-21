@@ -57,16 +57,16 @@ type Comment struct {
 }
 
 func CommentFromDatabaseComment(dbComment database.DatabaseComment) Comment {
-	return Photo {
-		Id: dbPhoto.Id,
-		CommentBody: dbPhoto.CommentBody,
+	return Comment {
+		Id: dbComment.Id,
+		CommentBody: dbComment.CommentBody,
 	}
 }
 
-func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComent {
+func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComment {
 	return database.DatabaseComment {
 		Id: comment.Id,
-		CommentBody: comment.CommentBody
+		CommentBody: comment.CommentBody,
 	}
 }
 
@@ -79,7 +79,7 @@ type Profile struct {
 
 func ProfileFromDatabaseProfile(dbProfile database.DatabaseProfile) Profile {
 	return Profile {
-		User: dbProfile.User,
+		User: UserFromDatabaseUser(dbProfile.User),
 		PhotosCount: dbProfile.PhotosCount,
 		FollowersCount: dbProfile.PhotosCount,
 		FollowingCount: dbProfile.FollowingCount,
@@ -88,7 +88,7 @@ func ProfileFromDatabaseProfile(dbProfile database.DatabaseProfile) Profile {
 
 func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
 	return database.DatabaseProfile {
-		User: profile.User,
+		User: profile.User.UserIntoDatabaseUser(),
 		PhotosCount: profile.PhotosCount,
 		FollowersCount: profile.PhotosCount,
 		FollowingCount: profile.FollowingCount,
@@ -99,9 +99,20 @@ type Stream struct {
 	Photos []Photo `json:"photos"`
 }
 
+// TODO: INVECE DI FARLA 3 VOLTE FAI LE INTERFACCE E FALLA GENERICS
+func PhotoArrayFromDatabasePhotoArray(array []database.DatabasePhoto) []Photo {
+	var databaseArray []Photo
+
+	for idx, element := range array {
+		databaseArray[idx] = PhotoFromDatabasePhoto(element)
+	}
+
+	return databaseArray
+}
+
 func StreamFromDatabaseStream(dbStream database.DatabaseStream) Stream {
 	return Stream {
-		Photos: dbStream.Photos,
+		Photos: PhotoArrayFromDatabasePhotoArray(dbStream.Photos),
 	}
 }
 
@@ -133,12 +144,12 @@ type CommentList struct {
 
 func CommentListFromDatabaseCommentList(dbCommentList database.DatabaseCommentList) CommentList {
 	return CommentList {
-		Users: dbCommentList.users,
+		Comments: dbCommentList.Comments,
 	}
 }
 
 func (commentList *CommentList) CommentListIntoDatabaseCommentList() database.DatabaseCommentList {
-	return database.DatabaseCommmentList {
-		Users: commentList.Users,
+	return database.DatabaseCommentList {
+		Comments: commentList.Comments,
 	}
 }

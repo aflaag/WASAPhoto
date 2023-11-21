@@ -19,20 +19,20 @@ type DatabaseComment struct {
 }
 
 type DatabaseProfile struct {
-	User User `json:"user"`
+	User DatabaseUser `json:"user"`
 	PhotosCount uint64 `json:"photos_count"`
 	FollowersCount uint64 `json:"followers_count"`
 	FollowingCount uint64 `json:"following_count"`
 }
 
 type DatabaseStream struct {
-	Photos []Photo `json:"photos"`
+	Photos []DatabasePhoto `json:"photos"`
 }
 
 type DatabaseUserList struct {
-	Users []User `json:"users"`
+	Users []DatabaseUser `json:"users"`
 }
 
 type DatabaseCommentList struct {
-	Comments []Comment `json:"comments"`
+	Comments []DatabaseComment `json:"comments"`
 }

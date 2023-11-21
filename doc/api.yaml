@@ -481,6 +481,11 @@ components:
       description: The component that represents a user.
       type: object
       properties:
+        id:
+          type: integer
+          description: The ID of the user.
+          minimum: 0
+          example: 1234
         username:
           type: string
           description: The username of the user.
