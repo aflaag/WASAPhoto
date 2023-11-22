@@ -38,8 +38,8 @@ type Photo struct {
 	Id uint64 `json:"id"`
 	Url string `json:"url"`
 	Date string `json:"date"`
-	LikeCount uint64 `json:"like_count"`
-	CommentCount uint64 `json:"comment_count"`
+	LikeCount int `json:"like_count"`
+	CommentCount int `json:"comment_count"`
 }
 
 func PhotoDefault() Photo {
@@ -100,9 +100,9 @@ func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComment {
 
 type Profile struct {
 	User User `json:"user"`
-	PhotosCount uint64 `json:"photos_count"`
-	FollowersCount uint64 `json:"followers_count"`
-	FollowingCount uint64 `json:"following_count"`
+	PhotosCount int `json:"photos_count"`
+	FollowersCount int `json:"followers_count"`
+	FollowingCount int `json:"following_count"`
 }
 
 func ProfileDefault() Profile {
