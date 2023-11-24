@@ -4,18 +4,14 @@ import (
 	// "database/sql"
 )
 
-func (db *appdbimpl) SetComment(user DatabaseUser, photo DatabasePhoto, comment DatabaseComment) error {
-	_, err := db.c.Exec(`INSERT INTO Comment (id, user, photo, comment_body) VALUES (?, ?, ?, ?)`, comment.Id, user.Id, photo.Id, comment.CommentBody)
+func (db *appdbimpl) SetComment(dbUser DatabaseUser, dbPhoto DatabasePhoto, dbComment DatabaseComment) error {
+	_, err := db.c.Exec(`INSERT INTO Comment (id, user, photo, comment_body) VALUES (?, ?, ?, ?)`, dbComment.Id, dbUser.Id, dbPhoto.Id, dbComment.CommentBody)
 
-	if err != nil {
-		return err
-	}
-	
-	return nil
+	return err
 }
 
-func (db *appdbimpl) RemoveComment(user DatabaseUser, photo DatabasePhoto, comment DatabaseComment) error {
-	res, err := db.c.Exec(`DELETE FROM Comment WHERE id=? AND user=? AND photo=? AND comment_body=?`, comment.Id, user.Id, photo.Id, comment.CommentBody)
+func (db *appdbimpl) RemoveComment(dbUser DatabaseUser, dbPhoto DatabasePhoto, dbComment DatabaseComment) error {
+	res, err := db.c.Exec(`DELETE FROM Comment WHERE id=? AND user=? AND photo=? AND comment_body=?`, dbComment.Id, dbUser.Id, dbPhoto.Id, dbComment.CommentBody)
 
 	if err != nil {
 		return err
@@ -23,11 +19,9 @@ func (db *appdbimpl) RemoveComment(user DatabaseUser, photo DatabasePhoto, comme
 
 	aff, err := res.RowsAffected()
 
-	if err != nil {
-		return err
-	} else if aff == 0 {
+	if aff == 0 {
 		return ErrUserNotFollowed
 	}
 
-	return nil
+	return err
 }

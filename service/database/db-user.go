@@ -4,18 +4,14 @@ import (
 	"database/sql"
 )
 
-func (db *appdbimpl) GetUserFromUsername(userUsername string) (DatabaseUser, error) {
+func (db *appdbimpl) GetDatabaseUserFromUsername(userUsername string) (DatabaseUser, error) {
 	var user DatabaseUser
 
-	err := db.c.QueryRow(`SELECT id, username from USER where username = ?`, userUsername).Scan(&user.Id, &user.Username)
+	err := db.c.QueryRow(`SELECT id, username from USER where username=?`, userUsername).Scan(&user.Id, &user.Username)
 
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return user, ErrUserDoesNotExist
-		}
-
-		return user, err
+	if err == sql.ErrNoRows {
+		return user, ErrUserDoesNotExist
 	}
 
-	return user, nil
+	return user, err
 }

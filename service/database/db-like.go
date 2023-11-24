@@ -4,18 +4,14 @@ import (
 	"database/sql"
 )
 
-func (db *appdbimpl) SetLike(user DatabaseUser, photo DatabasePhoto) error {
-	_, err := db.c.Exec(`INSERT INTO like (user, photo) VALUES (?, ?)`, user.Id, photo.Id)
+func (db *appdbimpl) SetLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
+	_, err := db.c.Exec(`INSERT INTO like (user, photo) VALUES (?, ?)`, dbUser.Id, dbPhoto.Id)
 
-	if err != nil {
-		return err
-	}
-	
-	return nil
+	return err
 }
 
-func (db *appdbimpl) RemoveLike(user DatabaseUser, photo DatabasePhoto) error {
-	res, err := db.c.Exec(`DELETE FROM follow WHERE user=? AND photo=?`, user.Id, photo.Id)
+func (db *appdbimpl) RemoveLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
+	res, err := db.c.Exec(`DELETE FROM follow WHERE user=? AND photo=?`, dbUser.Id, dbPhoto.Id)
 
 	if err != nil {
 		return err
@@ -23,27 +19,21 @@ func (db *appdbimpl) RemoveLike(user DatabaseUser, photo DatabasePhoto) error {
 
 	aff, err := res.RowsAffected()
 
-	if err != nil {
-		return err
-	} else if aff == 0 {
+	if aff == 0 {
 		return ErrUserNotFollowed
 	}
 
-	return nil
+	return err
 }
 
-func (db *appdbimpl) GetLikesCount(photo DatabasePhoto) (int, error) {
+func (db *appdbimpl) GetLikesCount(dbPhoto DatabasePhoto) (int, error) {
 	var likesCount int
 
-	err := db.c.QueryRow(`SELECT COUNT(*) FROM like WHERE photo=?`, photo.Id).Scan(&likesCount)
+	err := db.c.QueryRow(`SELECT COUNT(*) FROM like WHERE photo=?`, dbPhoto.Id).Scan(&likesCount)
 
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return likesCount, ErrUserDoesNotExist
-		}
-		
-		return likesCount, err
+	if err == sql.ErrNoRows {
+		return likesCount, ErrUserDoesNotExist
 	}
 
-	return likesCount, nil
+	return likesCount, err
 }

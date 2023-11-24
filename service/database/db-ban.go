@@ -4,12 +4,8 @@ import (
 	// "database/sql"
 )
 
-func (db *appdbimpl) SetBan(user DatabaseUser, bannedUser DatabaseUser) error {
-	_, err := db.c.Exec(`INSERT INTO ban (first_user, second_user) VALUES (?, ?)`, user.Id, bannedUser.Id)
+func (db *appdbimpl) SetBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error {
+	_, err := db.c.Exec(`INSERT INTO ban (first_user, second_user) VALUES (?, ?)`, dbUser.Id, bannedDbUser.Id)
 
-	if err != nil {
-		return err
-	}
-	
-	return nil
+	return err
 }

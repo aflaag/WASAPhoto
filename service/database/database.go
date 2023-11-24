@@ -41,19 +41,23 @@ type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
 
-	// Utils
-	GetUserFromUsername(userUsername string) (DatabaseUser, error)
+	// User
+	GetDatabaseUserFromUsername(userUsername string) (DatabaseUser, error)
 
 	// Follow
-	SetFollow(user DatabaseUser, followedUser DatabaseUser) error
-	RemoveFollow(user DatabaseUser, followedUser DatabaseUser) error
-	GetFollowersCount(user DatabaseUser) (int, error)
-	GetFollowingCount(user DatabaseUser) (int, error)
+	SetFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
+	RemoveFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
+	GetFollowersCount(dbUser DatabaseUser) (int, error)
+	GetFollowingCount(dbUser DatabaseUser) (int, error)
 
 	// Like
-	SetLike(user DatabaseUser, photo DatabasePhoto) error
-	RemoveLike(user DatabaseUser, photo DatabasePhoto) error
-	GetLikesCount(photo DatabasePhoto) (int, error)
+	SetLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	RemoveLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	GetLikesCount(dbPphoto DatabasePhoto) (int, error)
+
+	// Photo
+	SetPhoto(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	RemovePhoto(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
 
 	Ping() error
 }
