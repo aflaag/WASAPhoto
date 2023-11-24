@@ -10,6 +10,9 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.GET("/", rt.getHelloWorld)
 	// rt.router.GET("/context", rt.wrap(rt.getContextReply))
 
+	// Login
+	rt.router.POST("/session", rt.wrap(rt.session))
+
 	// Ban
 	rt.router.GET("/user/:uid/ban", rt.wrap(rt.getBanList))
 	rt.router.PUT("/user/:uid/ban/:banndeduid", rt.wrap(rt.banUser))
