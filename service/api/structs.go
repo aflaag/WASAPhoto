@@ -4,10 +4,6 @@ import (
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/database"
 )
 
-// type Default[T any] interface {
-// 	Default() 
-// }
-
 type User struct {
 	Id uint64 `json:"id"`
 	Username string `json:"username"`
@@ -32,6 +28,26 @@ func (user *User) UserIntoDatabaseUser() database.DatabaseUser {
 		Id: user.Id,
 		Username: user.Username,
 	}
+}
+
+func UserArrayFromDatabaseUserArray(array []database.DatabaseUser) []User {
+	var newArray []User
+
+	for idx, element := range array {
+		newArray[idx] = UserFromDatabaseUser(element)
+	}
+
+	return newArray
+}
+
+func UserArrayIntoDatabaseUserArray(array []User) []database.DatabaseUser {
+	var newArray []database.DatabaseUser
+
+	for idx, element := range array {
+		newArray[idx] = element.UserIntoDatabaseUser()
+	}
+
+	return newArray
 }
 
 type Photo struct {
@@ -72,6 +88,26 @@ func (photo *Photo) PhotoIntoDatabasePhoto() database.DatabasePhoto {
 	}
 }
 
+func PhotoArrayFromDatabasePhotoArray(array []database.DatabasePhoto) []Photo {
+	var newArray []Photo
+
+	for idx, element := range array {
+		newArray[idx] = PhotoFromDatabasePhoto(element)
+	}
+
+	return newArray
+}
+
+func PhotoArrayIntoDatabasePhotoArray(array []Photo) []database.DatabasePhoto {
+	var newArray []database.DatabasePhoto
+
+	for idx, element := range array {
+		newArray[idx] = element.PhotoIntoDatabasePhoto()
+	}
+
+	return newArray
+}
+
 type Comment struct {
 	Id uint64 `json:"id"`
 	CommentBody string `json:"comment_body"`
@@ -96,6 +132,26 @@ func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComment {
 		Id: comment.Id,
 		CommentBody: comment.CommentBody,
 	}
+}
+
+func CommentArrayFromDatabaseCommentArray(array []database.DatabaseComment) []Comment {
+	var newArray []Comment
+
+	for idx, element := range array {
+		newArray[idx] = CommentFromDatabaseComment(element)
+	}
+
+	return newArray
+}
+
+func CommentArrayIntoDatabaseCommentArray(array []Comment) []database.DatabaseComment {
+	var newArray []database.DatabaseComment
+
+	for idx, element := range array {
+		newArray[idx] = element.CommentIntoDatabaseComment()
+	}
+
+	return newArray
 }
 
 type Profile struct {
@@ -144,17 +200,6 @@ func StreamDefault() Stream {
 	}
 }
 
-// TODO: INVECE DI FARLA 3 VOLTE FAI LE INTERFACCE E FALLA GENERICS
-func PhotoArrayFromDatabasePhotoArray(array []database.DatabasePhoto) []Photo {
-	var databaseArray []Photo
-
-	for idx, element := range array {
-		databaseArray[idx] = PhotoFromDatabasePhoto(element)
-	}
-
-	return databaseArray
-}
-
 func StreamFromDatabaseStream(dbStream database.DatabaseStream) Stream {
 	return Stream {
 		Photos: PhotoArrayFromDatabasePhotoArray(dbStream.Photos),
@@ -163,7 +208,7 @@ func StreamFromDatabaseStream(dbStream database.DatabaseStream) Stream {
 
 func (stream *Stream) CommentIntoDatabaseComment() database.DatabaseStream {
 	return database.DatabaseStream {
-		Photos: stream.Photos,
+		Photos: PhotoArrayIntoDatabasePhotoArray(stream.Photos),
 	}
 }
 
@@ -171,15 +216,23 @@ type UserList struct {
 	Users []User `json:"users"`
 }
 
+func UserListDefault() UserList {
+	emptyArray := [0]User{}
+
+	return UserList {
+		Users: emptyArray[:],
+	}
+}
+
 func UserListFromDatabaseUserList(dbUserList database.DatabaseUserList) UserList {
 	return UserList {
-		Users: dbUserList.Users,
+		Users: UserArrayFromDatabaseUserArray(dbUserList.Users),
 	}
 }
 
 func (userList *UserList) UserListIntoDatabaseUserList() database.DatabaseUserList {
 	return database.DatabaseUserList {
-		Users: userList.Users,
+		Users: UserArrayIntoDatabaseUserArray(userList.Users),
 	}
 }
 
@@ -187,14 +240,22 @@ type CommentList struct {
 	Comments []Comment `json:"comments"`
 }
 
+func CommentListDefault() CommentList {
+	emptyArray := [0]Comment{}
+
+	return CommentList {
+		Comments: emptyArray[:],
+	}
+}
+
 func CommentListFromDatabaseCommentList(dbCommentList database.DatabaseCommentList) CommentList {
 	return CommentList {
-		Comments: dbCommentList.Comments,
+		Comments: CommentArrayFromDatabaseCommentArray(dbCommentList.Comments),
 	}
 }
 
 func (commentList *CommentList) CommentListIntoDatabaseCommentList() database.DatabaseCommentList {
 	return database.DatabaseCommentList {
-		Comments: commentList.Comments,
+		Comments: CommentArrayIntoDatabaseCommentArray(commentList.Comments),
 	}
 }
