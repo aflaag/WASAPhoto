@@ -4,11 +4,11 @@
 
 ### OpenAPI
 
+- controlla le response di errore se possono effettivamente essere ritornate
+
 ### Backend
 
-- CONTROLLA CHE NELLE OPERAZIONI DI REMOVE L'UTENTE SIA LO STESSO
 - db defaults
-- migliore gestione degli errori?
 - fare l'handler della liveness
 
 ## Domande

@@ -1,12 +1,8 @@
 package api
 
 import (
-	// "net/http"
-	// "strconv"
-	// "errors"
-
-	// "git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
-	// "github.com/julienschmidt/httprouter"
+	"regexp"
+	"strconv"
 )
 
 func (rt *_router) GetUserFromLogin(login Login) (User, error) {
@@ -19,4 +15,22 @@ func (rt *_router) GetUserFromLogin(login Login) (User, error) {
 	user := UserFromDatabaseUser(dbUser)
 
 	return user, nil
+}
+
+func CheckAuthorization(user User, authRaw string) error {
+	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
+
+    tokenString := re.FindAllString(authRaw, -1)
+
+	if len(tokenString) == 0 {
+		return ErrUserUnauthorized
+	}
+
+    token, _ := strconv.Atoi(tokenString[0])
+
+    if int(user.Id) != token {
+		return ErrUserUnauthorized
+	}
+
+	return nil
 }

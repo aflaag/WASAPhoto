@@ -22,6 +22,13 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
 	followedUser, err := rt.GetUserFromLogin(followedUserLogin)
 
 	if err != nil {
@@ -29,7 +36,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	err = rt.db.SetFollow(user.UserIntoDatabaseUser(), followedUser.UserIntoDatabaseUser())
+	err = rt.db.InsertFollow(user.UserIntoDatabaseUser(), followedUser.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -56,6 +63,13 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 	
+	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
 	followedUser, err := rt.GetUserFromLogin(followedUserLogin)
 
 	if err != nil {
@@ -63,7 +77,7 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	err = rt.db.RemoveFollow(user.UserIntoDatabaseUser(), followedUser.UserIntoDatabaseUser())
+	err = rt.db.DeleteFollow(user.UserIntoDatabaseUser(), followedUser.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

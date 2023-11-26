@@ -4,14 +4,14 @@ import (
 	"database/sql"
 )
 
-func (db *appdbimpl) SetFollow(dbUser DatabaseUser, dbFollowedUser DatabaseUser) error {
-	_, err := db.c.Exec(`INSERT INTO follow (first_user, second_user) VALUES (?, ?)`, dbUser.Id, dbFollowedUser.Id)
+func (db *appdbimpl) InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error {
+	_, err := db.c.Exec(`INSERT INTO follow (first_user, second_user) VALUES (?, ?)`, dbUser.Id, followedDbUser.Id)
 
 	return err
 }
 
-func (db *appdbimpl) RemoveFollow(dbUser DatabaseUser, dbFollowedUser DatabaseUser) error {
-	res, err := db.c.Exec(`DELETE FROM follow WHERE first_user=? AND second_user=?`, dbUser.Id, dbFollowedUser.Id)
+func (db *appdbimpl) DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error {
+	res, err := db.c.Exec(`DELETE FROM follow WHERE first_user=? AND second_user=?`, dbUser.Id, followedDbUser.Id)
 
 	if err != nil {
 		return err

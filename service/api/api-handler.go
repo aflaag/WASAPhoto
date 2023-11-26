@@ -7,16 +7,16 @@ import (
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
 	// Login
-	rt.router.POST("/session", rt.wrap(rt.session)) // works
+	rt.router.POST("/session", rt.wrap(rt.session)) // DONE
 
 	// Ban
 	rt.router.GET("/user/:uname/ban", rt.wrap(rt.getBanList))
-	rt.router.PUT("/user/:uname/ban/:bannded_uname", rt.wrap(rt.banUser))
+	rt.router.PUT("/user/:uname/ban/:banned_uname", rt.wrap(rt.banUser)) // DONE
 	rt.router.DELETE("/user/:uname/ban/:banned_uname", rt.wrap(rt.unbanUser))
 
 	// Follow
-	rt.router.PUT("/user/:uname/follow/:follow_uname", rt.wrap(rt.followUser)) // TODO: controlla il token
-	rt.router.DELETE("/user/:uname/follow/:follow_uname", rt.wrap(rt.unfollowUser)) // TODO: controlla il token
+	rt.router.PUT("/user/:uname/follow/:follow_uname", rt.wrap(rt.followUser)) // DONE
+	rt.router.DELETE("/user/:uname/follow/:follow_uname", rt.wrap(rt.unfollowUser)) // DONE
 	rt.router.GET("/user/:uname/followers", rt.wrap(rt.getFollowers))
 	rt.router.GET("/user/:uname/following", rt.wrap(rt.getFollowing))
 

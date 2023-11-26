@@ -42,9 +42,13 @@ type AppDatabase interface {
 	GetDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
 	CreateDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
 
+	// Ban
+	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
+	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
+
 	// Follow
-	SetFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
-	RemoveFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
+	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
+	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
 	GetFollowersCount(dbUser DatabaseUser) (int, error)
 	GetFollowingCount(dbUser DatabaseUser) (int, error)
 
