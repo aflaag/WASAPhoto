@@ -1,18 +1,18 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
-	// "strconv"
 
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
 
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uid")
+	userUsername := ps.ByName("uname")
 	userLogin := LoginFromUsername(userUsername)
 
-	followedUserUsername := ps.ByName("followuid")
+	followedUserUsername := ps.ByName("follow_uname")
 	followedUserLogin := LoginFromUsername(followedUserUsername)
 
 	user, err := rt.GetUserFromLogin(userLogin)
@@ -35,13 +35,18 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	_ = json.NewEncoder(w).Encode(followedUser)
 }
 
 func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uid")
+	userUsername := ps.ByName("uname")
 	userLogin := LoginFromUsername(userUsername)
 
-	followedUserUsername := ps.ByName("followuid")
+	followedUserUsername := ps.ByName("follow_uname")
 	followedUserLogin := LoginFromUsername(followedUserUsername)
 
 	user, err := rt.GetUserFromLogin(userLogin)
