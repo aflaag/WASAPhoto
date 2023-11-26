@@ -1,5 +1,9 @@
 package database
 
+type DatabaseLogin struct {
+	Username string `json:"username"`
+}
+
 type DatabaseUser struct {
 	Id uint64 `json:"id"`
 	Username string `json:"username"`

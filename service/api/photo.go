@@ -12,7 +12,9 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	userUsername := ps.ByName("uid")
 	photoIdString := ps.ByName("photoid")
 
-	user, err := rt.GetUserFromUsername(userUsername)
+	userLogin := LoginFromUsername(userUsername)
+
+	user, err := rt.GetUserFromLogin(userLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -41,7 +43,9 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	userUsername := ps.ByName("uid")
 	photoIdString := ps.ByName("photoid")
 
-	user, err := rt.GetUserFromUsername(userUsername)
+	userLogin := LoginFromUsername(userUsername)
+
+	_, err := rt.GetUserFromLogin(userLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -59,7 +63,9 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	photo.Id = photoId
 
-	err = rt.db.RemovePhoto(user.UserIntoDatabaseUser(), photo.PhotoIntoDatabasePhoto())
+	// TODO: CONTROLLARE CHE L'UTENTE SIA LO STESSO
+
+	err = rt.db.RemovePhoto(photo.PhotoIntoDatabasePhoto())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

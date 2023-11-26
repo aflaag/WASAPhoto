@@ -10,16 +10,19 @@ import (
 
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	userUsername := ps.ByName("uid")
-	followedUserUsername := ps.ByName("followuid")
+	userLogin := LoginFromUsername(userUsername)
 
-	user, err := rt.GetUserFromUsername(userUsername)
+	followedUserUsername := ps.ByName("followuid")
+	followedUserLogin := LoginFromUsername(followedUserUsername)
+
+	user, err := rt.GetUserFromLogin(userLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	followedUser, err := rt.GetUserFromUsername(followedUserUsername)
+	followedUser, err := rt.GetUserFromLogin(followedUserLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -36,17 +39,19 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 
 func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	userUsername := ps.ByName("uid")
+	userLogin := LoginFromUsername(userUsername)
 
-	user, err := rt.GetUserFromUsername(userUsername)
+	followedUserUsername := ps.ByName("followuid")
+	followedUserLogin := LoginFromUsername(followedUserUsername)
+
+	user, err := rt.GetUserFromLogin(userLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	followedUserUsername := ps.ByName("followuid")
 	
-	followedUser, err := rt.GetUserFromUsername(followedUserUsername)
+	followedUser, err := rt.GetUserFromLogin(followedUserLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -42,7 +42,8 @@ type AppDatabase interface {
 	SetName(name string) error
 
 	// User
-	GetDatabaseUserFromUsername(userUsername string) (DatabaseUser, error)
+	GetDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
+	CreateDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
 
 	// Follow
 	SetFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
@@ -57,7 +58,7 @@ type AppDatabase interface {
 
 	// Photo
 	SetPhoto(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	RemovePhoto(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	RemovePhoto(dbPhoto DatabasePhoto) error
 
 	Ping() error
 }
@@ -75,9 +76,15 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 	var err error
 
+	_, err = db.Exec("PRAGMA foreign_key=ON")
+
+	if err != nil {
+		return nil, err
+	}
+
 	userTable := `
 		CREATE TABLE IF NOT EXISTS User (
-			id INTEGER NOT NULL PRIMARY KEY,
+			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			username TEXT NOT NULL UNIQUE
 		);
 	`

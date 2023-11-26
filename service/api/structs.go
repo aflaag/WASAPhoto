@@ -4,6 +4,34 @@ import (
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/database"
 )
 
+type Login struct {
+	Username string `json:"username"`
+}
+
+func LoginDefault() Login {
+	return Login {
+		Username: "",
+	}
+}
+
+func LoginFromDatabaseLogin(dbLogin database.DatabaseLogin) Login {
+	return Login {
+		Username: dbLogin.Username,
+	}
+}
+
+func (login *Login) LoginIntoDatabaseLogin() database.DatabaseLogin {
+	return database.DatabaseLogin {
+		Username: login.Username,
+	}
+}
+
+func LoginFromUsername(username string) Login {
+	return Login {
+		Username: username,
+	}
+}
+
 type User struct {
 	Id uint64 `json:"id"`
 	Username string `json:"username"`

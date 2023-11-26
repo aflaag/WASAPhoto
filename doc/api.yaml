@@ -55,7 +55,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/User/properties/username" }
+            schema: { $ref: "#/components/schemas/Login" }
       responses:
         "201":
           description: User log-in action successful.
@@ -476,6 +476,19 @@ components:
       scheme: bearer
   
   schemas:
+    Login:
+      title: Login
+      description: The component that represents the login request body.
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the user.
+          pattern: '^.*?$'
+          minLength: 3
+          maxLength: 16
+          example: Mario
+
     User:
       title: User
       description: The component that represents a user.

@@ -9,8 +9,8 @@ import (
 	// "github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) GetUserFromUsername(userUsername string) (User, error) {
-	dbUser, err := rt.db.GetDatabaseUserFromUsername(userUsername)
+func (rt *_router) GetUserFromLogin(login Login) (User, error) {
+	dbUser, err := rt.db.GetDatabaseUser(login.LoginIntoDatabaseLogin())
 
 	if err != nil {
 		return UserDefault(), err
