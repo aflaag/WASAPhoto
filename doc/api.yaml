@@ -66,9 +66,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/ban:
+  /user/{uname}/ban:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     get:
       security:
@@ -88,10 +88,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/ban/{banneduid}:
+  /user/{uname}/ban/{banned_uname}:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/banneduid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/banned_uname" }
     
     put:
       security:
@@ -126,10 +126,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/follow/{followuid}:
+  /user/{uname}/follow/{follow_uname}:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/followuid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/follow_uname" }
       
     put:
       security:
@@ -164,9 +164,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/followers:
+  /user/{uname}/followers:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     get:
       security:
@@ -186,9 +186,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/following:
+  /user/{uname}/following:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     get:
       security:
@@ -208,9 +208,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/upload:
+  /user/{uname}/upload:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     post:
       security:
@@ -236,10 +236,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/photos/{photoid}:
+  /user/{uname}/photos/{photo_id}:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/photoid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/photo_id" }
     
     delete:
       security:
@@ -259,10 +259,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/photos/{photoid}/likes:
+  /user/{uname}/photos/{photo_id}/likes:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/photoid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/photo_id" }
 
     get:
       security:
@@ -282,11 +282,11 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uid}/photos/{photoid}/likes/{likeuid}:
+  /user/{uname}/photos/{photo_id}/likes/{like_uname}:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/photoid" }
-      - { $ref: "#/components/parameters/likeuid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/photo_id" }
+      - { $ref: "#/components/parameters/like_uname" }
       
     put:
       security:
@@ -321,10 +321,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/photos/{photoid}/comments:
+  /user/{uname}/photos/{photo_id}/comments:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/photoid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/photo_id" }
 
     get:
       security:
@@ -344,10 +344,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uid}/photos/{photoid}/comment:
+  /user/{uname}/photos/{photo_id}/comment:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/photoid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/photo_id" }
       
     post:
       security:
@@ -373,11 +373,11 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uid}/photos/{photoid}/comments/{commentid}:
+  /user/{uname}/photos/{photo_id}/comments/{comment_id}:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
-      - { $ref: "#/components/parameters/photoid" }
-      - { $ref: "#/components/parameters/commentid" }
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/photo_id" }
+      - { $ref: "#/components/parameters/comment_id" }
     
     delete:
       security:
@@ -397,9 +397,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uid}:
+  /user/{uname}:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     get:
       security:
@@ -419,9 +419,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uid}/username:
+  /user/{uname}/setusername:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     put:
       security:
@@ -439,7 +439,7 @@ paths:
             schema: { $ref: "#/components/schemas/User" }
       responses:
         "200":
-          description: User changed successfully.
+          description: Username changed successfully.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/User" }
@@ -447,9 +447,9 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uid}/stream:
+  /user/{uname}/stream:
     parameters:
-      - { $ref: "#/components/parameters/uid" }
+      - { $ref: "#/components/parameters/uname" }
     
     get:
       security:
@@ -619,38 +619,38 @@ components:
           maxItems: 1000
   
   parameters:
-    uid:
-      name: uid
+    uname:
+      name: uname
       in: path
       description: The parameter that represents the user performing the operation.
       required: true
       schema: { $ref: "#/components/schemas/User" }
-    banneduid:
-      name: banneduid
+    banned_uname:
+      name: banned_uname
       in: path
       description: The parameter that represents the banned user.
       required: true
       schema: { $ref: "#/components/schemas/User" }
-    followuid:
-      name: followuid
+    follow_uname:
+      name: follow_uname
       in: path
       description: The parameter that represents the user to be followed.
       required: true
       schema: { $ref: "#/components/schemas/User" }
-    likeuid:
-      name: likeuid
+    like_uname:
+      name: like_uname
       in: path
       description: The parameter that represents the user who liked.
       required: true
       schema: { $ref: "#/components/schemas/User" }
-    photoid:
-      name: photoid
+    photo_id:
+      name: photo_id
       in: path
       description: The parameter that represents the photo.
       required: true
       schema: { $ref: "#/components/schemas/Photo" }
-    commentid:
-      name: commentid
+    comment_id:
+      name: comment_id
       in: path
       description: The parameter that represents the posted comment.
       required: true
