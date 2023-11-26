@@ -8,6 +8,7 @@
 
 ### Backend
 
+- considera di utilizzare il logger per gli errori
 - db defaults
 - fare l'handler della liveness
 
