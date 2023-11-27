@@ -29,7 +29,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	photo.Id = photoId
-	photo.User = user
+	photo.User = user // TODO: DOVRESTI CONTROLLARE CHE SIA LO STESSO DELLA RICHIESTA?
 
 	// TODO: MANCANO DA GENERARE URL E DATA
 
