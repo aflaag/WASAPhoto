@@ -12,11 +12,11 @@ func (rt *_router) Handler() http.Handler {
 	// Ban
 	rt.router.GET("/user/:uname/ban", rt.wrap(rt.getBanList))
 	rt.router.PUT("/user/:uname/ban/:banned_uname", rt.wrap(rt.banUser)) // DONE
-	rt.router.DELETE("/user/:uname/ban/:banned_uname", rt.wrap(rt.unbanUser))
+	rt.router.DELETE("/user/:uname/ban/:banned_uname", rt.wrap(rt.unbanUser)) // DONE
 
 	// Follow
-	rt.router.PUT("/user/:uname/follow/:follow_uname", rt.wrap(rt.followUser)) // DONE
-	rt.router.DELETE("/user/:uname/follow/:follow_uname", rt.wrap(rt.unfollowUser)) // DONE
+	rt.router.PUT("/user/:uname/follow/:followed_uname", rt.wrap(rt.followUser)) // DONE
+	rt.router.DELETE("/user/:uname/follow/:followed_uname", rt.wrap(rt.unfollowUser)) // DONE
 	rt.router.GET("/user/:uname/followers", rt.wrap(rt.getFollowers))
 	rt.router.GET("/user/:uname/following", rt.wrap(rt.getFollowing))
 

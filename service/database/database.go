@@ -38,6 +38,9 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
+	// Utils
+	CheckIfAvailablePhotoId(newId uint64) (bool, error)
+
 	// User
 	GetDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
 	CreateDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
@@ -58,7 +61,7 @@ type AppDatabase interface {
 	GetLikesCount(dbPphoto DatabasePhoto) (int, error)
 
 	// Photo
-	SetPhoto(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	InsertPhoto(dbPhoto DatabasePhoto) error
 	RemovePhoto(dbPhoto DatabasePhoto) error
 
 	Ping() error

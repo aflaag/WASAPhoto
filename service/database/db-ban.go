@@ -19,9 +19,13 @@ func (db *appdbimpl) DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) e
 
 	aff, err := res.RowsAffected()
 
+	if err != nil {
+		return err
+	}
+
 	if aff == 0 {
 		return ErrUserNotBanned
 	}
 
-	return err
+	return nil
 }

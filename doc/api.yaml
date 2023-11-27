@@ -126,10 +126,10 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
-  /user/{uname}/follow/{follow_uname}:
+  /user/{uname}/follow/{followed_uname}:
     parameters:
       - { $ref: "#/components/parameters/uname" }
-      - { $ref: "#/components/parameters/follow_uname" }
+      - { $ref: "#/components/parameters/followed_uname" }
       
     put:
       security:
@@ -631,8 +631,8 @@ components:
       description: The parameter that represents the banned user.
       required: true
       schema: { $ref: "#/components/schemas/User" }
-    follow_uname:
-      name: follow_uname
+    followed_uname:
+      name: followed_uname
       in: path
       description: The parameter that represents the user to be followed.
       required: true

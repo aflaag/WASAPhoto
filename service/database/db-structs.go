@@ -18,6 +18,7 @@ func DatabaseUserDefault() DatabaseUser {
 
 type DatabasePhoto struct {
 	Id uint64 `json:"id"`
+	User DatabaseUser `json:"user"`
 	Url string `json:"url"`
 	Date string `json:"date"`
 	LikeCount int `json:"like_count"`

@@ -4,8 +4,8 @@ import (
 	// "database/sql"
 )
 
-func (db *appdbimpl) SetPhoto(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
-	_, err := db.c.Exec(`INSERT INTO Photo (id, user, url, date) VALUES (?, ?, ?, ?)`, dbPhoto.Id, dbUser.Id, dbPhoto.Url, dbPhoto.Date)
+func (db *appdbimpl) InsertPhoto(dbPhoto DatabasePhoto) error {
+	_, err := db.c.Exec(`INSERT INTO Photo (id, user, url, date) VALUES (?, ?, ?, ?)`, dbPhoto.Id, dbPhoto.User.Id, dbPhoto.Url, dbPhoto.Date)
 
 	return err
 }

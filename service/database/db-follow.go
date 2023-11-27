@@ -19,11 +19,15 @@ func (db *appdbimpl) DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUs
 
 	aff, err := res.RowsAffected()
 
-	if aff == 0 {
-		return ErrUserNotFollowed
+	if err != nil {
+		return err
 	}
 
-	return err
+	if aff == 0 {
+		return ErrUserNotBanned
+	}
+
+	return nil
 }
 
 // TODO: func (db *appdbimpl) GetFollowers(dbUser DatabaseUser) ([]DatabaseUser, error)

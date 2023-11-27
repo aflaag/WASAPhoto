@@ -1,6 +1,7 @@
 package api
 
 import (
+	"math/rand"
 	"regexp"
 	"strconv"
 )
@@ -33,4 +34,24 @@ func CheckAuthorization(user User, authRaw string) error {
 	}
 
 	return nil
+}
+
+func (rt *_router) GenerateRandomPhotoId() (uint64, error) {
+	newId := rand.Uint64()
+
+	for {
+		validPhotoId, err := rt.db.CheckIfAvailablePhotoId(newId)
+
+		if err != nil {
+			return 0, err
+		}
+
+		if validPhotoId {
+			break
+		}
+
+		newId = rand.Uint64()
+	}
+
+	return newId, nil
 }

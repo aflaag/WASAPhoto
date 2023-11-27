@@ -80,6 +80,7 @@ func UserArrayIntoDatabaseUserArray(array []User) []database.DatabaseUser {
 
 type Photo struct {
 	Id uint64 `json:"id"`
+	User User `json:"user"`
 	Url string `json:"url"`
 	Date string `json:"date"`
 	LikeCount int `json:"like_count"`
@@ -89,6 +90,7 @@ type Photo struct {
 func PhotoDefault() Photo {
 	return Photo {
 		Id: 0,
+		User: UserDefault(),
 		Url: "",
 		Date: "",
 		LikeCount: 0,
@@ -99,6 +101,7 @@ func PhotoDefault() Photo {
 func PhotoFromDatabasePhoto(dbPhoto database.DatabasePhoto) Photo {
 	return Photo {
 		Id: dbPhoto.Id,
+		User: UserFromDatabaseUser(dbPhoto.User),
 		Url: dbPhoto.Url,
 		Date: dbPhoto.Date,
 		LikeCount: dbPhoto.LikeCount,
@@ -109,6 +112,7 @@ func PhotoFromDatabasePhoto(dbPhoto database.DatabasePhoto) Photo {
 func (photo *Photo) PhotoIntoDatabasePhoto() database.DatabasePhoto {
 	return database.DatabasePhoto {
 		Id: photo.Id,
+		User: photo.User.UserIntoDatabaseUser(),
 		Url: photo.Url,
 		Date: photo.Date,
 		LikeCount: photo.LikeCount,
