@@ -20,22 +20,22 @@ func (rt *_router) GetUserFromLogin(login Login) (User, error) {
 func CheckAuthorization(user User, authRaw string) error {
 	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
 
-    tokenString := re.FindAllString(authRaw, -1)
+	tokenString := re.FindAllString(authRaw, -1)
 
 	if len(tokenString) == 0 {
 		return ErrUserUnauthorized
 	}
 
-    token, _ := strconv.Atoi(tokenString[0])
+	token, _ := strconv.Atoi(tokenString[0])
 
-    if int(user.Id) != token {
+	if int(user.Id) != token {
 		return ErrUserUnauthorized
 	}
 
 	return nil
 }
 
-func (rt *_router) GetPhotoFromPhotoId(photoId uint64) (Photo, error) {
+func (rt *_router) GetPhotoFromPhotoId(photoId uint32) (Photo, error) {
 	dbPhoto, err := rt.db.GetDatabasePhoto(photoId)
 
 	if err != nil {

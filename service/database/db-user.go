@@ -4,7 +4,7 @@ import (
 	"database/sql"
 )
 
-func (db *appdbimpl) GetDatabaseUser(userId uint64) (DatabaseUser, error) {
+func (db *appdbimpl) GetDatabaseUser(userId uint32) (DatabaseUser, error) {
 	dbUser := DatabaseUserDefault()
 
 	err := db.c.QueryRow(`SELECT id, username FROM User WHERE id=?`, userId).Scan(&dbUser.Id, &dbUser.Username)
@@ -41,7 +41,7 @@ func (db *appdbimpl) InsertUser(dbUser *DatabaseUser) error {
 		return err
 	}
 
-	dbUser.Id = uint64(dbUserId)
+	dbUser.Id = uint32(dbUserId)
 
 	return nil
 }

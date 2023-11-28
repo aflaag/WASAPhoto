@@ -81,7 +81,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	photo, err := rt.GetPhotoFromPhotoId(photoId)
+	photo, err := rt.GetPhotoFromPhotoId(uint32(photoId))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

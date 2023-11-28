@@ -4,7 +4,7 @@ import (
 	"database/sql"
 )
 
-func (db *appdbimpl) GetDatabasePhoto(photoId uint64) (DatabasePhoto, error) {
+func (db *appdbimpl) GetDatabasePhoto(photoId uint32) (DatabasePhoto, error) {
 	dbPhoto := DatabasePhotoDefault()
 
 	err := db.c.QueryRow(`SELECT id, user, date, url FROM Photo WHERE id=?`, photoId).Scan(&dbPhoto.Id, &dbPhoto.User.Id, &dbPhoto.Date, &dbPhoto.Url)
@@ -37,7 +37,7 @@ func (db *appdbimpl) InsertPhoto(dbPhoto *DatabasePhoto) error {
 		return err
 	}
 
-	dbPhoto.Id = uint64(dbPhotoId)
+	dbPhoto.Id = uint32(dbPhotoId)
 
 	return nil
 }

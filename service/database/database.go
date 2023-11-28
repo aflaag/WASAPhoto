@@ -39,7 +39,7 @@ import (
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	// User
-	GetDatabaseUser(userId uint64) (DatabaseUser, error)
+	GetDatabaseUser(userId uint32) (DatabaseUser, error)
 	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
 	InsertUser(dbUser *DatabaseUser) error
 
@@ -59,7 +59,7 @@ type AppDatabase interface {
 	GetLikesCount(dbPphoto DatabasePhoto) (int, error)
 
 	// Photo
-	GetDatabasePhoto(photoId uint64) (DatabasePhoto, error)
+	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
 	InsertPhoto(dbPhoto *DatabasePhoto) error
 	DeletePhoto(dbPhoto DatabasePhoto) error
 
