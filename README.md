@@ -8,8 +8,9 @@
 
 ### Backend
 
+- CAMBIA TUTTO IN UINT32
+- CONTROLLA TUTTI QUANTI GLI ERRORI
 - considera di utilizzare il logger per gli errori
-- db defaults
 - fare l'handler della liveness
 
 ## Domande

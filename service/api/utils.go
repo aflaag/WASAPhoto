@@ -1,13 +1,12 @@
 package api
 
 import (
-	"math/rand"
 	"regexp"
 	"strconv"
 )
 
 func (rt *_router) GetUserFromLogin(login Login) (User, error) {
-	dbUser, err := rt.db.GetDatabaseUser(login.LoginIntoDatabaseLogin())
+	dbUser, err := rt.db.GetDatabaseUserFromDatabaseLogin(login.LoginIntoDatabaseLogin())
 
 	if err != nil {
 		return UserDefault(), err
@@ -36,22 +35,14 @@ func CheckAuthorization(user User, authRaw string) error {
 	return nil
 }
 
-func (rt *_router) GenerateRandomPhotoId() (uint64, error) {
-	newId := rand.Uint64()
+func (rt *_router) GetPhotoFromPhotoId(photoId uint64) (Photo, error) {
+	dbPhoto, err := rt.db.GetDatabasePhoto(photoId)
 
-	for {
-		validPhotoId, err := rt.db.CheckIfAvailablePhotoId(newId)
-
-		if err != nil {
-			return 0, err
-		}
-
-		if validPhotoId {
-			break
-		}
-
-		newId = rand.Uint64()
+	if err != nil {
+		return PhotoDefault(), err
 	}
 
-	return newId, nil
+	photo := PhotoFromDatabasePhoto(dbPhoto)
+
+	return photo, nil
 }

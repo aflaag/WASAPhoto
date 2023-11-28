@@ -18,14 +18,19 @@ func (rt *_router) session(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	dbUser, err := rt.db.CreateDatabaseUser(login.LoginIntoDatabaseLogin())
+	user := UserDefault()
+	dbUser := user.UserIntoDatabaseUser()
+
+	dbUser.Username = login.Username
+
+	err = rt.db.InsertUser(&dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	user := UserFromDatabaseUser(dbUser)
+	user = UserFromDatabaseUser(dbUser)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

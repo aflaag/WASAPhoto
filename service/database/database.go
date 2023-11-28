@@ -38,12 +38,10 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	// Utils
-	CheckIfAvailablePhotoId(newId uint64) (bool, error)
-
 	// User
-	GetDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
-	CreateDatabaseUser(dbLogin DatabaseLogin) (DatabaseUser, error)
+	GetDatabaseUser(userId uint64) (DatabaseUser, error)
+	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
+	InsertUser(dbUser *DatabaseUser) error
 
 	// Ban
 	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
@@ -61,8 +59,9 @@ type AppDatabase interface {
 	GetLikesCount(dbPphoto DatabasePhoto) (int, error)
 
 	// Photo
-	InsertPhoto(dbPhoto DatabasePhoto) error
-	RemovePhoto(dbPhoto DatabasePhoto) error
+	GetDatabasePhoto(photoId uint64) (DatabasePhoto, error)
+	InsertPhoto(dbPhoto *DatabasePhoto) error
+	DeletePhoto(dbPhoto DatabasePhoto) error
 
 	Ping() error
 }
@@ -94,7 +93,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	`
 	photoTable := `
 		CREATE TABLE IF NOT EXISTS Photo (
-			id INTEGER NOT NULL PRIMARY KEY,
+			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			user INTEGER NOT NULL,
 			url TEXT NOT NULL,
 			date TEXT NOT NULL,

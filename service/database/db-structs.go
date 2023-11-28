@@ -4,6 +4,12 @@ type DatabaseLogin struct {
 	Username string `json:"username"`
 }
 
+func DatabaseLoginDefault() DatabaseLogin {
+	return DatabaseLogin {
+		Username: "",
+	}
+}
+
 type DatabaseUser struct {
 	Id uint64 `json:"id"`
 	Username string `json:"username"`
@@ -28,6 +34,7 @@ type DatabasePhoto struct {
 func DatabasePhotoDefault() DatabasePhoto {
 	return DatabasePhoto {
 		Id: 0,
+		User: DatabaseUserDefault(),
 		Url: "",
 		Date: "",
 		LikeCount: 0,
