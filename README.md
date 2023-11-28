@@ -8,9 +8,9 @@
 
 ### Backend
 
-- CAMBIA TUTTO IN UINT32
-- CONTROLLA TUTTI QUANTI GLI ERRORI
-- considera di utilizzare il logger per gli errori
+- errori
+  - gli errori vanno stampati nelle response o nel logger?
+    - se no, cosa va messo nella response? un messaggio standard?
 - fare l'handler della liveness
 
 ## Domande
