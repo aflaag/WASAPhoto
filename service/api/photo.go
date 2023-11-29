@@ -81,12 +81,8 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	photo, err := rt.GetPhotoFromPhotoId(uint32(photoId))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	photo := PhotoDefault()
+	photo.Id = uint32(photoId)
 
 	err = rt.db.DeletePhoto(photo.PhotoIntoDatabasePhoto())
 
@@ -96,7 +92,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 
 	_ = json.NewEncoder(w).Encode(photo)
 }

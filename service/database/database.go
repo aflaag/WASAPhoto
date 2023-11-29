@@ -63,6 +63,11 @@ type AppDatabase interface {
 	InsertPhoto(dbPhoto *DatabasePhoto) error
 	DeletePhoto(dbPhoto DatabasePhoto) error
 
+	// Comment
+	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
+	InsertComment(dbComment *DatabaseComment, dbPhoto DatabasePhoto) error
+	RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePhoto) error
+
 	Ping() error
 }
 
@@ -102,7 +107,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	`
 	commentTable := `
 		CREATE TABLE IF NOT EXISTS Comment (
-			id INTEGER NOT NULL PRIMARY KEY,
+			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			user INTEGER NOT NULL,
 			photo INTEGER NOT NULL,
 			comment_body TEXT NOT NULL,

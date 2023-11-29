@@ -46,3 +46,15 @@ func (rt *_router) GetPhotoFromPhotoId(photoId uint32) (Photo, error) {
 
 	return photo, nil
 }
+
+func (rt *_router) GetCommentFromCommentId(commentId uint32) (Comment, error) {
+	dbComment, err := rt.db.GetDatabaseComment(commentId)
+
+	if err != nil {
+		return CommentDefault(), err
+	}
+
+	comment := CommentFromDatabaseComment(dbComment)
+
+	return comment, nil
+}

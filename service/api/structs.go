@@ -142,12 +142,14 @@ func PhotoArrayIntoDatabasePhotoArray(array []Photo) []database.DatabasePhoto {
 
 type Comment struct {
 	Id          uint32 `json:"id"`
+	User 		User   `json:"user"`
 	CommentBody string `json:"comment_body"`
 }
 
 func CommentDefault() Comment {
 	return Comment{
 		Id:          0,
+		User: 		 UserDefault(),
 		CommentBody: "",
 	}
 }
@@ -155,6 +157,7 @@ func CommentDefault() Comment {
 func CommentFromDatabaseComment(dbComment database.DatabaseComment) Comment {
 	return Comment{
 		Id:          dbComment.Id,
+		User:	 	 UserFromDatabaseUser(dbComment.User),
 		CommentBody: dbComment.CommentBody,
 	}
 }
@@ -162,6 +165,7 @@ func CommentFromDatabaseComment(dbComment database.DatabaseComment) Comment {
 func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComment {
 	return database.DatabaseComment{
 		Id:          comment.Id,
+		User: 		 comment.User.UserIntoDatabaseUser(),
 		CommentBody: comment.CommentBody,
 	}
 }
@@ -220,6 +224,7 @@ func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
 	}
 }
 
+// TODO: NON CE LO METTO DI CHI È?? (IN CASO METTILO ANCHE NELLE API)
 type Stream struct {
 	Photos []Photo `json:"photos"`
 }

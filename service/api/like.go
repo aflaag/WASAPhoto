@@ -39,12 +39,8 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	photo, err := rt.GetPhotoFromPhotoId(uint32(photoId))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	photo := PhotoDefault()
+	photo.Id = uint32(photoId)
 
 	err = rt.db.InsertLike(likeUser.UserIntoDatabaseUser(), photo.PhotoIntoDatabasePhoto())
 
@@ -86,12 +82,8 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	photo, err := rt.GetPhotoFromPhotoId(uint32(photoId))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	photo := PhotoDefault()
+	photo.Id = uint32(photoId)
 
 	err = rt.db.DeleteLike(likeUser.UserIntoDatabaseUser(), photo.PhotoIntoDatabasePhoto())
 

@@ -16,3 +16,7 @@ var ErrPhotoDoesNotExist = errors.New("the requested photo does not exist")
 
 // Like
 var ErrPhotoNotLiked = errors.New("the requested photo was not liked by the given user")
+
+// Comment
+var ErrCommentDoesNotExist = errors.New("the requested comment does not exist")
+var ErrPhotoNotCommented = errors.New("the requested photo was not commented by the given user")
