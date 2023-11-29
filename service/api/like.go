@@ -24,12 +24,12 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	err = CheckAuthorization(likeUser, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	
+
 	photoIdString := ps.ByName("photo_id")
 
 	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
@@ -67,12 +67,12 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	err = CheckAuthorization(likeUser, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	
+
 	photoIdString := ps.ByName("photo_id")
 
 	photoId, err := strconv.ParseUint(photoIdString, 10, 64)

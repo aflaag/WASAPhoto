@@ -23,7 +23,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -62,9 +62,9 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return

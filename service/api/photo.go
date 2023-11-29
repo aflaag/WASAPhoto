@@ -22,7 +22,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -66,7 +66,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return

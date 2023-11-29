@@ -31,14 +31,14 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	if user.Id != comment.User.Id {
 		http.Error(w, ErrUserDoesNotExist.Error(), http.StatusUnauthorized)
 		return
 	}
 
 	err = CheckAuthorization(comment.User, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -91,7 +91,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	err = CheckAuthorization(comment.User, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return

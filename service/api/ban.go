@@ -8,7 +8,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {	
+func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 }
 
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
@@ -26,7 +26,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
@@ -65,9 +65,9 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-	
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
