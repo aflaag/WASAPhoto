@@ -43,15 +43,15 @@ func DatabasePhotoDefault() DatabasePhoto {
 }
 
 type DatabaseComment struct {
-	Id          uint32 `json:"id"`
-	User 		DatabaseUser `json:"user"`
-	CommentBody string `json:"comment_body"`
+	Id          uint32       `json:"id"`
+	User        DatabaseUser `json:"user"`
+	CommentBody string       `json:"comment_body"`
 }
 
 func DatabaseCommentDefault() DatabaseComment {
 	return DatabaseComment{
 		Id:          0,
-		User: 		 DatabaseUserDefault(),
+		User:        DatabaseUserDefault(),
 		CommentBody: "",
 	}
 }

@@ -1,7 +1,7 @@
 package database
 
 import (
-	// "database/sql"
+// "database/sql"
 )
 
 func (db *appdbimpl) InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error {

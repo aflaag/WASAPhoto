@@ -42,7 +42,7 @@ func (db *appdbimpl) GetFollowersCount(dbUser DatabaseUser) (int, error) {
 	if err == sql.ErrNoRows {
 		return followersCount, ErrUserDoesNotExist
 	}
-	
+
 	return followersCount, err
 }
 
