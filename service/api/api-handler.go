@@ -26,8 +26,8 @@ func (rt *_router) Handler() http.Handler {
 
 	// Like
 	rt.router.GET("/user/:uname/photos/:photo_id/likes", rt.wrap(rt.getPhotoLikes))
-	rt.router.PUT("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.likePhoto))
-	rt.router.DELETE("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.unlikePhoto))
+	rt.router.PUT("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.likePhoto)) // DONE
+	rt.router.DELETE("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.unlikePhoto)) // DONE
 
 	// Comment
 	rt.router.GET("/user/:uname/photos/:photo_id/comments", rt.wrap(rt.getPhotoComments))
@@ -41,7 +41,7 @@ func (rt *_router) Handler() http.Handler {
 	// Stream
 	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream))
 
-	// Special routes
+	// Liveness
 	rt.router.GET("/liveness", rt.liveness)
 
 	return rt.router

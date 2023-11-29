@@ -4,14 +4,14 @@ import (
 	"database/sql"
 )
 
-func (db *appdbimpl) SetLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
-	_, err := db.c.Exec(`INSERT INTO like (user, photo) VALUES (?, ?)`, dbUser.Id, dbPhoto.Id)
+func (db *appdbimpl) InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
+	_, err := db.c.Exec(`INSERT INTO like(user, photo) VALUES (?, ?)`, dbUser.Id, dbPhoto.Id)
 
 	return err
 }
 
-func (db *appdbimpl) RemoveLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
-	res, err := db.c.Exec(`DELETE FROM follow WHERE user=? AND photo=?`, dbUser.Id, dbPhoto.Id)
+func (db *appdbimpl) DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
+	res, err := db.c.Exec(`DELETE FROM like WHERE user=? AND photo=?`, dbUser.Id, dbPhoto.Id)
 
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func (db *appdbimpl) RemoveLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) erro
 	aff, err := res.RowsAffected()
 
 	if aff == 0 {
-		return ErrUserNotFollowed
+		return ErrPhotoNotLiked
 	}
 
 	return err

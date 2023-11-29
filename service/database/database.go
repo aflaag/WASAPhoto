@@ -54,8 +54,8 @@ type AppDatabase interface {
 	GetFollowingCount(dbUser DatabaseUser) (int, error)
 
 	// Like
-	SetLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	RemoveLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
 	GetLikesCount(dbPphoto DatabasePhoto) (int, error)
 
 	// Photo

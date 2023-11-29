@@ -11,7 +11,6 @@ import (
 func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {	
 }
 
-// TODO: CAMBIA I NOMI ALLE VARIABILI
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	userUsername := ps.ByName("uname")
 	userLogin := LoginFromUsername(userUsername)

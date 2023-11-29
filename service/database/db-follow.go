@@ -5,7 +5,7 @@ import (
 )
 
 func (db *appdbimpl) InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error {
-	_, err := db.c.Exec(`INSERT INTO follow (first_user, second_user) VALUES (?, ?)`, dbUser.Id, followedDbUser.Id)
+	_, err := db.c.Exec(`INSERT INTO follow(first_user, second_user) VALUES (?, ?)`, dbUser.Id, followedDbUser.Id)
 
 	return err
 }

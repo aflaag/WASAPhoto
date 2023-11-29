@@ -293,7 +293,7 @@ paths:
         - bearerAuth: []
       tags: ["Like"]
       description: |-
-        If both the photo and the user exist, it gets liked.
+        If both the photo and the user exist, the photo gets liked by the user.
       summary: Like a photo
       operationId: likePhoto
       responses:
@@ -311,7 +311,7 @@ paths:
         - bearerAuth: []
       tags: ["Like"]
       description: |-
-        If both the photo and the user exist, its like gets removed.
+        If both the photo and the user exist, the like gets removed.
       summary: Remove a like from a photo
       operationId: unlikePhoto
       responses:
