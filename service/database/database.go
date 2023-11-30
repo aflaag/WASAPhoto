@@ -68,6 +68,9 @@ type AppDatabase interface {
 	InsertComment(dbComment *DatabaseComment, dbPhoto DatabasePhoto) error
 	RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePhoto) error
 
+	// Stream
+	GetUserStream(dbUser DatabaseUser) (DatabaseStream, error)
+
 	Ping() error
 }
 

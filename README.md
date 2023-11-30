@@ -8,6 +8,9 @@
 
 ### Backend
 
+- stream
+  - fai query like count
+  - fai query comment count
 - generali
   - metti la data al commento (anche nell'api)
 - errori
