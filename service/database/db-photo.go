@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 )
 
 func (db *appdbimpl) GetDatabasePhoto(photoId uint32) (DatabasePhoto, error) {
@@ -9,7 +10,7 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32) (DatabasePhoto, error) {
 
 	err := db.c.QueryRow(`SELECT id, user, date, url FROM Photo WHERE id=?`, photoId).Scan(&dbPhoto.Id, &dbPhoto.User.Id, &dbPhoto.Date, &dbPhoto.Url)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return dbPhoto, ErrPhotoDoesNotExist
 	}
 

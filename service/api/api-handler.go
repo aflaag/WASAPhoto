@@ -36,7 +36,7 @@ func (rt *_router) Handler() http.Handler {
 
 	// User
 	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile))
-	rt.router.PUT("/user/:uname/username", rt.wrap(rt.setMyUserName))
+	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName))
 
 	// Stream
 	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream))

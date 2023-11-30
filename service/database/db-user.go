@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 )
 
 func (db *appdbimpl) GetDatabaseUser(userId uint32) (DatabaseUser, error) {
@@ -9,7 +10,7 @@ func (db *appdbimpl) GetDatabaseUser(userId uint32) (DatabaseUser, error) {
 
 	err := db.c.QueryRow(`SELECT id, username FROM User WHERE id=?`, userId).Scan(&dbUser.Id, &dbUser.Username)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return dbUser, ErrUserDoesNotExist
 	}
 
@@ -21,7 +22,7 @@ func (db *appdbimpl) GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (Da
 
 	err := db.c.QueryRow(`SELECT id, username FROM User WHERE username=?`, dbLogin.Username).Scan(&dbUser.Id, &dbUser.Username)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return dbUser, ErrUserDoesNotExist
 	}
 

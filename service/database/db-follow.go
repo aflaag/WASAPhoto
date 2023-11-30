@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 )
 
 func (db *appdbimpl) InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error {
@@ -39,7 +40,7 @@ func (db *appdbimpl) GetFollowersCount(dbUser DatabaseUser) (int, error) {
 
 	err := db.c.QueryRow(`SELECT COUNT(*) FROM follow WHERE second_user=?`, dbUser.Id).Scan(&followersCount)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return followersCount, ErrUserDoesNotExist
 	}
 
@@ -51,7 +52,7 @@ func (db *appdbimpl) GetFollowingCount(dbUser DatabaseUser) (int, error) {
 
 	err := db.c.QueryRow(`SELECT COUNT(*) FROM follow WHERE first_user=?`, dbUser.Id).Scan(&followingCount)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return followingCount, ErrUserDoesNotExist
 	}
 

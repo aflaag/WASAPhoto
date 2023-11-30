@@ -1,13 +1,16 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+)
 
 func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, error) {
 	dbComment := DatabaseCommentDefault()
 
 	err := db.c.QueryRow(`SELECT id, user, comment_body FROM Comment WHERE id=?`, commentId).Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.CommentBody)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return dbComment, ErrCommentDoesNotExist
 	}
 
