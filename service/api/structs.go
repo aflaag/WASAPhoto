@@ -225,7 +225,7 @@ func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
 }
 
 type Stream struct {
-	User User `json:"user"`
+	User   User    `json:"user"`
 	Photos []Photo `json:"photos"`
 }
 
@@ -233,21 +233,21 @@ func StreamDefault() Stream {
 	emptyArray := make([]Photo, 0)
 
 	return Stream{
-		User: UserDefault(),
+		User:   UserDefault(),
 		Photos: emptyArray,
 	}
 }
 
 func StreamFromDatabaseStream(dbStream database.DatabaseStream) Stream {
 	return Stream{
-		User: UserFromDatabaseUser(dbStream.User),
+		User:   UserFromDatabaseUser(dbStream.User),
 		Photos: PhotoArrayFromDatabasePhotoArray(dbStream.Photos),
 	}
 }
 
 func (stream *Stream) CommentIntoDatabaseComment() database.DatabaseStream {
 	return database.DatabaseStream{
-		User: stream.User.UserIntoDatabaseUser(),
+		User:   stream.User.UserIntoDatabaseUser(),
 		Photos: PhotoArrayIntoDatabasePhotoArray(stream.Photos),
 	}
 }

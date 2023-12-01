@@ -73,7 +73,7 @@ func DatabaseProfileDefault() DatabaseProfile {
 }
 
 type DatabaseStream struct {
-	User DatabaseUser `json:"user"`
+	User   DatabaseUser    `json:"user"`
 	Photos []DatabasePhoto `json:"photos"`
 }
 
@@ -81,7 +81,7 @@ func DatabaseStreamDefault() DatabaseStream {
 	emptyArray := make([]DatabasePhoto, 0)
 
 	return DatabaseStream{
-		User: DatabaseUserDefault(),
+		User:   DatabaseUserDefault(),
 		Photos: emptyArray,
 	}
 }
