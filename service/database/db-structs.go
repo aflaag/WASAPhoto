@@ -73,14 +73,16 @@ func DatabaseProfileDefault() DatabaseProfile {
 }
 
 type DatabaseStream struct {
+	User DatabaseUser `json:"user"`
 	Photos []DatabasePhoto `json:"photos"`
 }
 
 func DatabaseStreamDefault() DatabaseStream {
-	emptyArray := [0]DatabasePhoto{}
+	emptyArray := make([]DatabasePhoto, 0)
 
 	return DatabaseStream{
-		Photos: emptyArray[:],
+		User: DatabaseUserDefault(),
+		Photos: emptyArray,
 	}
 }
 
@@ -89,10 +91,10 @@ type DatabaseUserList struct {
 }
 
 func DatabaseUserListDefault() DatabaseUserList {
-	emptyArray := [0]DatabaseUser{}
+	emptyArray := make([]DatabaseUser, 0)
 
 	return DatabaseUserList{
-		Users: emptyArray[:],
+		Users: emptyArray,
 	}
 }
 
@@ -101,9 +103,9 @@ type DatabaseCommentList struct {
 }
 
 func DatabaseCommentListDefault() DatabaseCommentList {
-	emptyArray := [0]DatabaseComment{}
+	emptyArray := make([]DatabaseComment, 0)
 
 	return DatabaseCommentList{
-		Comments: emptyArray[:],
+		Comments: emptyArray,
 	}
 }

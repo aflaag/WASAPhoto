@@ -22,17 +22,17 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	login := LoginDefault()
-	login.Username = comment.User.Username
+	commentLogin := LoginDefault()
+	commentLogin.Username = comment.User.Username
 
-	user, err := rt.GetUserFromLogin(login)
+	commentUser, err := rt.GetUserFromLogin(commentLogin)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if user.Id != comment.User.Id {
+	if comment.User.Id != commentUser.Id {
 		http.Error(w, ErrUserDoesNotExist.Error(), http.StatusUnauthorized)
 		return
 	}
@@ -44,17 +44,24 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	photoIdString := ps.ByName("photo_id")
-
-	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	photo := PhotoDefault()
-	photo.Id = uint32(photoId)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	if photo.User.Id != user.Id {
+		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
+		return
+	}
 
 	dbComment := comment.CommentIntoDatabaseComment()
 
@@ -75,7 +82,6 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	commentIdString := ps.ByName("comment_id")
-
 	commentId, err := strconv.ParseUint(commentIdString, 10, 64)
 
 	if err != nil {
@@ -97,17 +103,24 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	photoIdString := ps.ByName("photo_id")
-
-	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	photo := PhotoDefault()
-	photo.Id = uint32(photoId)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	if photo.User.Id != user.Id {
+		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
+		return
+	}
 
 	err = rt.db.RemoveComment(comment.CommentIntoDatabaseComment(), photo.PhotoIntoDatabasePhoto())
 

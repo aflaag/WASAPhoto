@@ -9,14 +9,16 @@
 ### Backend
 
 - generali
+  - ricontrollare
+    - response
+    - errori
+    - ogni possibile cosa che può fallire di ogni request
   - metti la data al commento (anche nell'api)
   - riformatta tutte le query
 - errori
   - gli errori vanno stampati nelle response o nel logger?
     - se no, cosa va messo nella response? un messaggio standard?
 - fare l'handler della liveness
-- response
-  - ricontrollale tutte perché hai fatto un casino quando copiavi
 
 ## Domande
 

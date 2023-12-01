@@ -12,30 +12,17 @@ func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	bannedUserUsername := ps.ByName("banned_uname")
-	bannedUserLogin := LoginFromUsername(bannedUserUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	bannedUser, code, err := rt.GetUserFromParameter("banned_uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	bannedUser, err := rt.GetUserFromLogin(bannedUserLogin)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
@@ -53,30 +40,17 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 }
 
 func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	bannedUserUsername := ps.ByName("banned_uname")
-	bannedUserLogin := LoginFromUsername(bannedUserUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	bannedUser, code, err := rt.GetUserFromParameter("banned_uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	bannedUser, err := rt.GetUserFromLogin(bannedUserLogin)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 

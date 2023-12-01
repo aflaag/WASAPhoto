@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
@@ -11,24 +10,14 @@ import (
 )
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	photo := PhotoDefault()
+	photo := PhotoDefault() // TODO: IN TEORIA DEVI PRENDERLO DAL REQUEST BODY PER PRENDERE ANCHE L'URL
 
 	currentTime := time.Now()
 
@@ -55,34 +44,19 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 }
 
 func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	_, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), code)
 		return
 	}
-
-	photoIdString := ps.ByName("photo_id")
-
-	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	photo := PhotoDefault()
-	photo.Id = uint32(photoId)
 
 	err = rt.db.DeletePhoto(photo.PhotoIntoDatabasePhoto())
 

@@ -9,30 +9,17 @@ import (
 )
 
 func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	followedUserUsername := ps.ByName("followed_uname")
-	followedUserLogin := LoginFromUsername(followedUserUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	followedUser, code, err := rt.GetUserFromParameter("followed_uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	followedUser, err := rt.GetUserFromLogin(followedUserLogin)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
@@ -50,30 +37,17 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	followedUserUsername := ps.ByName("follow_uname")
-	followedUserLogin := LoginFromUsername(followedUserUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	followedUser, code, err := rt.GetUserFromParameter("followed_uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-
-	followedUser, err := rt.GetUserFromLogin(followedUserLogin)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 

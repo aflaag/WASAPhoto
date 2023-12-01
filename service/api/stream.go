@@ -9,26 +9,18 @@ import (
 )
 
 func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	// TODO: STA ROBA STA IN MILLE POSTI, RENDILA UNA FUNZIONE
-	userUsername := ps.ByName("uname")
-	userLogin := LoginFromUsername(userUsername)
-
-	user, err := rt.GetUserFromLogin(userLogin)
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+	dbUser := user.UserIntoDatabaseUser()
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-	// TODO: FINO A QUA
+	dbStream, err := rt.db.GetDatabaseStream(dbUser)
 
-	dbStream, err := rt.db.GetDatabaseStream(user.UserIntoDatabaseUser())
+	dbStream.User = dbUser
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

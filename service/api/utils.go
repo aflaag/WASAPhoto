@@ -1,21 +1,12 @@
 package api
 
 import (
+	"net/http"
 	"regexp"
 	"strconv"
+
+	"github.com/julienschmidt/httprouter"
 )
-
-func (rt *_router) GetUserFromLogin(login Login) (User, error) {
-	dbUser, err := rt.db.GetDatabaseUserFromDatabaseLogin(login.LoginIntoDatabaseLogin())
-
-	if err != nil {
-		return UserDefault(), err
-	}
-
-	user := UserFromDatabaseUser(dbUser)
-
-	return user, nil
-}
 
 func CheckAuthorization(user User, authRaw string) error {
 	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
@@ -33,6 +24,18 @@ func CheckAuthorization(user User, authRaw string) error {
 	}
 
 	return nil
+}
+
+func (rt *_router) GetUserFromLogin(login Login) (User, error) {
+	dbUser, err := rt.db.GetDatabaseUserFromDatabaseLogin(login.LoginIntoDatabaseLogin())
+
+	if err != nil {
+		return UserDefault(), err
+	}
+
+	user := UserFromDatabaseUser(dbUser)
+
+	return user, nil
 }
 
 func (rt *_router) GetPhotoFromPhotoId(photoId uint32) (Photo, error) {
@@ -57,4 +60,54 @@ func (rt *_router) GetCommentFromCommentId(commentId uint32) (Comment, error) {
 	comment := CommentFromDatabaseComment(dbComment)
 
 	return comment, nil
+}
+
+func (rt *_router) GetUserFromParameter(parameter string, r *http.Request, ps httprouter.Params) (User, int, error) {
+	userUsername := ps.ByName(parameter)
+	userLogin := LoginFromUsername(userUsername)
+
+	user, err := rt.GetUserFromLogin(userLogin)
+
+	code := -1
+
+	if err != nil {
+		code = http.StatusInternalServerError
+	}
+
+	return user, code, err
+}
+
+func (rt *_router) GetPhotoFromParameter(parameter string, r *http.Request, ps httprouter.Params) (Photo, int, error) {
+	photo := PhotoDefault()
+
+	photoIdString := ps.ByName(parameter)
+	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
+
+	if err != nil {
+		return photo, http.StatusInternalServerError, err
+	}
+
+	photo, err = rt.GetPhotoFromPhotoId(uint32(photoId))
+
+	if err != nil {
+		return photo, http.StatusInternalServerError, err
+	}
+
+	return photo, -1, nil
+}
+
+func (rt *_router) AuthenticateUserFromParameter(parameter string, r *http.Request, ps httprouter.Params) (User, int, error) {
+	user, code, err := rt.GetUserFromParameter(parameter, r, ps)
+
+	if err != nil {
+		return user, code, err
+	}
+
+	err = CheckAuthorization(user, r.Header.Get("Authorization"))
+
+	if err != nil {
+		code = http.StatusUnauthorized
+	}
+
+	return user, code, err
 }

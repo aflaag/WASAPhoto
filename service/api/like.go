@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -13,34 +12,31 @@ func (rt *_router) getPhotoLikes(w http.ResponseWriter, r *http.Request, ps http
 }
 
 func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	likeUserUsername := ps.ByName("like_uname")
-	likeUserLogin := LoginFromUsername(likeUserUsername)
-
-	likeUser, err := rt.GetUserFromLogin(likeUserLogin)
+	likeUser, code, err := rt.AuthenticateUserFromParameter("like_uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(likeUser, r.Header.Get("Authorization"))
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	photoIdString := ps.ByName("photo_id")
-
-	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	photo := PhotoDefault()
-	photo.Id = uint32(photoId)
+	if photo.User.Id != user.Id {
+		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
+		return
+	}
 
 	err = rt.db.InsertLike(likeUser.UserIntoDatabaseUser(), photo.PhotoIntoDatabasePhoto())
 
@@ -56,34 +52,31 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 }
 
 func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	likeUserUsername := ps.ByName("like_uname")
-	likeUserLogin := LoginFromUsername(likeUserUsername)
-
-	likeUser, err := rt.GetUserFromLogin(likeUserLogin)
+	likeUser, code, err := rt.AuthenticateUserFromParameter("like_uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	err = CheckAuthorization(likeUser, r.Header.Get("Authorization"))
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	photoIdString := ps.ByName("photo_id")
-
-	photoId, err := strconv.ParseUint(photoIdString, 10, 64)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
-	photo := PhotoDefault()
-	photo.Id = uint32(photoId)
+	if photo.User.Id != user.Id {
+		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
+		return
+	}
 
 	err = rt.db.DeleteLike(likeUser.UserIntoDatabaseUser(), photo.PhotoIntoDatabasePhoto())
 

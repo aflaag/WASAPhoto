@@ -142,37 +142,44 @@ func New(db *sql.DB) (AppDatabase, error) {
 		CREATE TABLE IF NOT EXISTS like (
 			user INTEGER NOT NULL,
 			photo INTEGER NOT NULL,
+			PRIMARY KEY (user, photo),
 			FOREIGN KEY (user) REFERENCES User(name),
 			FOREIGN KEY (photo) REFERENCES Photo(id)
 		);
 	`
 
 	_, err = db.Exec(userTable)
+
 	if err != nil {
 		return nil, fmt.Errorf("error creating database structure: %w", err)
 	}
 
 	_, err = db.Exec(photoTable)
+
 	if err != nil {
 		return nil, fmt.Errorf("error creating database structure: %w", err)
 	}
 
 	_, err = db.Exec(commentTable)
+
 	if err != nil {
 		return nil, fmt.Errorf("error creating database structure: %w", err)
 	}
 
 	_, err = db.Exec(followTable)
+
 	if err != nil {
 		return nil, fmt.Errorf("error creating database structure: %w", err)
 	}
 
 	_, err = db.Exec(banTable)
+
 	if err != nil {
 		return nil, fmt.Errorf("error creating database structure: %w", err)
 	}
 
 	_, err = db.Exec(likeTable)
+
 	if err != nil {
 		return nil, fmt.Errorf("error creating database structure: %w", err)
 	}

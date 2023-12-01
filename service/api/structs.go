@@ -59,20 +59,20 @@ func (user *User) UserIntoDatabaseUser() database.DatabaseUser {
 }
 
 func UserArrayFromDatabaseUserArray(array []database.DatabaseUser) []User {
-	var newArray []User
+	newArray := make([]User, 0)
 
-	for idx, element := range array {
-		newArray[idx] = UserFromDatabaseUser(element)
+	for _, element := range array {
+		newArray = append(newArray, UserFromDatabaseUser(element))
 	}
 
 	return newArray
 }
 
 func UserArrayIntoDatabaseUserArray(array []User) []database.DatabaseUser {
-	var newArray []database.DatabaseUser
+	newArray := make([]database.DatabaseUser, 0)
 
-	for idx, element := range array {
-		newArray[idx] = element.UserIntoDatabaseUser()
+	for _, element := range array {
+		newArray = append(newArray, element.UserIntoDatabaseUser())
 	}
 
 	return newArray
@@ -121,7 +121,7 @@ func (photo *Photo) PhotoIntoDatabasePhoto() database.DatabasePhoto {
 }
 
 func PhotoArrayFromDatabasePhotoArray(array []database.DatabasePhoto) []Photo {
-	var newArray []Photo
+	newArray := make([]Photo, 0)
 
 	for _, element := range array {
 		newArray = append(newArray, PhotoFromDatabasePhoto(element))
@@ -131,10 +131,10 @@ func PhotoArrayFromDatabasePhotoArray(array []database.DatabasePhoto) []Photo {
 }
 
 func PhotoArrayIntoDatabasePhotoArray(array []Photo) []database.DatabasePhoto {
-	var newArray []database.DatabasePhoto
+	newArray := make([]database.DatabasePhoto, 0)
 
-	for idx, element := range array {
-		newArray[idx] = element.PhotoIntoDatabasePhoto()
+	for _, element := range array {
+		newArray = append(newArray, element.PhotoIntoDatabasePhoto())
 	}
 
 	return newArray
@@ -171,20 +171,20 @@ func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComment {
 }
 
 func CommentArrayFromDatabaseCommentArray(array []database.DatabaseComment) []Comment {
-	var newArray []Comment
+	newArray := make([]Comment, 0)
 
-	for idx, element := range array {
-		newArray[idx] = CommentFromDatabaseComment(element)
+	for _, element := range array {
+		newArray = append(newArray, CommentFromDatabaseComment(element))
 	}
 
 	return newArray
 }
 
 func CommentArrayIntoDatabaseCommentArray(array []Comment) []database.DatabaseComment {
-	var newArray []database.DatabaseComment
+	newArray := make([]database.DatabaseComment, 0)
 
-	for idx, element := range array {
-		newArray[idx] = element.CommentIntoDatabaseComment()
+	for _, element := range array {
+		newArray = append(newArray, element.CommentIntoDatabaseComment())
 	}
 
 	return newArray
@@ -224,27 +224,30 @@ func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
 	}
 }
 
-// TODO: NON CE LO METTO DI CHI È?? (IN CASO METTILO ANCHE NELLE API)
 type Stream struct {
+	User User `json:"user"`
 	Photos []Photo `json:"photos"`
 }
 
 func StreamDefault() Stream {
-	emptyArray := [0]Photo{}
+	emptyArray := make([]Photo, 0)
 
 	return Stream{
-		Photos: emptyArray[:],
+		User: UserDefault(),
+		Photos: emptyArray,
 	}
 }
 
 func StreamFromDatabaseStream(dbStream database.DatabaseStream) Stream {
 	return Stream{
+		User: UserFromDatabaseUser(dbStream.User),
 		Photos: PhotoArrayFromDatabasePhotoArray(dbStream.Photos),
 	}
 }
 
 func (stream *Stream) CommentIntoDatabaseComment() database.DatabaseStream {
 	return database.DatabaseStream{
+		User: stream.User.UserIntoDatabaseUser(),
 		Photos: PhotoArrayIntoDatabasePhotoArray(stream.Photos),
 	}
 }
@@ -254,10 +257,10 @@ type UserList struct {
 }
 
 func UserListDefault() UserList {
-	emptyArray := [0]User{}
+	emptyArray := make([]User, 0)
 
 	return UserList{
-		Users: emptyArray[:],
+		Users: emptyArray,
 	}
 }
 
@@ -278,10 +281,10 @@ type CommentList struct {
 }
 
 func CommentListDefault() CommentList {
-	emptyArray := [0]Comment{}
+	emptyArray := make([]Comment, 0)
 
 	return CommentList{
-		Comments: emptyArray[:],
+		Comments: emptyArray,
 	}
 }
 
