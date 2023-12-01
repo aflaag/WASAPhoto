@@ -123,8 +123,8 @@ func (photo *Photo) PhotoIntoDatabasePhoto() database.DatabasePhoto {
 func PhotoArrayFromDatabasePhotoArray(array []database.DatabasePhoto) []Photo {
 	var newArray []Photo
 
-	for idx, element := range array {
-		newArray[idx] = PhotoFromDatabasePhoto(element)
+	for _, element := range array {
+		newArray = append(newArray, PhotoFromDatabasePhoto(element))
 	}
 
 	return newArray

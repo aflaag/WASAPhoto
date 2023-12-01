@@ -62,6 +62,8 @@ type AppDatabase interface {
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
 	InsertPhoto(dbPhoto *DatabasePhoto) error
 	DeletePhoto(dbPhoto DatabasePhoto) error
+	GetPhotoLikeCount(dbPhoto *DatabasePhoto) error
+	GetPhotoCommentCount(dbPhoto *DatabasePhoto) error
 
 	// Comment
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
@@ -69,7 +71,7 @@ type AppDatabase interface {
 	RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePhoto) error
 
 	// Stream
-	GetUserStream(dbUser DatabaseUser) (DatabaseStream, error)
+	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)
 
 	Ping() error
 }

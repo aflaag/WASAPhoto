@@ -66,3 +66,23 @@ func (db *appdbimpl) DeletePhoto(dbPhoto DatabasePhoto) error {
 
 	return nil
 }
+
+func (db *appdbimpl) GetPhotoLikeCount(dbPhoto *DatabasePhoto) error {
+	err := db.c.QueryRow(`SELECT COUNT(*) FROM like WHERE photo=?`, dbPhoto.Id).Scan(&dbPhoto.LikeCount)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return ErrPhotoDoesNotExist
+	}
+
+	return err
+}
+
+func (db *appdbimpl) GetPhotoCommentCount(dbPhoto *DatabasePhoto) error {
+	err := db.c.QueryRow(`SELECT COUNT(*) FROM Comment WHERE photo=?`, dbPhoto.Id).Scan(&dbPhoto.CommentCount)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return ErrPhotoDoesNotExist
+	}
+
+	return err
+}

@@ -12,7 +12,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	userUsername := ps.ByName("uname")
 	userLogin := LoginFromUsername(userUsername)
 
-	followedUserUsername := ps.ByName("follow_uname")
+	followedUserUsername := ps.ByName("followed_uname")
 	followedUserLogin := LoginFromUsername(followedUserUsername)
 
 	user, err := rt.GetUserFromLogin(userLogin)

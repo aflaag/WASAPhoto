@@ -28,7 +28,7 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	// TODO: FINO A QUA
 
-	dbStream, err := rt.db.GetUserStream(user.UserIntoDatabaseUser())
+	dbStream, err := rt.db.GetDatabaseStream(user.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

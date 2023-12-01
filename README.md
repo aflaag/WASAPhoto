@@ -8,11 +8,9 @@
 
 ### Backend
 
-- stream
-  - fai query like count
-  - fai query comment count
 - generali
   - metti la data al commento (anche nell'api)
+  - riformatta tutte le query
 - errori
   - gli errori vanno stampati nelle response o nel logger?
     - se no, cosa va messo nella response? un messaggio standard?
