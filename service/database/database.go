@@ -42,10 +42,12 @@ type AppDatabase interface {
 	GetDatabaseUser(userId uint32) (DatabaseUser, error)
 	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
 	InsertUser(dbUser *DatabaseUser) error
+	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
 
 	// Ban
 	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
 	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
+	CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error)
 
 	// Follow
 	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
@@ -56,7 +58,7 @@ type AppDatabase interface {
 	// Like
 	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
 	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	GetLikesCount(dbPphoto DatabasePhoto) (int, error)
+	GetLikesCount(dbPhoto DatabasePhoto) (int, error)
 
 	// Photo
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
@@ -64,6 +66,7 @@ type AppDatabase interface {
 	DeletePhoto(dbPhoto DatabasePhoto) error
 	GetPhotoLikeCount(dbPhoto *DatabasePhoto) error
 	GetPhotoCommentCount(dbPhoto *DatabasePhoto) error
+	GetPhotosCount(dbUser DatabaseUser) (int, error)
 
 	// Comment
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)

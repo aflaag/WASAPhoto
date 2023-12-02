@@ -86,3 +86,15 @@ func (db *appdbimpl) GetPhotoCommentCount(dbPhoto *DatabasePhoto) error {
 
 	return err
 }
+
+func (db *appdbimpl) GetPhotosCount(dbUser DatabaseUser) (int, error) {
+	var photosCount int
+
+	err := db.c.QueryRow(`SELECT COUNT(*) FROM Photo WHERE user=?`, dbUser.Id).Scan(&photosCount)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return photosCount, ErrPhotoDoesNotExist
+	}
+
+	return photosCount, err
+}

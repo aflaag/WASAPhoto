@@ -8,16 +8,26 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func CheckAuthorization(user User, authRaw string) error {
+func GetBearerToken(authRaw string) (int, error) {
 	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
 
 	tokenString := re.FindAllString(authRaw, -1)
 
 	if len(tokenString) == 0 {
-		return ErrUserUnauthorized
+		return -1, ErrUserUnauthorized
 	}
 
-	token, _ := strconv.Atoi(tokenString[0])
+	token, err := strconv.Atoi(tokenString[0])
+
+	return token, err
+}
+
+func CheckAuthorization(user User, authRaw string) error {
+	token, err := GetBearerToken(authRaw)
+
+	if err != nil {
+		return err
+	}
 
 	if int(user.Id) != token {
 		return ErrUserUnauthorized

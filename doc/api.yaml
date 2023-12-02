@@ -51,7 +51,7 @@ paths:
         If the user exists, it gets returned back.
       operationId: doLogin
       requestBody:
-        description: User details
+        description: User login
         required: true
         content:
           application/json:
@@ -411,7 +411,7 @@ paths:
       security:
         - bearerAuth: []
       tags: ["User"]
-      summary: Get a user profile information
+      summary: Get a user's profile
       description: |-
         If the user exists, returns the user profile.
       operationId: getUserProfile
@@ -438,11 +438,11 @@ paths:
         If the user exists, it changes its username with the given one.
       operationId: setMyUserName
       requestBody:
-        description: The new username of the user.
+        description: User login
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/User" }
+            schema: { $ref: "#/components/schemas/Login" }
       responses:
         "200":
           description: Username changed successfully.

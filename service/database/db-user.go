@@ -46,3 +46,23 @@ func (db *appdbimpl) InsertUser(dbUser *DatabaseUser) error {
 
 	return nil
 }
+
+func (db *appdbimpl) UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error {
+	res, err := db.c.Exec(`UPDATE User SET username=? WHERE id=? AND username=?`, newDbUser.Username, oldDbUser.Id, oldDbUser.Username)
+
+	if err != nil {
+		return err
+	}
+
+	aff, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if aff == 0 {
+		return ErrUserNotBanned
+	}
+
+	return nil
+}

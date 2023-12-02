@@ -1,8 +1,11 @@
 package database
 
 import (
-// "database/sql"
+	"database/sql"
+	"errors"
 )
+
+// "database/sql"
 
 func (db *appdbimpl) InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error {
 	_, err := db.c.Exec(`INSERT INTO ban(first_user, second_user) VALUES (?, ?)`, dbUser.Id, bannedDbUser.Id)
@@ -28,4 +31,16 @@ func (db *appdbimpl) DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) e
 	}
 
 	return nil
+}
+
+func (db *appdbimpl) CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error) {
+	checkBan := true
+
+	err := db.c.QueryRow(`SELECT EXISTS(SELECT 1 FROM ban WHERE first_user=? AND second_user=?)`, firstDbUser.Id, secondDbUser.Id).Scan(&checkBan)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, err
+	}
+
+	return checkBan, err
 }
