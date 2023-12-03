@@ -17,15 +17,15 @@ func (rt *_router) Handler() http.Handler {
 	// Follow
 	rt.router.PUT("/user/:uname/follow/:followed_uname", rt.wrap(rt.followUser))      // DONE
 	rt.router.DELETE("/user/:uname/follow/:followed_uname", rt.wrap(rt.unfollowUser)) // DONE
-	rt.router.GET("/user/:uname/followers", rt.wrap(rt.getFollowers))
-	rt.router.GET("/user/:uname/following", rt.wrap(rt.getFollowing))
+	rt.router.GET("/user/:uname/followers", rt.wrap(rt.getFollowers))                 // DONE
+	rt.router.GET("/user/:uname/following", rt.wrap(rt.getFollowing))                 // DONE
 
 	// Photo
 	rt.router.POST("/user/:uname/upload", rt.wrap(rt.uploadPhoto))             // DONE (A MENO DELL'URL)
 	rt.router.DELETE("/user/:uname/photos/:photo_id", rt.wrap(rt.deletePhoto)) // DONE (A MENO DELL'URL)
 
 	// Like
-	rt.router.GET("/user/:uname/photos/:photo_id/likes", rt.wrap(rt.getPhotoLikes)) // DONE
+	rt.router.GET("/user/:uname/photos/:photo_id/likes", rt.wrap(rt.getPhotoLikes))              // DONE
 	rt.router.PUT("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.likePhoto))      // DONE
 	rt.router.DELETE("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.unlikePhoto)) // DONE
 
