@@ -63,7 +63,7 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 }
 
 func (rt *_router) getFollowers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	user, code, err := rt.GetUserFromParameter("user", r, ps)
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
@@ -86,7 +86,7 @@ func (rt *_router) getFollowers(w http.ResponseWriter, r *http.Request, ps httpr
 }
 
 func (rt *_router) getFollowing(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	user, code, err := rt.GetUserFromParameter("user", r, ps)
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)

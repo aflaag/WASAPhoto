@@ -56,9 +56,69 @@ func (db *appdbimpl) GetFollowingCount(dbUser DatabaseUser) (int, error) {
 }
 
 func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error) {
-	// TODO: todo
+	dbUserList := DatabaseUserListDefault()
+
+	rows, err := db.c.Query(`
+		SELECT id, username
+		FROM User
+		WHERE id IN (
+			SELECT first_user
+			FROM follow
+			WHERE second_user=?
+		)
+	`, dbUser.Id)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return dbUserList, ErrUserDoesNotExist
+	}
+
+	for rows.Next() {
+		dbUser := DatabaseUserDefault()
+
+		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+
+		if err != nil {
+			return dbUserList, err
+		}
+
+		dbUserList.Users = append(dbUserList.Users, dbUser)
+	}
+
+	_ = rows.Close()
+
+	return dbUserList, err
 }
 
 func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error) {
-	// TODO: todo
+	dbUserList := DatabaseUserListDefault()
+
+	rows, err := db.c.Query(`
+		SELECT id, username
+		FROM User
+		WHERE id IN (
+			SELECT second_user
+			FROM follow
+			WHERE first_user=?
+		)
+	`, dbUser.Id)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return dbUserList, ErrUserDoesNotExist
+	}
+
+	for rows.Next() {
+		dbUser := DatabaseUserDefault()
+
+		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+
+		if err != nil {
+			return dbUserList, err
+		}
+
+		dbUserList.Users = append(dbUserList.Users, dbUser)
+	}
+
+	_ = rows.Close()
+
+	return dbUserList, err
 }
