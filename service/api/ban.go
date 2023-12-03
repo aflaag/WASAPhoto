@@ -9,6 +9,26 @@ import (
 )
 
 func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	dbBanList, err := rt.db.GetBanList(user.UserIntoDatabaseUser())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	followersList := UserListFromDatabaseUserList(dbBanList)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(followersList)
 }
 
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {

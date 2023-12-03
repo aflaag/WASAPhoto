@@ -43,11 +43,13 @@ type AppDatabase interface {
 	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
 	InsertUser(dbUser *DatabaseUser) error
 	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
+	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error)
 
 	// Ban
 	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
 	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
 	CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error)
+	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error)
 
 	// Follow
 	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
@@ -75,6 +77,7 @@ type AppDatabase interface {
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
 	InsertComment(dbComment *DatabaseComment, dbPhoto DatabasePhoto) error
 	RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePhoto) error
+	GetCommentList(dbPhoto DatabasePhoto) (DatabaseCommentList, error)
 
 	// Stream
 	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)

@@ -107,3 +107,31 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	_ = json.NewEncoder(w).Encode(newUser)
 }
+
+func (rt *_router) getUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	query := ps.ByName("query_uname")
+
+	queryLogin := LoginDefault()
+	queryLogin.Username = query
+
+	dbUserList, err := rt.db.GetUserList(user.UserIntoDatabaseUser(), queryLogin.LoginIntoDatabaseLogin())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	userList := UserListFromDatabaseUserList(dbUserList)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(userList)
+}

@@ -10,6 +10,38 @@ import (
 )
 
 func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	if photo.User.Id != user.Id {
+		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
+		return
+	}
+
+	dbCommentList, err := rt.db.GetCommentList(photo.PhotoIntoDatabasePhoto())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	commentList := CommentListFromDatabaseCommentList(dbCommentList)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(commentList)
 }
 
 func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {

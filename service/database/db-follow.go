@@ -72,6 +72,10 @@ func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, er
 		return dbUserList, ErrUserDoesNotExist
 	}
 
+	if err != nil {
+		return dbUserList, err
+	}
+
 	for rows.Next() {
 		dbUser := DatabaseUserDefault()
 
@@ -104,6 +108,10 @@ func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, er
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUserList, ErrUserDoesNotExist
+	}
+
+	if err != nil {
+		return dbUserList, err
 	}
 
 	for rows.Next() {

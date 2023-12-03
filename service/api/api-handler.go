@@ -10,7 +10,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session", rt.wrap(rt.session)) // DONE
 
 	// Ban
-	rt.router.GET("/user/:uname/ban", rt.wrap(rt.getBanList))
+	rt.router.GET("/user/:uname/ban", rt.wrap(rt.getBanList))                 // DONE
 	rt.router.PUT("/user/:uname/ban/:banned_uname", rt.wrap(rt.banUser))      // DONE
 	rt.router.DELETE("/user/:uname/ban/:banned_uname", rt.wrap(rt.unbanUser)) // DONE
 
@@ -25,18 +25,19 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/user/:uname/photos/:photo_id", rt.wrap(rt.deletePhoto)) // DONE (A MENO DELL'URL)
 
 	// Like
-	rt.router.GET("/user/:uname/photos/:photo_id/likes", rt.wrap(rt.getPhotoLikes))              // DONE
-	rt.router.PUT("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.likePhoto))      // DONE
-	rt.router.DELETE("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.unlikePhoto)) // DONE
+	rt.router.GET("/user/:uname/photos/:photo_id/likes", rt.wrap(rt.getPhotoLikes))             // DONE
+	rt.router.PUT("/user/:uname/photos/:photo_id/like/:like_uname", rt.wrap(rt.likePhoto))      // DONE
+	rt.router.DELETE("/user/:uname/photos/:photo_id/like/:like_uname", rt.wrap(rt.unlikePhoto)) // DONE
 
 	// Comment
-	rt.router.GET("/user/:uname/photos/:photo_id/comments", rt.wrap(rt.getPhotoComments))
+	rt.router.GET("/user/:uname/photos/:photo_id/comments", rt.wrap(rt.getPhotoComments))              // DONE
 	rt.router.POST("/user/:uname/photos/:photo_id/comment", rt.wrap(rt.commentPhoto))                  // DONE
 	rt.router.DELETE("/user/:uname/photos/:photo_id/comments/:comment_id", rt.wrap(rt.uncommentPhoto)) // DONE
 
 	// User
-	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile))            // DONE
-	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName)) // DONE
+	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile))               // DONE
+	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName))    // DONE
+	rt.router.GET("/user/:uname/search/:query_uname", rt.wrap(rt.getUsers)) // DONE
 
 	// Stream
 	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream)) // DONE

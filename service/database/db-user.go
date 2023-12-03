@@ -66,3 +66,49 @@ func (db *appdbimpl) UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) 
 
 	return nil
 }
+
+func (db *appdbimpl) GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) {
+	dbUserList := DatabaseUserListDefault()
+
+	rows, err := db.c.Query(`
+		SELECT id
+		FROM User
+		WHERE username LIKE '%'||?||'%'
+		EXCEPT 
+		SELECT first_user
+		FROM ban
+		WHERE second_user=?
+		EXCEPT
+		SELECT ?
+	`, dbLogin.Username, dbUser.Id, dbUser.Id)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return dbUserList, ErrUserDoesNotExist
+	}
+
+	if err != nil {
+		return dbUserList, err
+	}
+
+	for rows.Next() {
+		var newDbUserId uint32
+
+		err = rows.Scan(&newDbUserId)
+
+		if err != nil {
+			return dbUserList, err
+		}
+
+		newDbUser, err := db.GetDatabaseUser(newDbUserId)
+
+		if err != nil {
+			return dbUserList, err
+		}
+
+		dbUserList.Users = append(dbUserList.Users, newDbUser)
+	}
+
+	_ = rows.Close()
+
+	return dbUserList, err
+}

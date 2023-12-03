@@ -93,17 +93,17 @@ func (rt *_router) getFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	dbFollowersList, err := rt.db.GetFollowingList(user.UserIntoDatabaseUser())
+	dbFollowingList, err := rt.db.GetFollowingList(user.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	followersList := UserListFromDatabaseUserList(dbFollowersList)
+	followingList := UserListFromDatabaseUserList(dbFollowingList)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	_ = json.NewEncoder(w).Encode(followersList)
+	_ = json.NewEncoder(w).Encode(followingList)
 }

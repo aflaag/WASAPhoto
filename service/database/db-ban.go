@@ -44,3 +44,41 @@ func (db *appdbimpl) CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUse
 
 	return checkBan, err
 }
+
+func (db *appdbimpl) GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) {
+	dbUserList := DatabaseUserListDefault()
+
+	rows, err := db.c.Query(`
+		SELECT id, username
+		FROM User
+		WHERE id IN (
+			SELECT second_user
+			FROM ban
+			WHERE first_user=?
+		)
+	`, dbUser.Id)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return dbUserList, ErrUserDoesNotExist
+	}
+
+	if err != nil {
+		return dbUserList, err
+	}
+
+	for rows.Next() {
+		dbUser := DatabaseUserDefault()
+
+		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+
+		if err != nil {
+			return dbUserList, err
+		}
+
+		dbUserList.Users = append(dbUserList.Users, dbUser)
+	}
+
+	_ = rows.Close()
+
+	return dbUserList, err
+}

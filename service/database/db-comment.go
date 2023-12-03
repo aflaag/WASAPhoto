@@ -58,3 +58,39 @@ func (db *appdbimpl) RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePh
 
 	return err
 }
+
+func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto) (DatabaseCommentList, error) {
+	dbCommentList := DatabaseCommentListDefault()
+
+	rows, err := db.c.Query(`
+		SELECT id, user, comment_body, photo
+		FROM Comment
+		WHERE photo=?
+	`, dbPhoto.Id)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return dbCommentList, ErrUserDoesNotExist
+	}
+
+	if err != nil {
+		return dbCommentList, err
+	}
+
+	for rows.Next() {
+		dbComment := DatabaseCommentDefault()
+
+		var photoId int
+
+		err = rows.Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.CommentBody, &photoId)
+
+		if err != nil {
+			return dbCommentList, err
+		}
+
+		dbCommentList.Comments = append(dbCommentList.Comments, dbComment)
+	}
+
+	_ = rows.Close()
+
+	return dbCommentList, err
+}

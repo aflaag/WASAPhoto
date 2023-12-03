@@ -8,20 +8,9 @@
 
 ### Backend
 
-- controlla che chi fa l'operazione non sia stato bannato quando
-  - follow
-  - remove follow
-  - get followers list
-  - get following list
-  - get user profile
-  - like
-  - remove like
-  - get photo like count
-  - get photo comment count
-  - get photo count
-  - comment
-  - remove comment
-  - get database stream
+- ban
+  - se un utente mi ha bannato, non posso vedere i suoi like alle foto degli altri
+  - se un utente mi ha bannato, non posso vedere i suoi commenti alle foto degli altri
 - generali
   - gestisci le PUT bene
   - ricontrollare

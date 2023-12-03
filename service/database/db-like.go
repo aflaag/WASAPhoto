@@ -56,6 +56,10 @@ func (db *appdbimpl) GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error
 		return dbUserList, ErrPhotoDoesNotExist
 	}
 
+	if err != nil {
+		return dbUserList, err
+	}
+
 	for rows.Next() {
 		dbUser := DatabaseUserDefault()
 

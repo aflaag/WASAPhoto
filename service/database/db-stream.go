@@ -27,6 +27,10 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 		return dbStream, ErrUserDoesNotExist
 	}
 
+	if err != nil {
+		return dbStream, err
+	}
+
 	for rows.Next() {
 		dbPhoto := DatabasePhotoDefault()
 

@@ -283,7 +283,7 @@ paths:
         "404": { $ref: "#/components/responses/NotFound" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uname}/photos/{photo_id}/likes/{like_uname}:
+  /user/{uname}/photos/{photo_id}/like/{like_uname}:
     parameters:
       - { $ref: "#/components/parameters/uname" }
       - { $ref: "#/components/parameters/photo_id" }
@@ -475,6 +475,29 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
+  /user/{uname}/search/{query_name}:
+    parameters:
+      - { $ref: "#/components/parameters/uname" }
+      - { $ref: "#/components/parameters/query_name" }
+    
+    get:
+      security:
+        - bearerAuth: []
+      tags: ["User"]
+      summary: Get search results
+      description: |-
+        Return the users matching the given query.
+      operationId: getUsers
+      responses:
+        "200":
+          description: The users found from the given query.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UserList" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -662,6 +685,12 @@ components:
       description: The parameter that represents the posted comment.
       required: true
       schema: { $ref: "#/components/schemas/Comment" }
+    query_name:
+      name: query_name
+      in: path
+      description: The parameter that represents a search term.
+      required: true
+      schema: { $ref: "#/components/schemas/Login" }
   
   responses:
     BadRequest:
