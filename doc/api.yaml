@@ -572,7 +572,7 @@ components:
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
-        photos_count:
+        photo_count:
           type: integer
           description: The amount of photos the user has posted.
           minimum: 0

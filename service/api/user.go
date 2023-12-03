@@ -46,7 +46,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	profile.User = profileUser
 
-	profile.PhotosCount, err = rt.db.GetPhotosCount(profileUser.UserIntoDatabaseUser())
+	profile.PhotoCount, err = rt.db.GetPhotoCount(profileUser.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

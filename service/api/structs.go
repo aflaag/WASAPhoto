@@ -192,7 +192,7 @@ func CommentArrayIntoDatabaseCommentArray(array []Comment) []database.DatabaseCo
 
 type Profile struct {
 	User           User `json:"user"`
-	PhotosCount    int  `json:"photos_count"`
+	PhotoCount     int  `json:"photo_count"`
 	FollowersCount int  `json:"followers_count"`
 	FollowingCount int  `json:"following_count"`
 }
@@ -200,7 +200,7 @@ type Profile struct {
 func ProfileDefault() Profile {
 	return Profile{
 		User:           UserDefault(),
-		PhotosCount:    0,
+		PhotoCount:     0,
 		FollowersCount: 0,
 		FollowingCount: 0,
 	}
@@ -209,8 +209,8 @@ func ProfileDefault() Profile {
 func ProfileFromDatabaseProfile(dbProfile database.DatabaseProfile) Profile {
 	return Profile{
 		User:           UserFromDatabaseUser(dbProfile.User),
-		PhotosCount:    dbProfile.PhotosCount,
-		FollowersCount: dbProfile.PhotosCount,
+		PhotoCount:     dbProfile.PhotoCount,
+		FollowersCount: dbProfile.PhotoCount,
 		FollowingCount: dbProfile.FollowingCount,
 	}
 }
@@ -218,8 +218,8 @@ func ProfileFromDatabaseProfile(dbProfile database.DatabaseProfile) Profile {
 func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
 	return database.DatabaseProfile{
 		User:           profile.User.UserIntoDatabaseUser(),
-		PhotosCount:    profile.PhotosCount,
-		FollowersCount: profile.PhotosCount,
+		PhotoCount:     profile.PhotoCount,
+		FollowersCount: profile.PhotoCount,
 		FollowingCount: profile.FollowingCount,
 	}
 }

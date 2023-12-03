@@ -58,7 +58,7 @@ func DatabaseCommentDefault() DatabaseComment {
 
 type DatabaseProfile struct {
 	User           DatabaseUser `json:"user"`
-	PhotosCount    int          `json:"photos_count"`
+	PhotoCount     int          `json:"photo_count"`
 	FollowersCount int          `json:"followers_count"`
 	FollowingCount int          `json:"following_count"`
 }
@@ -66,7 +66,7 @@ type DatabaseProfile struct {
 func DatabaseProfileDefault() DatabaseProfile {
 	return DatabaseProfile{
 		User:           DatabaseUserDefault(),
-		PhotosCount:    0,
+		PhotoCount:     0,
 		FollowersCount: 0,
 		FollowingCount: 0,
 	}

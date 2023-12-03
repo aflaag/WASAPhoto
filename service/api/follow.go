@@ -63,7 +63,47 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 }
 
 func (rt *_router) getFollowers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	user, code, err := rt.GetUserFromParameter("user", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	dbFollowersList, err := rt.db.GetFollowersList(user.UserIntoDatabaseUser())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	followersList := UserListFromDatabaseUserList(dbFollowersList)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(followersList)
 }
 
 func (rt *_router) getFollowing(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	user, code, err := rt.GetUserFromParameter("user", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	dbFollowersList, err := rt.db.GetFollowingList(user.UserIntoDatabaseUser())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	followersList := UserListFromDatabaseUserList(dbFollowersList)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(followersList)
 }

@@ -31,10 +31,6 @@ func (db *appdbimpl) DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUs
 	return nil
 }
 
-// TODO: func (db *appdbimpl) GetFollowers(dbUser DatabaseUser) ([]DatabaseUser, error)
-
-// TODO: func (db *appdbimpl) GetFollowing(dbUser DatabaseUser) ([]DatabaseUser, error)
-
 func (db *appdbimpl) GetFollowersCount(dbUser DatabaseUser) (int, error) {
 	var followersCount int
 
@@ -57,4 +53,12 @@ func (db *appdbimpl) GetFollowingCount(dbUser DatabaseUser) (int, error) {
 	}
 
 	return followingCount, err
+}
+
+func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error) {
+	// TODO: todo
+}
+
+func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error) {
+	// TODO: todo
 }

@@ -9,6 +9,38 @@ import (
 )
 
 func (rt *_router) getPhotoLikes(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	user, code, err := rt.GetUserFromParameter("uname", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+
+	if photo.User.Id != user.Id {
+		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
+		return
+	}
+
+	dbLikeList, err := rt.db.GetLikeList(photo.PhotoIntoDatabasePhoto())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	likeList := UserListFromDatabaseUserList(dbLikeList)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(likeList)
 }
 
 func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {

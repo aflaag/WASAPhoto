@@ -10,10 +10,15 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 
 	rows, err := db.c.Query(`
 		SELECT id, user, url, date
-		FROM Photo WHERE user IN (
-			SELECT second_user FROM follow
-			WHERE first_user=? AND second_user NOT IN (
-				SELECT first_user FROM ban WHERE second_user=?
+		FROM Photo
+		WHERE user IN (
+			SELECT second_user
+			FROM follow
+			WHERE first_user=?
+			  AND second_user NOT IN (
+				SELECT first_user
+				FROM ban
+				WHERE second_user=?
 			)
 		)
 	`, dbUser.Id, dbUser.Id)

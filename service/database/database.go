@@ -54,11 +54,14 @@ type AppDatabase interface {
 	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
 	GetFollowersCount(dbUser DatabaseUser) (int, error)
 	GetFollowingCount(dbUser DatabaseUser) (int, error)
+	GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error)
+	GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error)
 
 	// Like
 	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
 	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	GetLikesCount(dbPhoto DatabasePhoto) (int, error)
+	GetLikeCount(dbPhoto DatabasePhoto) (int, error)
+	GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error)
 
 	// Photo
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
@@ -66,7 +69,7 @@ type AppDatabase interface {
 	DeletePhoto(dbPhoto DatabasePhoto) error
 	GetPhotoLikeCount(dbPhoto *DatabasePhoto) error
 	GetPhotoCommentCount(dbPhoto *DatabasePhoto) error
-	GetPhotosCount(dbUser DatabaseUser) (int, error)
+	GetPhotoCount(dbUser DatabaseUser) (int, error)
 
 	// Comment
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
