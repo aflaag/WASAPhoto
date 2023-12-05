@@ -6,6 +6,7 @@ import (
 )
 
 func (db *appdbimpl) InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error {
+	// insert the ban into the database
 	_, err := db.c.Exec(`
 		INSERT OR IGNORE INTO ban(first_user, second_user)
 		VALUES (?, ?)
@@ -15,7 +16,12 @@ func (db *appdbimpl) InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) e
 }
 
 func (db *appdbimpl) DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error {
-	res, err := db.c.Exec(`DELETE FROM ban WHERE first_user=? AND second_user=?`, dbUser.Id, bannedDbUser.Id)
+	// remove the ban from the database
+	res, err := db.c.Exec(`
+		DELETE FROM ban
+		WHERE first_user=?
+		AND second_user=?
+	`, dbUser.Id, bannedDbUser.Id)
 
 	if err != nil {
 		return err
@@ -27,6 +33,8 @@ func (db *appdbimpl) DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) e
 		return err
 	}
 
+	// if there are no affected rows
+	// then the user was not banned
 	if aff == 0 {
 		return ErrUserNotBanned
 	}
@@ -49,6 +57,7 @@ func (db *appdbimpl) CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUse
 func (db *appdbimpl) GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
+	// get the table of the banned users
 	rows, err := db.c.Query(`
 		SELECT id, username
 		FROM User
@@ -67,6 +76,7 @@ func (db *appdbimpl) GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) {
 		return dbUserList, err
 	}
 
+	// build the banned users list
 	for rows.Next() {
 		dbUser := DatabaseUserDefault()
 

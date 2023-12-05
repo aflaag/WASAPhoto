@@ -9,6 +9,7 @@ import (
 )
 
 func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// authenticate the user performing the action
 	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -16,6 +17,7 @@ func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	// get the list of banned users from the database
 	dbBanList, err := rt.db.GetBanList(user.UserIntoDatabaseUser())
 
 	if err != nil {
@@ -23,15 +25,17 @@ func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	followersList := UserListFromDatabaseUserList(dbBanList)
+	banList := UserListFromDatabaseUserList(dbBanList)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // 200
 
-	_ = json.NewEncoder(w).Encode(followersList)
+	// return the list of banned users
+	_ = json.NewEncoder(w).Encode(banList)
 }
 
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// authenticate the user performing the action
 	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -39,6 +43,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	// get the user to be banned from the resource parameter
 	bannedUser, code, err := rt.GetUserFromParameter("banned_uname", r, ps)
 
 	if err != nil {
@@ -46,6 +51,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	// insert the ban into the database
 	err = rt.db.InsertBan(user.UserIntoDatabaseUser(), bannedUser.UserIntoDatabaseUser())
 
 	if err != nil {
@@ -54,12 +60,14 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // 200
 
+	// return the banned user
 	_ = json.NewEncoder(w).Encode(bannedUser)
 }
 
 func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// authenticate the user performing the action
 	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -67,6 +75,7 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
+	// get the banned user from the resource parameter
 	bannedUser, code, err := rt.GetUserFromParameter("banned_uname", r, ps)
 
 	if err != nil {
@@ -74,6 +83,7 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
+	// remove the ban from the database
 	err = rt.db.DeleteBan(user.UserIntoDatabaseUser(), bannedUser.UserIntoDatabaseUser())
 
 	if err != nil {
@@ -82,5 +92,5 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNoContent)
+	w.WriteHeader(http.StatusNoContent) // 204
 }

@@ -38,31 +38,19 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	// User
-	GetDatabaseUser(userId uint32) (DatabaseUser, error)
-	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
-	InsertUser(dbUser *DatabaseUser) error
-	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
-	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error)
-
 	// Ban
-	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
-	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error
+	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error // DONE
+	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error // DONE
 	CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error)
-	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error)
+	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Follow
-	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
-	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error
+	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error // DONE
+	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error // DONE
 	GetFollowersCount(dbUser DatabaseUser) (int, error)
 	GetFollowingCount(dbUser DatabaseUser) (int, error)
-	GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error)
-	GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error)
-
-	// Like
-	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error)
+	GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Photo
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
@@ -71,6 +59,11 @@ type AppDatabase interface {
 	GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error
 	GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error
 	GetPhotoCount(dbUser DatabaseUser) (int, error)
+
+	// Like
+	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
+	GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error)
 
 	// Comment
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
@@ -81,6 +74,14 @@ type AppDatabase interface {
 	// Stream
 	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)
 
+	// User
+	GetDatabaseUser(userId uint32) (DatabaseUser, error)
+	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
+	InsertUser(dbUser *DatabaseUser) error // DONE
+	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
+	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error)
+
+	// Liveness
 	Ping() error
 }
 

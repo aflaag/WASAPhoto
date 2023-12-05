@@ -6,6 +6,7 @@ import (
 )
 
 func (db *appdbimpl) InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error {
+	// insert the following into the database
 	_, err := db.c.Exec(`
 		INSERT OR IGNORE INTO follow(first_user, second_user)
 		VALUES (?, ?)
@@ -15,7 +16,12 @@ func (db *appdbimpl) InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUs
 }
 
 func (db *appdbimpl) DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error {
-	res, err := db.c.Exec(`DELETE FROM follow WHERE first_user=? AND second_user=?`, dbUser.Id, followedDbUser.Id)
+	// remove the following from the database
+	res, err := db.c.Exec(`
+		DELETE FROM follow
+		WHERE first_user=?
+		AND second_user=?
+	`, dbUser.Id, followedDbUser.Id)
 
 	if err != nil {
 		return err
@@ -27,8 +33,10 @@ func (db *appdbimpl) DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUs
 		return err
 	}
 
+	// if there are no affected rows
+	// then the user was not followed
 	if aff == 0 {
-		return ErrUserNotBanned
+		return ErrUserNotFollowed
 	}
 
 	return nil
@@ -61,6 +69,7 @@ func (db *appdbimpl) GetFollowingCount(dbUser DatabaseUser) (int, error) {
 func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
+	// get the table of the followers
 	rows, err := db.c.Query(`
 		SELECT id, username
 		FROM User
@@ -79,6 +88,7 @@ func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, er
 		return dbUserList, err
 	}
 
+	// build the followers list
 	for rows.Next() {
 		dbUser := DatabaseUserDefault()
 
@@ -99,6 +109,7 @@ func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, er
 func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
+	// get the table of the followed
 	rows, err := db.c.Query(`
 		SELECT id, username
 		FROM User
@@ -117,6 +128,7 @@ func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, er
 		return dbUserList, err
 	}
 
+	// build the following list
 	for rows.Next() {
 		dbUser := DatabaseUserDefault()
 

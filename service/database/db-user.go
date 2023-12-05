@@ -30,12 +30,17 @@ func (db *appdbimpl) GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (Da
 }
 
 func (db *appdbimpl) InsertUser(dbUser *DatabaseUser) error {
-	res, err := db.c.Exec("INSERT INTO User(username) VALUES (?)", dbUser.Username)
+	// insert the new user into the database
+	res, err := db.c.Exec(`
+		INSERT INTO User(username)
+		VALUES (?)
+	`, dbUser.Username)
 
 	if err != nil {
 		return err
 	}
 
+	// get the user id
 	dbUserId, err := res.LastInsertId()
 
 	if err != nil {
