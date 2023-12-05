@@ -8,7 +8,11 @@ import (
 func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, error) {
 	dbComment := DatabaseCommentDefault()
 
-	err := db.c.QueryRow(`SELECT id, user, comment_body FROM Comment WHERE id=?`, commentId).Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.CommentBody)
+	err := db.c.QueryRow(`
+		SELECT id, user, date, comment_body
+		FROM Comment
+		WHERE id=?
+	`, commentId).Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.Date, &dbComment.CommentBody)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbComment, ErrCommentDoesNotExist
@@ -25,8 +29,11 @@ func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, erro
 	return dbComment, err
 }
 
-func (db *appdbimpl) InsertComment(dbComment *DatabaseComment, dbPhoto DatabasePhoto) error {
-	res, err := db.c.Exec(`INSERT INTO Comment(user, photo, comment_body) VALUES (?, ?, ?)`, dbComment.User.Id, dbPhoto.Id, dbComment.CommentBody)
+func (db *appdbimpl) InsertComment(dbComment *DatabaseComment) error {
+	res, err := db.c.Exec(`
+		INSERT INTO Comment(user, photo, date, comment_body)
+		VALUES (?, ?, ?, ?)
+	`, dbComment.User.Id, dbComment.Photo, dbComment.Date, dbComment.CommentBody)
 
 	if err != nil {
 		return err
@@ -43,8 +50,11 @@ func (db *appdbimpl) InsertComment(dbComment *DatabaseComment, dbPhoto DatabaseP
 	return nil
 }
 
-func (db *appdbimpl) RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePhoto) error {
-	res, err := db.c.Exec(`DELETE FROM Comment WHERE id=? AND user=? AND photo=? AND comment_body=?`, dbComment.Id, dbComment.User.Id, dbPhoto.Id, dbComment.CommentBody)
+func (db *appdbimpl) DeleteComment(dbComment DatabaseComment) error {
+	res, err := db.c.Exec(`
+		DELETE FROM Comment
+		WHERE id=?
+	`, dbComment.Id)
 
 	if err != nil {
 		return err
@@ -59,17 +69,22 @@ func (db *appdbimpl) RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePh
 	return err
 }
 
-func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto) (DatabaseCommentList, error) {
+func (db *appdbimpl) GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) (DatabaseCommentList, error) {
 	dbCommentList := DatabaseCommentListDefault()
 
 	rows, err := db.c.Query(`
-		SELECT id, user, comment_body, photo
+		SELECT id, user, photo, date, comment_body
 		FROM Comment
 		WHERE photo=?
-	`, dbPhoto.Id)
+		AND user NOT IN (
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+		)
+	`, dbPhoto.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return dbCommentList, ErrUserDoesNotExist
+		return dbCommentList, ErrPhotoDoesNotExist
 	}
 
 	if err != nil {
@@ -79,9 +94,8 @@ func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto) (DatabaseCommentList,
 	for rows.Next() {
 		dbComment := DatabaseCommentDefault()
 
-		var photoId int
-
-		err = rows.Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.CommentBody, &photoId)
+		// TODO: MANCANO DA FILLARE UTENTI E FOTO
+		err = rows.Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.Photo.Id, &dbComment.Date, &dbComment.CommentBody)
 
 		if err != nil {
 			return dbCommentList, err

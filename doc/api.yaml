@@ -555,7 +555,7 @@ components:
           example: "https://ph04.github.io/WASAPhoto/Mario/photos/1234"
         date:
           type: string
-          description: The date of the publishing of the photo.
+          description: The date when the photo was published.
           pattern: "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)((-(\\d{2}):(\\d{2})|Z)?)$"
           minLength: 20
           maxLength: 30
@@ -577,10 +577,18 @@ components:
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
+        photo: { $ref: "#/components/schemas/Photo" }
         id:
           type: integer
           description: The id of the comment.
           example: 1234
+        date:
+          type: string
+          description: The date when the comment was published.
+          pattern: "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)((-(\\d{2}):(\\d{2})|Z)?)$"
+          minLength: 20
+          maxLength: 30
+          example: "2023-11-21T00:28:28Z"
         comment_body:
           type: string
           description: The content of the comment.

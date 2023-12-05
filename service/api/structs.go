@@ -143,6 +143,8 @@ func PhotoArrayIntoDatabasePhotoArray(array []Photo) []database.DatabasePhoto {
 type Comment struct {
 	Id          uint32 `json:"id"`
 	User        User   `json:"user"`
+	Photo       Photo  `json:"photo"`
+	Date        string `json:"date"`
 	CommentBody string `json:"comment_body"`
 }
 
@@ -150,6 +152,8 @@ func CommentDefault() Comment {
 	return Comment{
 		Id:          0,
 		User:        UserDefault(),
+		Photo:       PhotoDefault(),
+		Date:        "",
 		CommentBody: "",
 	}
 }
@@ -158,6 +162,8 @@ func CommentFromDatabaseComment(dbComment database.DatabaseComment) Comment {
 	return Comment{
 		Id:          dbComment.Id,
 		User:        UserFromDatabaseUser(dbComment.User),
+		Photo:       PhotoFromDatabasePhoto(dbComment.Photo),
+		Date:        dbComment.Date,
 		CommentBody: dbComment.CommentBody,
 	}
 }
@@ -166,6 +172,8 @@ func (comment *Comment) CommentIntoDatabaseComment() database.DatabaseComment {
 	return database.DatabaseComment{
 		Id:          comment.Id,
 		User:        comment.User.UserIntoDatabaseUser(),
+		Photo:       comment.Photo.PhotoIntoDatabasePhoto(),
+		Date:        comment.Date,
 		CommentBody: comment.CommentBody,
 	}
 }

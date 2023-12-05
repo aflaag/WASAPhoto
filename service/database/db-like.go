@@ -6,7 +6,10 @@ import (
 )
 
 func (db *appdbimpl) InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
-	_, err := db.c.Exec(`INSERT INTO like(user, photo) VALUES (?, ?)`, dbUser.Id, dbPhoto.Id)
+	_, err := db.c.Exec(`
+		INSERT OR IGNORE INTO like(user, photo)
+		VALUES (?, ?)
+	`, dbUser.Id, dbPhoto.Id)
 
 	return err
 }
@@ -25,18 +28,6 @@ func (db *appdbimpl) DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) erro
 	}
 
 	return err
-}
-
-func (db *appdbimpl) GetLikeCount(dbPhoto DatabasePhoto) (int, error) {
-	var likeCount int
-
-	err := db.c.QueryRow(`SELECT COUNT(*) FROM like WHERE photo=?`, dbPhoto.Id).Scan(&likeCount)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return likeCount, ErrUserDoesNotExist
-	}
-
-	return likeCount, err
 }
 
 func (db *appdbimpl) GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error) {

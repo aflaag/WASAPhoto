@@ -8,17 +8,9 @@
 
 ### Backend
 
-- ban
-  - se un utente mi ha bannato, non posso vedere i suoi like alle foto degli altri
-  - se un utente mi ha bannato, non posso vedere i suoi commenti alle foto degli altri
 - generali
-  - gestisci le PUT bene
-  - ricontrollare
-    - response
-    - errori
-    - ogni possibile cosa che può fallire di ogni request
-  - metti la data al commento (anche nell'api)
-  - riformatta tutte le query
+  - RILEGGI TUTTO QUANTO E RICONTROLLA TUTTO
+  - commenti
 - errori
   - gli errori vanno stampati nelle response o nel logger?
     - se no, cosa va messo nella response? un messaggio standard?

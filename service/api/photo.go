@@ -19,10 +19,9 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	photo := PhotoDefault() // TODO: IN TEORIA DEVI PRENDERLO DAL REQUEST BODY PER PRENDERE ANCHE L'URL
 
-	currentTime := time.Now()
-
 	photo.User = user
-	photo.Date = currentTime.Format("2006-01-02 15:04:05")
+
+	photo.Date = time.Now().Format("2006-01-02 15:04:05")
 
 	// TODO: MANCA DA CAPIRE COSA SIA L'URL
 

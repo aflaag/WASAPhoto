@@ -62,22 +62,21 @@ type AppDatabase interface {
 	// Like
 	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
 	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	GetLikeCount(dbPhoto DatabasePhoto) (int, error)
 	GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error)
 
 	// Photo
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
 	InsertPhoto(dbPhoto *DatabasePhoto) error
 	DeletePhoto(dbPhoto DatabasePhoto) error
-	GetPhotoLikeCount(dbPhoto *DatabasePhoto) error
-	GetPhotoCommentCount(dbPhoto *DatabasePhoto) error
+	GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error
+	GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error
 	GetPhotoCount(dbUser DatabaseUser) (int, error)
 
 	// Comment
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
-	InsertComment(dbComment *DatabaseComment, dbPhoto DatabasePhoto) error
-	RemoveComment(dbComment DatabaseComment, dbPhoto DatabasePhoto) error
-	GetCommentList(dbPhoto DatabasePhoto) (DatabaseCommentList, error)
+	InsertComment(dbComment *DatabaseComment) error
+	DeleteComment(dbComment DatabaseComment) error
+	GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) (DatabaseCommentList, error)
 
 	// Stream
 	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)
@@ -123,6 +122,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 		CREATE TABLE IF NOT EXISTS Comment (
 			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			user INTEGER NOT NULL,
+			date TEXT NOT NULL,
 			photo INTEGER NOT NULL,
 			comment_body TEXT NOT NULL,
 			FOREIGN KEY (user) REFERENCES User(name),

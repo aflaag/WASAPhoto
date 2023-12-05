@@ -45,6 +45,8 @@ func DatabasePhotoDefault() DatabasePhoto {
 type DatabaseComment struct {
 	Id          uint32       `json:"id"`
 	User        DatabaseUser `json:"user"`
+	Photo       DatabasePhoto `json:"photo"`
+	Date        string       `json:"date"`
 	CommentBody string       `json:"comment_body"`
 }
 
@@ -52,6 +54,8 @@ func DatabaseCommentDefault() DatabaseComment {
 	return DatabaseComment{
 		Id:          0,
 		User:        DatabaseUserDefault(),
+		Photo: DatabasePhotoDefault(),
+		Date:        "",
 		CommentBody: "",
 	}
 }

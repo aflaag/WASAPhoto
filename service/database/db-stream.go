@@ -40,21 +40,21 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 			return dbStream, err
 		}
 
-		dbUser, err := db.GetDatabaseUser(dbPhoto.User.Id)
+		dbPhotoUser, err := db.GetDatabaseUser(dbPhoto.User.Id)
 
 		if err != nil {
 			return dbStream, err
 		}
 
-		dbPhoto.User = dbUser
+		dbPhoto.User = dbPhotoUser
 
-		err = db.GetPhotoLikeCount(&dbPhoto)
+		err = db.GetPhotoLikeCount(dbUser, &dbPhoto)
 
 		if err != nil {
 			return dbStream, err
 		}
 
-		err = db.GetPhotoCommentCount(&dbPhoto)
+		err = db.GetPhotoCommentCount(dbUser, &dbPhoto)
 
 		if err != nil {
 			return dbStream, err
