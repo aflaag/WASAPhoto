@@ -109,7 +109,7 @@ func (rt *_router) getFollowers(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// get the followers list from the database
-	dbFollowersList, err := rt.db.GetFollowersList(followersUser.UserIntoDatabaseUser())
+	dbFollowersList, err := rt.db.GetFollowersList(followersUser.UserIntoDatabaseUser(), dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -165,7 +165,7 @@ func (rt *_router) getFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// get the following list from the database
-	dbFollowingList, err := rt.db.GetFollowingList(followingUser.UserIntoDatabaseUser())
+	dbFollowingList, err := rt.db.GetFollowingList(followingUser.UserIntoDatabaseUser(), dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

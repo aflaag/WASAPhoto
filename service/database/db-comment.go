@@ -33,7 +33,7 @@ func (db *appdbimpl) InsertComment(dbComment *DatabaseComment) error {
 	res, err := db.c.Exec(`
 		INSERT INTO Comment(user, photo, date, comment_body)
 		VALUES (?, ?, ?, ?)
-	`, dbComment.User.Id, dbComment.Photo, dbComment.Date, dbComment.CommentBody)
+	`, dbComment.User.Id, dbComment.Photo.Id, dbComment.Date, dbComment.CommentBody)
 
 	if err != nil {
 		return err

@@ -4,10 +4,10 @@
 
 ### OpenAPI
 
-- controlla le response di errore se possono effettivamente essere ritornate
-
 ### Backend
 
+- ricontrolla components con struct
+- ricontrolla tabelle del DB
 - FIXA LA COSA DELL'UPDATE DELLO USERNAME CON LA UNIQUENESS
 - generali
   - RILEGGI TUTTO QUANTO E RICONTROLLA TUTTO

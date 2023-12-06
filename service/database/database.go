@@ -45,31 +45,31 @@ type AppDatabase interface {
 	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Follow
-	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error // DONE
-	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error // DONE
-	GetFollowersCount(dbUser DatabaseUser) (int, error)
-	GetFollowingCount(dbUser DatabaseUser) (int, error)
-	GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
-	GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
+	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
+	GetFollowersCount(dbUser DatabaseUser) (int, error)                              // TODO: leva chi mi ha bannato
+	GetFollowingCount(dbUser DatabaseUser) (int, error)                              // TODO: leva chi mi ha bannato
+	GetFollowersList(followersDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	GetFollowingList(followingDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Photo
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
-	InsertPhoto(dbPhoto *DatabasePhoto) error
-	DeletePhoto(dbPhoto DatabasePhoto) error
-	GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error
-	GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error
+	InsertPhoto(dbPhoto *DatabasePhoto) error                               // DONE
+	DeletePhoto(dbPhoto DatabasePhoto) error                                // DONE
+	GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error    // TODO: leva chi mi ha bannato
+	GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error // TODO: leva chi mi ha bannato
 	GetPhotoCount(dbUser DatabaseUser) (int, error)
 
 	// Like
-	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error
-	GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error)
+	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error                      // DONE
+	DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error                      // DONE
+	GetLikeList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Comment
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
 	InsertComment(dbComment *DatabaseComment) error
 	DeleteComment(dbComment DatabaseComment) error
-	GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) (DatabaseCommentList, error)
+	GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) (DatabaseCommentList, error) // TODO: leva chi mi ha bannato (dovrei averlo già fatto qui, controlla)
 
 	// Stream
 	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)
@@ -79,7 +79,7 @@ type AppDatabase interface {
 	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
 	InsertUser(dbUser *DatabaseUser) error // DONE
 	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
-	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error)
+	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) // TODO: leva chi mi ha bannato (doveri averlo già fatto qui, controlla)
 
 	// Liveness
 	Ping() error

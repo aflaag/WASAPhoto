@@ -66,10 +66,11 @@ func (db *appdbimpl) GetFollowingCount(dbUser DatabaseUser) (int, error) {
 	return followingCount, err
 }
 
-func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, error) {
+func (db *appdbimpl) GetFollowersList(followersDbUser DatabaseUser, dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
 	// get the table of the followers
+	// without the users who banned the user performing the action
 	rows, err := db.c.Query(`
 		SELECT id, username
 		FROM User
@@ -78,7 +79,12 @@ func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, er
 			FROM follow
 			WHERE second_user=?
 		)
-	`, dbUser.Id)
+		AND id NOT IN (
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+		)
+	`, followersDbUser.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUserList, ErrUserDoesNotExist
@@ -90,15 +96,15 @@ func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, er
 
 	// build the followers list
 	for rows.Next() {
-		dbUser := DatabaseUserDefault()
+		tableDbUser := DatabaseUserDefault()
 
-		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+		err = rows.Scan(&tableDbUser.Id, &tableDbUser.Username)
 
 		if err != nil {
 			return dbUserList, err
 		}
 
-		dbUserList.Users = append(dbUserList.Users, dbUser)
+		dbUserList.Users = append(dbUserList.Users, tableDbUser)
 	}
 
 	_ = rows.Close()
@@ -106,7 +112,7 @@ func (db *appdbimpl) GetFollowersList(dbUser DatabaseUser) (DatabaseUserList, er
 	return dbUserList, err
 }
 
-func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, error) {
+func (db *appdbimpl) GetFollowingList(followingDbUser DatabaseUser, dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
 	// get the table of the followed
@@ -118,7 +124,12 @@ func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, er
 			FROM follow
 			WHERE first_user=?
 		)
-	`, dbUser.Id)
+		AND id NOT IN (
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+		)
+	`, followingDbUser.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUserList, ErrUserDoesNotExist
@@ -130,15 +141,15 @@ func (db *appdbimpl) GetFollowingList(dbUser DatabaseUser) (DatabaseUserList, er
 
 	// build the following list
 	for rows.Next() {
-		dbUser := DatabaseUserDefault()
+		tableDbUser := DatabaseUserDefault()
 
-		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+		err = rows.Scan(&tableDbUser.Id, &tableDbUser.Username)
 
 		if err != nil {
 			return dbUserList, err
 		}
 
-		dbUserList.Users = append(dbUserList.Users, dbUser)
+		dbUserList.Users = append(dbUserList.Users, tableDbUser)
 	}
 
 	_ = rows.Close()

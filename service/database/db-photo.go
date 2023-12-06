@@ -26,12 +26,16 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32) (DatabasePhoto, error) {
 }
 
 func (db *appdbimpl) InsertPhoto(dbPhoto *DatabasePhoto) error {
-	res, err := db.c.Exec(`INSERT INTO Photo(user, url, date) VALUES (?, ?, ?)`, dbPhoto.User.Id, dbPhoto.Url, dbPhoto.Date)
+	res, err := db.c.Exec(`
+		INSERT INTO Photo(user, url, date)
+		VALUES (?, ?, ?)
+	`, dbPhoto.User.Id, dbPhoto.Url, dbPhoto.Date)
 
 	if err != nil {
 		return err
 	}
 
+	// get the photo id
 	dbPhotoId, err := res.LastInsertId()
 
 	if err != nil {
@@ -44,27 +48,33 @@ func (db *appdbimpl) InsertPhoto(dbPhoto *DatabasePhoto) error {
 }
 
 func (db *appdbimpl) DeletePhoto(dbPhoto DatabasePhoto) error {
-	var err error
-
-	_, err = db.c.Exec(`DELETE FROM like WHERE photo=?`, dbPhoto.Id)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = db.c.Exec(`DELETE FROM comment WHERE photo=?`, dbPhoto.Id)
+	// remove every like to the photo from the database
+	_, err := db.c.Exec(`
+		DELETE FROM like
+		WHERE photo=?
+	`, dbPhoto.Id)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = db.c.Exec(`DELETE FROM Photo WHERE id=?`, dbPhoto.Id)
+	// remove every comment under the photo from the database
+	_, err = db.c.Exec(`
+		DELETE FROM Comment
+		WHERE photo=?
+	`, dbPhoto.Id)
 
 	if err != nil {
 		return err
 	}
 
-	return nil
+	// remove the photo from the database
+	_, err = db.c.Exec(`
+		DELETE FROM Photo
+		WHERE id=?
+	`, dbPhoto.Id)
+
+	return err
 }
 
 func (db *appdbimpl) GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error {

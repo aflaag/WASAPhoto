@@ -78,15 +78,15 @@ func (db *appdbimpl) GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) {
 
 	// build the banned users list
 	for rows.Next() {
-		dbUser := DatabaseUserDefault()
+		tableDbUser := DatabaseUserDefault()
 
-		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+		err = rows.Scan(&tableDbUser.Id, &tableDbUser.Username)
 
 		if err != nil {
 			return dbUserList, err
 		}
 
-		dbUserList.Users = append(dbUserList.Users, dbUser)
+		dbUserList.Users = append(dbUserList.Users, tableDbUser)
 	}
 
 	_ = rows.Close()

@@ -6,6 +6,7 @@ import (
 )
 
 func (db *appdbimpl) InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
+	// insert the like into the database
 	_, err := db.c.Exec(`
 		INSERT OR IGNORE INTO like(user, photo)
 		VALUES (?, ?)
@@ -15,7 +16,11 @@ func (db *appdbimpl) InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) erro
 }
 
 func (db *appdbimpl) DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error {
-	res, err := db.c.Exec(`DELETE FROM like WHERE user=? AND photo=?`, dbUser.Id, dbPhoto.Id)
+	res, err := db.c.Exec(`
+		DELETE FROM like
+		WHERE user=?
+		AND photo=?
+	`, dbUser.Id, dbPhoto.Id)
 
 	if err != nil {
 		return err
@@ -23,6 +28,12 @@ func (db *appdbimpl) DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) erro
 
 	aff, err := res.RowsAffected()
 
+	if err != nil {
+		return err
+	}
+
+	// if there are no affected rows
+	// then the photo was not liked
 	if aff == 0 {
 		return ErrPhotoNotLiked
 	}
@@ -30,18 +41,25 @@ func (db *appdbimpl) DeleteLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) erro
 	return err
 }
 
-func (db *appdbimpl) GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error) {
+func (db *appdbimpl) GetLikeList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
+	// get the table of the users who liked the photo
+	// without the users who banned the user performing the action
 	rows, err := db.c.Query(`
 		SELECT id, username
 		FROM User
 		WHERE id IN (
-			SELECT id
+			SELECT user
 			FROM like
 			WHERE photo=?
 		)
-	`, dbPhoto.Id)
+		AND id NOT IN (
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+		)
+	`, dbPhoto.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUserList, ErrPhotoDoesNotExist
@@ -51,16 +69,17 @@ func (db *appdbimpl) GetLikeList(dbPhoto DatabasePhoto) (DatabaseUserList, error
 		return dbUserList, err
 	}
 
+	// build the like list
 	for rows.Next() {
-		dbUser := DatabaseUserDefault()
+		tableDbUser := DatabaseUserDefault()
 
-		err = rows.Scan(&dbUser.Id, &dbUser.Username)
+		err = rows.Scan(&tableDbUser.Id, &tableDbUser.Username)
 
 		if err != nil {
 			return dbUserList, err
 		}
 
-		dbUserList.Users = append(dbUserList.Users, dbUser)
+		dbUserList.Users = append(dbUserList.Users, tableDbUser)
 	}
 
 	_ = rows.Close()
