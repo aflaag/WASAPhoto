@@ -11,6 +11,7 @@ import (
 )
 
 func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// get the bearer token
 	token, err := GetBearerToken(r.Header.Get("Authorization"))
 
 	if err != nil {
@@ -18,6 +19,7 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// authenticate the user performing the action
 	dbUser, err := rt.db.GetDatabaseUser(uint32(token))
 
 	if err != nil {
@@ -25,6 +27,7 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// get the user of the photo from the resource parameter
 	photoUser, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -32,6 +35,21 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// check whether the user of the photo
+	// has banned the user performing the action
+	checkBan, err := rt.db.CheckBan(photoUser.UserIntoDatabaseUser(), dbUser)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if checkBan {
+		http.Error(w, ErrBannedUser.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	// get the photo from the resource parameter
 	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
 
 	if err != nil {
@@ -39,12 +57,14 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// check if the resource is consistent
 	if photo.User.Id != photoUser.Id {
 		http.Error(w, ErrPageNotFound.Error(), http.StatusNotFound)
 		return
 	}
 
-	dbCommentList, err := rt.db.GetCommentList(dbUser, photo.PhotoIntoDatabasePhoto())
+	// get the comment list from the database
+	dbCommentList, err := rt.db.GetCommentList(photo.PhotoIntoDatabasePhoto(), dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -54,8 +74,9 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 	commentList := CommentListFromDatabaseCommentList(dbCommentList)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // 200
 
+	// return the comment list
 	_ = json.NewEncoder(w).Encode(commentList)
 }
 

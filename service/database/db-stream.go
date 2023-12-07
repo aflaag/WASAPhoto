@@ -31,6 +31,8 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 		return dbStream, err
 	}
 
+	dbPhotoUser := DatabaseUserDefault()
+
 	for rows.Next() {
 		dbPhoto := DatabasePhotoDefault()
 
@@ -40,21 +42,23 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 			return dbStream, err
 		}
 
-		dbPhotoUser, err := db.GetDatabaseUser(dbPhoto.User.Id)
+		if dbPhotoUser.Id == 0 {
+			dbPhotoUser, err = db.GetDatabaseUser(dbPhoto.User.Id)
 
-		if err != nil {
-			return dbStream, err
+			if err != nil {
+				return dbStream, err
+			}
 		}
 
 		dbPhoto.User = dbPhotoUser
 
-		err = db.GetPhotoLikeCount(dbUser, &dbPhoto)
+		err = db.GetPhotoLikeCount(&dbPhoto, dbUser)
 
 		if err != nil {
 			return dbStream, err
 		}
 
-		err = db.GetPhotoCommentCount(dbUser, &dbPhoto)
+		err = db.GetPhotoCommentCount(&dbPhoto, dbUser)
 
 		if err != nil {
 			return dbStream, err

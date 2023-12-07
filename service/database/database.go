@@ -56,8 +56,8 @@ type AppDatabase interface {
 	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
 	InsertPhoto(dbPhoto *DatabasePhoto) error                               // DONE
 	DeletePhoto(dbPhoto DatabasePhoto) error                                // DONE
-	GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error    // TODO: leva chi mi ha bannato
-	GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error // TODO: leva chi mi ha bannato
+	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error
+	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error
 	GetPhotoCount(dbUser DatabaseUser) (int, error)
 
 	// Like
@@ -69,7 +69,7 @@ type AppDatabase interface {
 	GetDatabaseComment(commentId uint32) (DatabaseComment, error)
 	InsertComment(dbComment *DatabaseComment) error
 	DeleteComment(dbComment DatabaseComment) error
-	GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) (DatabaseCommentList, error) // TODO: leva chi mi ha bannato (dovrei averlo già fatto qui, controlla)
+	GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseCommentList, error) // TODO: CONTROLLALA PER BENE E SE FUNZIONA SEGNALA COME DONE
 
 	// Stream
 	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)

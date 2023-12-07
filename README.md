@@ -6,6 +6,8 @@
 
 ### Backend
 
+- DEVI FINIRE DI CONTROLLARE GET COMMENTS
+
 - ricontrolla components con struct
 - ricontrolla tabelle del DB
 - FIXA LA COSA DELL'UPDATE DELLO USERNAME CON LA UNIQUENESS

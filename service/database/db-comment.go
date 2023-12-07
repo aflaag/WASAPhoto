@@ -69,9 +69,10 @@ func (db *appdbimpl) DeleteComment(dbComment DatabaseComment) error {
 	return err
 }
 
-func (db *appdbimpl) GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) (DatabaseCommentList, error) {
+func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseCommentList, error) {
 	dbCommentList := DatabaseCommentListDefault()
 
+	// get the table of the comments under the photo
 	rows, err := db.c.Query(`
 		SELECT id, user, photo, date, comment_body
 		FROM Comment
@@ -91,15 +92,35 @@ func (db *appdbimpl) GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) 
 		return dbCommentList, err
 	}
 
+	dbCommentPhoto := DatabasePhotoDefault()
+
+	// build the comment list
 	for rows.Next() {
 		dbComment := DatabaseCommentDefault()
 
-		// TODO: MANCANO DA FILLARE UTENTI E FOTO
 		err = rows.Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.Photo.Id, &dbComment.Date, &dbComment.CommentBody)
 
 		if err != nil {
 			return dbCommentList, err
 		}
+
+		dbCommentUser, err := db.GetDatabaseUser(dbComment.User.Id)
+
+		if err != nil {
+			return dbCommentList, err
+		}
+
+		dbComment.User = dbCommentUser
+
+		if dbCommentPhoto.Id == 0 {
+			dbCommentPhoto, err = db.GetDatabasePhoto(dbComment.Photo.Id)
+
+			if err != nil {
+				return dbCommentList, err
+			}
+		}
+
+		dbComment.Photo = dbCommentPhoto
 
 		dbCommentList.Comments = append(dbCommentList.Comments, dbComment)
 	}

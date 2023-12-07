@@ -22,6 +22,14 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32) (DatabasePhoto, error) {
 
 	dbPhoto.User.Username = dbUser.Username
 
+	err = db.GetPhotoLikeCount(&dbPhoto, dbUser)
+
+	if err != nil {
+		return dbPhoto, err
+	}
+
+	err = db.GetPhotoCommentCount(&dbPhoto, dbUser)
+
 	return dbPhoto, err
 }
 
@@ -77,7 +85,7 @@ func (db *appdbimpl) DeletePhoto(dbPhoto DatabasePhoto) error {
 	return err
 }
 
-func (db *appdbimpl) GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error {
+func (db *appdbimpl) GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error {
 	err := db.c.QueryRow(`
 		SELECT COUNT(*)
 		FROM like
@@ -96,7 +104,7 @@ func (db *appdbimpl) GetPhotoLikeCount(dbUser DatabaseUser, dbPhoto *DatabasePho
 	return err
 }
 
-func (db *appdbimpl) GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *DatabasePhoto) error {
+func (db *appdbimpl) GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error {
 	err := db.c.QueryRow(`
 		SELECT COUNT(*)
 		FROM Comment
@@ -104,7 +112,7 @@ func (db *appdbimpl) GetPhotoCommentCount(dbUser DatabaseUser, dbPhoto *Database
 		AND user NOT IN (
 			SELECT first_user
 			FROM ban
-			WHERE second_user?
+			WHERE second_user=?
 		)`, dbPhoto.Id, dbUser.Id).Scan(&dbPhoto.CommentCount)
 
 	if errors.Is(err, sql.ErrNoRows) {
