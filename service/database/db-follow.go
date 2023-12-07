@@ -107,6 +107,10 @@ func (db *appdbimpl) GetFollowersList(followersDbUser DatabaseUser, dbUser Datab
 		dbUserList.Users = append(dbUserList.Users, tableDbUser)
 	}
 
+	if rows.Err() != nil {
+		return dbUserList, err
+	}
+
 	_ = rows.Close()
 
 	return dbUserList, err
@@ -150,6 +154,10 @@ func (db *appdbimpl) GetFollowingList(followingDbUser DatabaseUser, dbUser Datab
 		}
 
 		dbUserList.Users = append(dbUserList.Users, tableDbUser)
+	}
+
+	if rows.Err() != nil {
+		return dbUserList, err
 	}
 
 	_ = rows.Close()

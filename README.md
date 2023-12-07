@@ -6,6 +6,7 @@
 
 ### Backend
 
+- FIXA ERRORE RESULT
 - ricontrolla components con struct
 - ricontrolla tabelle del DB
 - FIXA LA COSA DELL'UPDATE DELLO USERNAME CON LA UNIQUENESS

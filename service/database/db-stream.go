@@ -63,6 +63,10 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 		dbStream.Photos = append(dbStream.Photos, dbPhoto)
 	}
 
+	if rows.Err() != nil {
+		return dbStream, err
+	}
+
 	_ = rows.Close()
 
 	return dbStream, err

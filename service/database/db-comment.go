@@ -104,6 +104,10 @@ func (db *appdbimpl) GetCommentList(dbUser DatabaseUser, dbPhoto DatabasePhoto) 
 		dbCommentList.Comments = append(dbCommentList.Comments, dbComment)
 	}
 
+	if rows.Err() != nil {
+		return dbCommentList, err
+	}
+
 	_ = rows.Close()
 
 	return dbCommentList, err

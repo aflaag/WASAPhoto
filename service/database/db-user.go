@@ -113,6 +113,10 @@ func (db *appdbimpl) GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (Da
 		dbUserList.Users = append(dbUserList.Users, newDbUser)
 	}
 
+	if rows.Err() != nil {
+		return dbUserList, err
+	}
+
 	_ = rows.Close()
 
 	return dbUserList, err

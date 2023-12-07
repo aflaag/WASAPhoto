@@ -89,6 +89,10 @@ func (db *appdbimpl) GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) {
 		dbUserList.Users = append(dbUserList.Users, tableDbUser)
 	}
 
+	if rows.Err() != nil {
+		return dbUserList, err
+	}
+
 	_ = rows.Close()
 
 	return dbUserList, err
