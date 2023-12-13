@@ -48,7 +48,7 @@ func (rt *_router) getPhotoLikes(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// get the photo from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", UserFromDatabaseUser(dbUser), r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
@@ -96,7 +96,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// get the photo from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", likeUser, r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
@@ -120,7 +120,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	dbPhoto := photo.PhotoIntoDatabasePhoto()
 
 	// update the number of likes to the photo
-	err = rt.db.GetPhotoLikeCount(&dbPhoto, user.UserIntoDatabaseUser())
+	err = rt.db.GetPhotoLikeCount(&dbPhoto, likeUser.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -154,7 +154,7 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// get the photo from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", likeUser, r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)

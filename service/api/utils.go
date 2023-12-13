@@ -48,8 +48,8 @@ func (rt *_router) GetUserFromLogin(login Login) (User, error) {
 	return user, nil
 }
 
-func (rt *_router) GetPhotoFromPhotoId(photoId uint32) (Photo, error) {
-	dbPhoto, err := rt.db.GetDatabasePhoto(photoId)
+func (rt *_router) GetPhotoFromPhotoId(photoId uint32, user User) (Photo, error) {
+	dbPhoto, err := rt.db.GetDatabasePhoto(photoId, user.UserIntoDatabaseUser())
 
 	if err != nil {
 		return PhotoDefault(), err
@@ -60,8 +60,8 @@ func (rt *_router) GetPhotoFromPhotoId(photoId uint32) (Photo, error) {
 	return photo, nil
 }
 
-func (rt *_router) GetCommentFromCommentId(commentId uint32) (Comment, error) {
-	dbComment, err := rt.db.GetDatabaseComment(commentId)
+func (rt *_router) GetCommentFromCommentId(commentId uint32, user User) (Comment, error) {
+	dbComment, err := rt.db.GetDatabaseComment(commentId, user.UserIntoDatabaseUser())
 
 	if err != nil {
 		return CommentDefault(), err
@@ -87,7 +87,7 @@ func (rt *_router) GetUserFromParameter(parameter string, r *http.Request, ps ht
 	return user, code, err
 }
 
-func (rt *_router) GetPhotoFromParameter(parameter string, r *http.Request, ps httprouter.Params) (Photo, int, error) {
+func (rt *_router) GetPhotoFromParameter(parameter string, user User, r *http.Request, ps httprouter.Params) (Photo, int, error) {
 	photo := PhotoDefault()
 
 	photoIdString := ps.ByName(parameter)
@@ -97,7 +97,7 @@ func (rt *_router) GetPhotoFromParameter(parameter string, r *http.Request, ps h
 		return photo, http.StatusInternalServerError, err
 	}
 
-	photo, err = rt.GetPhotoFromPhotoId(uint32(photoId))
+	photo, err = rt.GetPhotoFromPhotoId(uint32(photoId), user)
 
 	if err != nil {
 		return photo, http.StatusInternalServerError, err

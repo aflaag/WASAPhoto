@@ -5,22 +5,26 @@ import (
 	"errors"
 )
 
-func (db *appdbimpl) GetDatabasePhoto(photoId uint32) (DatabasePhoto, error) {
+func (db *appdbimpl) GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (DatabasePhoto, error) {
 	dbPhoto := DatabasePhotoDefault()
 
-	err := db.c.QueryRow(`SELECT id, user, date, url FROM Photo WHERE id=?`, photoId).Scan(&dbPhoto.Id, &dbPhoto.User.Id, &dbPhoto.Date, &dbPhoto.Url)
+	err := db.c.QueryRow(`
+		SELECT id, user, date, url
+		FROM Photo
+		WHERE id=?
+	`, photoId).Scan(&dbPhoto.Id, &dbPhoto.User.Id, &dbPhoto.Date, &dbPhoto.Url)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbPhoto, ErrPhotoDoesNotExist
 	}
 
-	dbUser, err := db.GetDatabaseUser(dbPhoto.User.Id)
+	dbPhotoUser, err := db.GetDatabaseUser(dbPhoto.User.Id)
 
 	if err != nil {
 		return dbPhoto, err
 	}
 
-	dbPhoto.User.Username = dbUser.Username
+	dbPhoto.User.Username = dbPhotoUser.Username
 
 	err = db.GetPhotoLikeCount(&dbPhoto, dbUser)
 
@@ -86,6 +90,9 @@ func (db *appdbimpl) DeletePhoto(dbPhoto DatabasePhoto) error {
 }
 
 func (db *appdbimpl) GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error {
+	// return the number of likes to the photo
+	// without counting the likes of users who banned
+	// the user performing the action
 	err := db.c.QueryRow(`
 		SELECT COUNT(*)
 		FROM like
@@ -105,6 +112,9 @@ func (db *appdbimpl) GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUs
 }
 
 func (db *appdbimpl) GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error {
+	// return the number of likes to the photo
+	// without counting the likes of users who banned
+	// the user performing the action
 	err := db.c.QueryRow(`
 		SELECT COUNT(*)
 		FROM Comment

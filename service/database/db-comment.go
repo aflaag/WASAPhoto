@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, error) {
+func (db *appdbimpl) GetDatabaseComment(commentId uint32, dbUser DatabaseUser) (DatabaseComment, error) {
 	dbComment := DatabaseCommentDefault()
 
 	// get the comment from the database
@@ -20,16 +20,16 @@ func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, erro
 	}
 
 	// get the user of the comment
-	dbUser, err := db.GetDatabaseUser(dbComment.User.Id)
+	dbCommentUser, err := db.GetDatabaseUser(dbComment.User.Id)
 
 	if err != nil {
 		return dbComment, err
 	}
 
-	dbComment.User.Username = dbUser.Username
+	dbComment.User.Username = dbCommentUser.Username
 
 	// // get the photo of the comment
-	dbPhoto, err := db.GetDatabasePhoto(dbComment.Photo.Id)
+	dbPhoto, err := db.GetDatabasePhoto(dbComment.Photo.Id, dbUser)
 
 	if err != nil {
 		return dbComment, err
@@ -89,6 +89,8 @@ func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) 
 	dbCommentList := DatabaseCommentListDefault()
 
 	// get the table of the comments under the photo
+	// without considering the comments made by users
+	// who banned the user performing the action
 	rows, err := db.c.Query(`
 		SELECT id, user, photo, date, comment_body
 		FROM Comment
@@ -129,7 +131,7 @@ func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) 
 		dbComment.User = dbCommentUser
 
 		if dbCommentPhoto.Id == 0 {
-			dbCommentPhoto, err = db.GetDatabasePhoto(dbComment.Photo.Id)
+			dbCommentPhoto, err = db.GetDatabasePhoto(dbComment.Photo.Id, dbUser)
 
 			if err != nil {
 				return dbCommentList, err

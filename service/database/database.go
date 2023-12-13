@@ -53,7 +53,7 @@ type AppDatabase interface {
 	GetFollowingList(followingDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Photo
-	GetDatabasePhoto(photoId uint32) (DatabasePhoto, error)
+	GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (DatabasePhoto, error)
 	InsertPhoto(dbPhoto *DatabasePhoto) error // DONE
 	DeletePhoto(dbPhoto DatabasePhoto) error  // DONE
 	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error
@@ -66,7 +66,7 @@ type AppDatabase interface {
 	GetLikeList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Comment
-	GetDatabaseComment(commentId uint32) (DatabaseComment, error)                           // DONE
+	GetDatabaseComment(commentId uint32, dbUser DatabaseUser) (DatabaseComment, error)      // DONE
 	InsertComment(dbComment *DatabaseComment) error                                         // DONE
 	DeleteComment(dbComment DatabaseComment) error                                          // DONE
 	GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseCommentList, error) // TODO: CONTROLLALA PER BENE E SE FUNZIONA SEGNALA COME DONE

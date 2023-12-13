@@ -50,7 +50,7 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 	}
 
 	// get the photo from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", UserFromDatabaseUser(dbUser), r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
@@ -95,7 +95,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	commentLogin.Username = comment.User.Username
 
-	// get the user writing the comment from the database
+	// get the user performing the action from the database
 	commentUser, err := rt.GetUserFromLogin(commentLogin)
 
 	if err != nil {
@@ -128,7 +128,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// get the photo from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", commentUser, r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
@@ -161,7 +161,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	dbPhoto := photo.PhotoIntoDatabasePhoto()
 
 	// update the number of comments under the photo
-	err = rt.db.GetPhotoCommentCount(&dbPhoto, user.UserIntoDatabaseUser())
+	err = rt.db.GetPhotoCommentCount(&dbPhoto, commentUser.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -187,8 +187,24 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// get the bearer token
+	token, err := GetBearerToken(r.Header.Get("Authorization"))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	// authenticate the user performing the action
+	dbUser, err := rt.db.GetDatabaseUser(uint32(token))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	// get the comment from the database
-	comment, err := rt.GetCommentFromCommentId(uint32(commentId))
+	comment, err := rt.GetCommentFromCommentId(uint32(commentId), UserFromDatabaseUser(dbUser))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -197,10 +213,8 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 
 	// check if the user in the bearer token
 	// matches the comment user
-	err = CheckAuthorization(comment.User, r.Header.Get("Authorization"))
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+	if token != int(comment.User.Id) {
+		http.Error(w, ErrUserUnauthorized.Error(), http.StatusUnauthorized)
 		return
 	}
 
@@ -213,7 +227,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// get the photo from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", UserFromDatabaseUser(dbUser), r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
@@ -237,7 +251,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	dbPhoto := photo.PhotoIntoDatabasePhoto()
 
 	// update the number of comments under the photo
-	err = rt.db.GetPhotoCommentCount(&dbPhoto, user.UserIntoDatabaseUser())
+	err = rt.db.GetPhotoCommentCount(&dbPhoto, dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

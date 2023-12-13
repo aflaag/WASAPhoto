@@ -59,7 +59,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// get the photo to be deleted from the resource parameter
-	photo, code, err := rt.GetPhotoFromParameter("photo_id", r, ps)
+	photo, code, err := rt.GetPhotoFromParameter("photo_id", user, r, ps)
 
 	if err != nil {
 		http.Error(w, err.Error(), code)
