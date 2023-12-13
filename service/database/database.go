@@ -98,6 +98,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 	var err error
 
+	// enable checks for foreign keys
 	_, err = db.Exec("PRAGMA foreign_key=ON")
 
 	if err != nil {
