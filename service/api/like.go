@@ -117,6 +117,18 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
+	dbPhoto := photo.PhotoIntoDatabasePhoto()
+
+	// update the number of likes to the photo
+	err = rt.db.GetPhotoLikeCount(&dbPhoto, user.UserIntoDatabaseUser())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	photo.LikeCount = dbPhoto.LikeCount
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK) // 200
 

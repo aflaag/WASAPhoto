@@ -8,16 +8,18 @@ import (
 func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, error) {
 	dbComment := DatabaseCommentDefault()
 
+	// get the comment from the database
 	err := db.c.QueryRow(`
-		SELECT id, user, date, comment_body
+		SELECT id, user, date, photo, comment_body
 		FROM Comment
 		WHERE id=?
-	`, commentId).Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.Date, &dbComment.CommentBody)
+	`, commentId).Scan(&dbComment.Id, &dbComment.User.Id, &dbComment.Date, &dbComment.Photo.Id, &dbComment.CommentBody)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbComment, ErrCommentDoesNotExist
 	}
 
+	// get the user of the comment
 	dbUser, err := db.GetDatabaseUser(dbComment.User.Id)
 
 	if err != nil {
@@ -26,10 +28,20 @@ func (db *appdbimpl) GetDatabaseComment(commentId uint32) (DatabaseComment, erro
 
 	dbComment.User.Username = dbUser.Username
 
+	// // get the photo of the comment
+	dbPhoto, err := db.GetDatabasePhoto(dbComment.Photo.Id)
+
+	if err != nil {
+		return dbComment, err
+	}
+
+	dbComment.Photo = dbPhoto
+
 	return dbComment, err
 }
 
 func (db *appdbimpl) InsertComment(dbComment *DatabaseComment) error {
+	// insert the comment into the database
 	res, err := db.c.Exec(`
 		INSERT INTO Comment(user, photo, date, comment_body)
 		VALUES (?, ?, ?, ?)
@@ -39,6 +51,7 @@ func (db *appdbimpl) InsertComment(dbComment *DatabaseComment) error {
 		return err
 	}
 
+	// get the comment id
 	dbCommentId, err := res.LastInsertId()
 
 	if err != nil {
@@ -51,6 +64,7 @@ func (db *appdbimpl) InsertComment(dbComment *DatabaseComment) error {
 }
 
 func (db *appdbimpl) DeleteComment(dbComment DatabaseComment) error {
+	// remove the comment from the database
 	res, err := db.c.Exec(`
 		DELETE FROM Comment
 		WHERE id=?
@@ -62,6 +76,8 @@ func (db *appdbimpl) DeleteComment(dbComment DatabaseComment) error {
 
 	aff, err := res.RowsAffected()
 
+	// if there are no affected rows
+	// then the photo was not commented
 	if aff == 0 {
 		return ErrPhotoNotCommented
 	}
