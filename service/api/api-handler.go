@@ -21,7 +21,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/user/:uname/following", rt.wrap(rt.getFollowing))                 // DONE
 
 	// Photo
-	rt.router.DELETE("/user/:uname/photos", rt.wrap(rt.getPhotos)) // TODO: DA FARE + DA AGGIUNGERE ALLE API
+	rt.router.DELETE("/user/:uname/photos", rt.wrap(rt.getPhotos))             // TODO: DA FARE + DA AGGIUNGERE ALLE API
 	rt.router.POST("/user/:uname/upload", rt.wrap(rt.uploadPhoto))             // DONE (a meno dell'url)
 	rt.router.DELETE("/user/:uname/photos/:photo_id", rt.wrap(rt.deletePhoto)) // DONE (a meno dell'url, anche se in teoria questa funziona cosi com'è)
 
@@ -31,8 +31,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/user/:uname/photos/:photo_id/likes/:like_uname", rt.wrap(rt.unlikePhoto)) // DONE
 
 	// Comment
-	rt.router.GET("/user/:uname/photos/:photo_id/comments", rt.wrap(rt.getPhotoComments)) // TODO: COMMENTATA, DA CONTROLLARE
-	rt.router.POST("/user/:uname/photos/:photo_id/comment", rt.wrap(rt.commentPhoto)) // DONE
+	rt.router.GET("/user/:uname/photos/:photo_id/comments", rt.wrap(rt.getPhotoComments))              // TODO: COMMENTATA, DA CONTROLLARE
+	rt.router.POST("/user/:uname/photos/:photo_id/comment", rt.wrap(rt.commentPhoto))                  // DONE
 	rt.router.DELETE("/user/:uname/photos/:photo_id/comments/:comment_id", rt.wrap(rt.uncommentPhoto)) // DONE
 
 	// User
