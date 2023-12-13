@@ -4,8 +4,11 @@
 
 ### OpenAPI
 
+- aggiungi getPhotos
+
 ### Backend
 
+- vieta la possibilità di fare self-follow e self-ban
 - ricontrolla components con struct
 - ricontrolla tabelle del DB
 - FIXA LA COSA DELL'UPDATE DELLO USERNAME CON LA UNIQUENESS
