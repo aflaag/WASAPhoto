@@ -42,10 +42,21 @@ func (db *appdbimpl) DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUs
 	return nil
 }
 
-func (db *appdbimpl) GetFollowersCount(dbUser DatabaseUser) (int, error) {
+func (db *appdbimpl) GetFollowersCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error) {
 	var followersCount int
 
-	err := db.c.QueryRow(`SELECT COUNT(*) FROM follow WHERE second_user=?`, dbUser.Id).Scan(&followersCount)
+	// get the number of user following
+	// the user performing the action
+	err := db.c.QueryRow(`
+		SELECT COUNT(*)
+		FROM follow
+		WHERE second_user=?
+		AND first_user NOT IN (
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+		)
+	`, profileDbUser.Id, dbUser.Id).Scan(&followersCount)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return followersCount, ErrUserDoesNotExist
@@ -54,10 +65,21 @@ func (db *appdbimpl) GetFollowersCount(dbUser DatabaseUser) (int, error) {
 	return followersCount, err
 }
 
-func (db *appdbimpl) GetFollowingCount(dbUser DatabaseUser) (int, error) {
+func (db *appdbimpl) GetFollowingCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error) {
 	var followingCount int
 
-	err := db.c.QueryRow(`SELECT COUNT(*) FROM follow WHERE first_user=?`, dbUser.Id).Scan(&followingCount)
+	// get the number of users followed by
+	// the user performing the action
+	err := db.c.QueryRow(`
+		SELECT COUNT(*)
+		FROM follow
+		WHERE first_user=?
+		AND second_user NOT IN (
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+		)
+	`, profileDbUser.Id, dbUser.Id).Scan(&followingCount)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return followingCount, ErrUserDoesNotExist

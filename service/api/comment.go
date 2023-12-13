@@ -19,7 +19,7 @@ func (rt *_router) getPhotoComments(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	// authenticate the user performing the action
+	// get the user performing the action
 	dbUser, err := rt.db.GetDatabaseUser(uint32(token))
 
 	if err != nil {
@@ -195,7 +195,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	// authenticate the user performing the action
+	// get the user performing the action
 	dbUser, err := rt.db.GetDatabaseUser(uint32(token))
 
 	if err != nil {

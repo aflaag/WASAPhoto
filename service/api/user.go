@@ -9,6 +9,7 @@ import (
 )
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// get the bearer token
 	token, err := GetBearerToken(r.Header.Get("Authorization"))
 
 	if err != nil {
@@ -16,6 +17,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// get the user performing the action
 	dbUser, err := rt.db.GetDatabaseUser(uint32(token))
 
 	if err != nil {
@@ -23,6 +25,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// get the user of the profile from the resource parameter
 	profileUser, code, err := rt.GetUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -30,6 +33,8 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// check whether the user of the profile
+	// has banned the user performing the action
 	checkBan, err := rt.db.CheckBan(profileUser.UserIntoDatabaseUser(), dbUser)
 
 	if err != nil {
@@ -42,6 +47,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// build the user profile
 	profile := ProfileDefault()
 
 	profile.User = profileUser
@@ -53,14 +59,14 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	profile.FollowersCount, err = rt.db.GetFollowersCount(profileUser.UserIntoDatabaseUser())
+	profile.FollowersCount, err = rt.db.GetFollowersCount(profileUser.UserIntoDatabaseUser(), dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	profile.FollowingCount, err = rt.db.GetFollowingCount(profileUser.UserIntoDatabaseUser())
+	profile.FollowingCount, err = rt.db.GetFollowingCount(profileUser.UserIntoDatabaseUser(), dbUser)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -68,8 +74,9 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // 200
 
+	// return the user profile
 	_ = json.NewEncoder(w).Encode(profile)
 }
 

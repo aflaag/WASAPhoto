@@ -47,17 +47,17 @@ type AppDatabase interface {
 	// Follow
 	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
 	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
-	GetFollowersCount(dbUser DatabaseUser) (int, error)                              // TODO: da fare + leva chi mi ha bannato
-	GetFollowingCount(dbUser DatabaseUser) (int, error)                              // TODO: da fare + leva chi mi ha bannato
+	GetFollowersCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error)  // DONE
+	GetFollowingCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error)  // DONE
 	GetFollowersList(followersDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 	GetFollowingList(followingDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Photo
 	GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (DatabasePhoto, error)
-	InsertPhoto(dbPhoto *DatabasePhoto) error // DONE
-	DeletePhoto(dbPhoto DatabasePhoto) error  // DONE
-	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error
-	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error
+	InsertPhoto(dbPhoto *DatabasePhoto) error                               // DONE
+	DeletePhoto(dbPhoto DatabasePhoto) error                                // DONE
+	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error    // DONE
+	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error // DONE
 	GetPhotoCount(dbUser DatabaseUser) (int, error)
 
 	// Like
