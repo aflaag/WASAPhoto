@@ -28,9 +28,9 @@
 
 <template>
     <div class="everything">
-        <header>
+        <div class="header-div">
             <p class="header">WASAPhoto</p>
-        </header>
+        </div>
 
         <div class="center-div">
             <div class="user-icon-div">
@@ -40,7 +40,9 @@
             <div class="bar-section-div">
                 <input class="bar" placeholder="Enter your username!">
 
-                <button class="button">boh</button>
+                <button class="button">
+                    <img class="button-image" src="assets/arrow.svg" width="80px" height="60px">
+                </button>
             </div>
         </div>
     </div>
@@ -51,17 +53,81 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
 
-        width: 1920px;
-        height: 1080px;
+    .header-div {
+        margin-top: 1%;
+        margin-left: 2%;
 
-        margin: 0px;
+        width: 100%;
     }
 
     .header {
         font-weight: 800;
-        font-size: 250%;
-
+        font-size: 500%;
         color: #485696;
+    }
+
+    .center-div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: absolute;
+
+        top: 22%;
+    }
+
+    .user-icon-div {
+        margin-bottom: 20%;
+    }
+
+    .bar-section-div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: absolute;
+
+        top: 100%;
+        left: -80%;
+    }
+
+    .bar {
+        background-color: #C6DDFF;
+
+        border-radius: 50px;
+        border: 6px solid #485696;
+
+        width: 550px;
+        height: 60px;
+
+        margin-right: 2%;
+
+        font-size: 170%;
+        color: #485696;
+
+        box-sizing: boder-box;
+        padding: 0 30px 0 30px;
+    }
+
+    ::placeholder {
+        color: #8A8A8A;
+
+        opacity: 1;
+    }
+
+    .button {
+        background: none;
+
+        color: inherit;
+
+        border: none;
+
+        padding: 0;
+
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
     }
 </style>
