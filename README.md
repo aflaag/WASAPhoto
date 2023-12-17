@@ -21,6 +21,10 @@
     - se no, cosa va messo nella response? un messaggio standard?
 - fare l'handler della liveness
 
+### Frontend
+
+- progetta errore 404?
+
 ## Domande
 
 - quale licenza va usata?
