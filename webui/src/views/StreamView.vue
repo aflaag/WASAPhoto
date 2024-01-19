@@ -33,7 +33,10 @@
 
             <input class="bar" placeholder="Search a profile" style="margin-top: 2%;">
 
-            <img class="user-icon" src="assets/user-small.svg">
+			<div class="left-right-corner">
+				<img class="user-icon" src="assets/user-small.svg">
+				<img class="logout-icon" src="assets/logout.svg">
+			</div>
         </div>
 
 		<div class="horizontal-scroll-panel">
@@ -139,14 +142,18 @@
 		</div>
     </div>
 
-	<div class="overlay">
+	<!-- <div class="overlay">
 		<div class="comment-box">
 			<img class="cross" src="assets/cross.svg"/>
 
 			<div class="comment-scroll-panel">
 				<div class="comment">
-					<div class="comment-op">
-						<p>enginemode1</p>
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+
+						<img class="delete-comment" src="assets/delete.svg"/>
 					</div>
 
 					<div class="comment-text">
@@ -157,8 +164,10 @@
 				</div>
 
 				<div class="comment">
-					<div class="comment-op">
-						<p>exyss_</p>
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
 					</div>
 
 					<div class="comment-text">
@@ -169,8 +178,10 @@
 				</div>
 
 				<div class="comment">
-					<div class="comment-op">
-						<p>exyss_</p>
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
 					</div>
 
 					<div class="comment-text">
@@ -181,8 +192,10 @@
 				</div>
 
 				<div class="comment">
-					<div class="comment-op">
-						<p>exyss_</p>
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
 					</div>
 
 					<div class="comment-text">
@@ -193,8 +206,10 @@
 				</div>
 
 				<div class="comment">
-					<div class="comment-op">
-						<p>exyss_</p>
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
 					</div>
 
 					<div class="comment-text">
@@ -205,8 +220,10 @@
 				</div>
 
 				<div class="comment">
-					<div class="comment-op">
-						<p>exyss_</p>
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
 					</div>
 
 					<div class="comment-text">
@@ -219,6 +236,104 @@
 
 			<div class="comment-input-box">
             	<input class="comment-bar" placeholder="Leave a comment!">
+			</div>
+		</div>
+	</div> -->
+
+	<div class="overlay">
+		<div class="comment-box">
+			<img class="cross" src="assets/cross.svg"/>
+
+			<div class="search-scroll-panel">
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -244,6 +359,25 @@
 		margin-top: -8.2%;
 		
 		background-color: rgba(0, 0, 0, 0.3);
+	}
+
+	.left-right-corner {
+		display: flex;
+		justify-content: space-between;
+
+		width: 17%;
+	}
+
+	.comment-header {
+		display: flex;
+	}
+
+	.delete-comment {
+		width: 5%;
+		height: 5%;
+
+		margin-left: 3%;
+		margin-top: -0.5%
 	}
 
 	.cross {
@@ -283,12 +417,18 @@
 		background-color: #757575;
 	}
 
+	.search-scroll-panel {
+		height: 100%;
+		width: 97%;
+
+		overflow: auto;
+	}
+
 	.comment-scroll-panel {
 		height: 87%;
 		width: 97%;
 
 		overflow: auto;
-		/* white-space: nowrap; */
 	}
 
 	.comment-box {
@@ -336,102 +476,4 @@
         font-size: 500%;
         color: #485696;
     }
-
-	.horizontal-scroll-panel {
-		position: absolute;
-
-		/* border: solid 3px red; */
-
-		top: 30%;
-		left: 2%;
-
-		width: 96%;
-		height: 60%;
-
-		overflow: auto;
-		white-space: nowrap;
-	}
-
-	.post-card {
-		display: inline-block;
-		text-align: center;
-
-		width: 25%;
-		height: 100%;
-
-		margin-right: 3%;
-
-		border: solid 4px #485696;
-		border-radius: 30px;
-
-        color: #485696;
-
-		font-size: 300%;
-	}
-
-	.post-photo-div {
-		width: 100%;
-		height: 70%;
-
-		margin-top: -2%;
-
-		/* border: solid 3px blue; */
-
-		z-index: 1;
-	}
-
-	.post-photo-bg {
-		width: 100%;
-		height: 100%;
-		/* object-fit: fill;
-		overflow: hidden; */
-		background-color: #c8cfe8;
-
-		z-index: 2;
-	}
-
-	.post-photo-img {
-		width: 100%;
-		height: 100%;
-
-		object-fit: contain;
-		overflow: hidden;
-
-		z-index: 3;
-
-		/* border: solid 3px blue; */
-
-		/* margin-left: -100%; */
-		margin-top: -100%;
-	}
-
-	.post-card-footer {
-		display: flex;
-		font-weight: 800;
-
-		/* border: solid 1px green; */
-		height: 14%;
-	}
-
-	.post-photo-utils {
-		/* border: solid 1px green; */
-		height: 90%;
-
-		margin-left: 3%;
-	}
-
-	.post-card-footer p {
-		margin-top: 1.5%;
-		margin-right: 4%;
-		margin-left: 2%;
-	}
-
-	.post-card-header {
-		display: flex;
-		margin-top: 2%;
-	}
-
-	.post-card-header p {
-		margin-left: 6%;
-	}
 </style>

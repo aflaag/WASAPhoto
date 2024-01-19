@@ -23,9 +23,6 @@
 
 ### Frontend
 
-- sezione risultati ricerca
-- bottone logout
-
 ## Domande
 
 - quale licenza va usata?

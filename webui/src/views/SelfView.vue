@@ -65,6 +65,8 @@
 			<div class="post-card">
 				<div class="post-card-header">
 					<p class="post-card-username">walter4c</p>
+
+					<img class="delete-photo" src="assets/delete.svg"/>
 				</div>
 
 				<div class="post-photo-div">
@@ -122,6 +124,13 @@
         align-items: center;
     }
 
+	.delete-photo {
+		width: 10%;
+		height: 10%;
+
+		margin-top: 3%;
+	}
+
     .numbers-div {
         display: flex;
         justify-content: space-between;
@@ -146,17 +155,6 @@
     .numbers-block-numbers {
         font-weight: 600;
         margin-bottom: -10%
-    }
-
-    .header-div {
-		display: flex;
-        justify-content: space-between;
-
-        margin-top: 1%;
-        margin-left: 2%;
-		margin-right: 2%;
-
-        width: 100%;
     }
 
     .username-div {
@@ -268,7 +266,10 @@
 
 	.post-card-header {
 		display: flex;
+		justify-content: space-between;
 		margin-top: 2%;
+
+		width: 94%;
 	}
 
 	.post-card-header p {
