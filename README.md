@@ -23,7 +23,6 @@
 
 ### Frontend
 
-- sezione commenti
 - sezione risultati ricerca
 - bottone logout
 

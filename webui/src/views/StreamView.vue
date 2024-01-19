@@ -138,6 +138,90 @@
 			</div>
 		</div>
     </div>
+
+	<div class="overlay">
+		<div class="comment-box">
+			<img class="cross" src="assets/cross.svg"/>
+
+			<div class="comment-scroll-panel">
+				<div class="comment">
+					<div class="comment-op">
+						<p>enginemode1</p>
+					</div>
+
+					<div class="comment-text">
+						<p>lesgoooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooo</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-op">
+						<p>exyss_</p>
+					</div>
+
+					<div class="comment-text">
+						<p>Lucian ammazzati</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-op">
+						<p>exyss_</p>
+					</div>
+
+					<div class="comment-text">
+						<p>Lucian ammazzati</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-op">
+						<p>exyss_</p>
+					</div>
+
+					<div class="comment-text">
+						<p>Lucian ammazzati</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-op">
+						<p>exyss_</p>
+					</div>
+
+					<div class="comment-text">
+						<p>Lucian ammazzati</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+
+				<div class="comment">
+					<div class="comment-op">
+						<p>exyss_</p>
+					</div>
+
+					<div class="comment-text">
+						<p>Lucian ammazzati</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+			</div>
+
+			<div class="comment-input-box">
+            	<input class="comment-bar" placeholder="Leave a comment!">
+			</div>
+		</div>
+	</div>
 </template>
 
 <style>
@@ -146,6 +230,95 @@
         justify-content: center;
         align-items: center;
     }
+
+	.overlay {
+		position: absolute;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		width: 100%;
+		height: 100%;
+
+		margin-top: -8.2%;
+		
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+
+	.cross {
+		position: absolute;
+
+		width: 10%;
+		height: 10%;
+
+		z-index: 2;
+
+		margin-top: 2%;
+		margin-left: 85%;
+	}
+
+	.comment-bar {
+        background-color: rgba(0, 0, 0, 0);
+
+        border-radius: 0px;
+        border: 0px solid rgba(0, 0, 0, 0);
+
+        width: 93%;
+		height: 50%;
+
+        font-size: 110%;
+
+		margin-left: 3.5%;
+		/* margin-top: -40%; */
+
+        box-sizing: boder-box;
+	}
+
+	.heightless-line {
+		height: 2px;
+
+		width: 99%;
+
+		background-color: #757575;
+	}
+
+	.comment-scroll-panel {
+		height: 87%;
+		width: 97%;
+
+		overflow: auto;
+		/* white-space: nowrap; */
+	}
+
+	.comment-box {
+		position: relative;
+
+		width: 44%;
+		height: 60%;
+
+		border: solid 4px #485696;
+		border-radius: 30px;
+
+		background-color: #e7e7e7;
+
+		font-size: 150%;
+
+		z-index: 1;
+	}
+
+	.comment {
+		margin-left: 4%;
+		margin-top: 3%;
+
+		/* border: solid 2px red; */
+	}
+
+	.comment-text {
+		margin-top: -1%;
+
+		font-weight: 300;
+	}
 
     .header-div {
 		display: flex;
