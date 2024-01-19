@@ -23,7 +23,9 @@
 
 ### Frontend
 
-- progetta errore 404?
+- sezione commenti
+- sezione risultati ricerca
+- bottone logout
 
 ## Domande
 
