@@ -9,10 +9,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) getPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	// TODO:
-}
-
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// authenticate the user performing the action
 	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
@@ -22,13 +18,19 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	photo := PhotoDefault() // TODO: va presa dal request body
+	photo := PhotoDefault()
+
+	// take the photo coded in base64 from the request body
+	err = json.NewDecoder(r.Body).Decode(&photo)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	photo.User = user
 
 	photo.Date = time.Now().Format("2006-01-02 15:04:05")
-
-	// TODO: capire cosa sia l'url
 
 	dbPhoto := photo.PhotoIntoDatabasePhoto()
 

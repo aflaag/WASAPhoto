@@ -75,11 +75,11 @@ type AppDatabase interface {
 	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)
 
 	// User
-	GetDatabaseUser(userId uint32) (DatabaseUser, error)
-	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)
-	InsertUser(dbUser *DatabaseUser) error // DONE
+	GetDatabaseUser(userId uint32) (DatabaseUser, error)                          // DONE
+	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error) // DONE
+	InsertUser(dbUser *DatabaseUser) error                                        // DONE
 	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
-	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) // TODO: da fare + leva chi mi ha bannato (dovresti averlo già fatto qui, controlla)
+	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) // DONE
 
 	// Liveness
 	Ping() error
@@ -124,8 +124,8 @@ func New(db *sql.DB) (AppDatabase, error) {
 		CREATE TABLE IF NOT EXISTS Comment (
 			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			user INTEGER NOT NULL,
-			date TEXT NOT NULL,
 			photo INTEGER NOT NULL,
+			date TEXT NOT NULL,
 			comment_body TEXT NOT NULL,
 			FOREIGN KEY (user) REFERENCES User(name),
 			FOREIGN KEY (photo) REFERENCES Photo(id)

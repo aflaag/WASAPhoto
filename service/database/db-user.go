@@ -8,7 +8,12 @@ import (
 func (db *appdbimpl) GetDatabaseUser(userId uint32) (DatabaseUser, error) {
 	dbUser := DatabaseUserDefault()
 
-	err := db.c.QueryRow(`SELECT id, username FROM User WHERE id=?`, userId).Scan(&dbUser.Id, &dbUser.Username)
+	// get the user having the given user id
+	err := db.c.QueryRow(`
+		SELECT id, username
+		FROM User
+		WHERE id=?
+	`, userId).Scan(&dbUser.Id, &dbUser.Username)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUser, ErrUserDoesNotExist
@@ -20,7 +25,12 @@ func (db *appdbimpl) GetDatabaseUser(userId uint32) (DatabaseUser, error) {
 func (db *appdbimpl) GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error) {
 	dbUser := DatabaseUserDefault()
 
-	err := db.c.QueryRow(`SELECT id, username FROM User WHERE username=?`, dbLogin.Username).Scan(&dbUser.Id, &dbUser.Username)
+	// get the user from the given login instance
+	err := db.c.QueryRow(`
+		SELECT id, username
+		FROM User
+		WHERE username=?
+	`, dbLogin.Username).Scan(&dbUser.Id, &dbUser.Username)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUser, ErrUserDoesNotExist
@@ -75,16 +85,21 @@ func (db *appdbimpl) UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) 
 func (db *appdbimpl) GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
+	// get the table of the users matching the query
 	rows, err := db.c.Query(`
-		SELECT id
+		SELECT id, username
 		FROM User
-		WHERE username LIKE '%'||?||'%'
-		EXCEPT 
-		SELECT first_user
-		FROM ban
-		WHERE second_user=?
-		EXCEPT
-		SELECT ?
+		WHERE id IN (
+			SELECT id
+			FROM User
+			WHERE username LIKE '%'||?||'%'
+			EXCEPT 
+			SELECT first_user
+			FROM ban
+			WHERE second_user=?
+			EXCEPT
+			SELECT ?
+		)
 	`, dbLogin.Username, dbUser.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {
@@ -95,16 +110,11 @@ func (db *appdbimpl) GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (Da
 		return dbUserList, err
 	}
 
+	// build the results list
 	for rows.Next() {
-		var newDbUserId uint32
+		newDbUser := DatabaseUserDefault()
 
-		err = rows.Scan(&newDbUserId)
-
-		if err != nil {
-			return dbUserList, err
-		}
-
-		newDbUser, err := db.GetDatabaseUser(newDbUserId)
+		err = rows.Scan(&newDbUser.Id, &newDbUser.Username)
 
 		if err != nil {
 			return dbUserList, err

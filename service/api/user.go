@@ -116,6 +116,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 }
 
 func (rt *_router) getUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// get the user performin the action from the resource parameter
 	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -123,11 +124,13 @@ func (rt *_router) getUsers(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
+	// get the query from the resource parameter
 	query := ps.ByName("query_uname")
 
 	queryLogin := LoginDefault()
 	queryLogin.Username = query
 
+	// get the users matching the query from the database
 	dbUserList, err := rt.db.GetUserList(user.UserIntoDatabaseUser(), queryLogin.LoginIntoDatabaseLogin())
 
 	if err != nil {
@@ -138,7 +141,8 @@ func (rt *_router) getUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	userList := UserListFromDatabaseUserList(dbUserList)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // 200
 
+	// return the user list
 	_ = json.NewEncoder(w).Encode(userList)
 }
