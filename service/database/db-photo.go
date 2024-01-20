@@ -18,6 +18,7 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (Data
 		return dbPhoto, ErrPhotoDoesNotExist
 	}
 
+	// get the user information
 	dbPhotoUser, err := db.GetDatabaseUser(dbPhoto.User.Id)
 
 	if err != nil {
@@ -26,12 +27,14 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (Data
 
 	dbPhoto.User.Username = dbPhotoUser.Username
 
+	// get the like count
 	err = db.GetPhotoLikeCount(&dbPhoto, dbUser)
 
 	if err != nil {
 		return dbPhoto, err
 	}
 
+	// get the comment count
 	err = db.GetPhotoCommentCount(&dbPhoto, dbUser)
 
 	return dbPhoto, err
@@ -135,7 +138,12 @@ func (db *appdbimpl) GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser Databas
 func (db *appdbimpl) GetPhotoCount(dbUser DatabaseUser) (int, error) {
 	var photoCount int
 
-	err := db.c.QueryRow(`SELECT COUNT(*) FROM Photo WHERE user=?`, dbUser.Id).Scan(&photoCount)
+	// get the number of photos the user has posted
+	err := db.c.QueryRow(`
+		SELECT COUNT(*)
+		FROM Photo
+		WHERE user=?
+	`, dbUser.Id).Scan(&photoCount)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return photoCount, ErrPhotoDoesNotExist

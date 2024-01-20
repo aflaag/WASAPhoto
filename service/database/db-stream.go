@@ -8,6 +8,7 @@ import (
 func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error) {
 	dbStream := DatabaseStreamDefault()
 
+	// get the user's stream table
 	rows, err := db.c.Query(`
 		SELECT id, user, url, date
 		FROM Photo
@@ -33,6 +34,7 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 
 	dbPhotoUser := DatabaseUserDefault()
 
+	// build the user's stream
 	for rows.Next() {
 		dbPhoto := DatabasePhotoDefault()
 

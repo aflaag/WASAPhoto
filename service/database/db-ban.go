@@ -45,8 +45,19 @@ func (db *appdbimpl) DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) e
 func (db *appdbimpl) CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error) {
 	checkBan := true
 
-	err := db.c.QueryRow(`SELECT EXISTS(SELECT 1 FROM ban WHERE first_user=? AND second_user=?)`, firstDbUser.Id, secondDbUser.Id).Scan(&checkBan)
+	// check wether the first user has banned the second user
+	err := db.c.QueryRow(`
+		SELECT EXISTS(
+			SELECT 1
+			FROM ban
+			WHERE first_user=?
+			AND second_user=?
+		)
+	`, firstDbUser.Id, secondDbUser.Id).Scan(&checkBan)
 
+	// if no table rows are found, then there is no row
+	// containing the ban, hence the first user has not
+	// banned the second user
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, err
 	}

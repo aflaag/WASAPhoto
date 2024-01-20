@@ -35,15 +35,15 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/user/:uname/photos/:photo_id/comments/:comment_id", rt.wrap(rt.uncommentPhoto)) // DONE
 
 	// User
-	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile)) // DONE
-	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName))
+	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile))               // DONE
+	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName))    // TODO:
 	rt.router.GET("/user/:uname/search/:query_uname", rt.wrap(rt.getUsers)) // DONE
 
 	// Stream
-	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream))
+	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream)) // DONE
 
 	// Liveness
-	rt.router.GET("/liveness", rt.liveness)
+	rt.router.GET("/liveness", rt.liveness) // TODO:
 
 	return rt.router
 }

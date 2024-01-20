@@ -39,10 +39,10 @@ import (
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	// Ban
-	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error // DONE
-	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error // DONE
-	CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error)
-	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error             // DONE
+	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error             // DONE
+	CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error) // DONE
+	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error)                   // DONE
 
 	// Follow
 	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
@@ -53,12 +53,12 @@ type AppDatabase interface {
 	GetFollowingList(followingDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
 
 	// Photo
-	GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (DatabasePhoto, error)
-	InsertPhoto(dbPhoto *DatabasePhoto) error                               // DONE
-	DeletePhoto(dbPhoto DatabasePhoto) error                                // DONE
-	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error    // DONE
-	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error // DONE
-	GetPhotoCount(dbUser DatabaseUser) (int, error)
+	GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (DatabasePhoto, error) // DONE
+	InsertPhoto(dbPhoto *DatabasePhoto) error                                    // DONE
+	DeletePhoto(dbPhoto DatabasePhoto) error                                     // DONE
+	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error         // DONE
+	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error      // DONE
+	GetPhotoCount(dbUser DatabaseUser) (int, error)                              // TODO
 
 	// Like
 	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error                      // DONE
@@ -69,20 +69,20 @@ type AppDatabase interface {
 	GetDatabaseComment(commentId uint32, dbUser DatabaseUser) (DatabaseComment, error)      // DONE
 	InsertComment(dbComment *DatabaseComment) error                                         // DONE
 	DeleteComment(dbComment DatabaseComment) error                                          // DONE
-	GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseCommentList, error) // TODO: CONTROLLALA PER BENE E SE FUNZIONA SEGNALA COME DONE
+	GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) (DatabaseCommentList, error) // DONE
 
 	// Stream
-	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error)
+	GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, error) // DONE
 
 	// User
-	GetDatabaseUser(userId uint32) (DatabaseUser, error)                          // DONE
-	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error) // DONE
-	InsertUser(dbUser *DatabaseUser) error                                        // DONE
-	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error
+	GetDatabaseUser(userId uint32) (DatabaseUser, error)                              // DONE
+	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)     // DONE
+	InsertUser(dbUser *DatabaseUser) error                                            // DONE
+	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error                  // TODO:
 	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) // DONE
 
 	// Liveness
-	Ping() error
+	Ping() error // TODO:
 }
 
 type appdbimpl struct {
