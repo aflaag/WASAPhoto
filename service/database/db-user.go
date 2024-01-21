@@ -40,26 +40,43 @@ func (db *appdbimpl) GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (Da
 }
 
 func (db *appdbimpl) InsertUser(dbUser *DatabaseUser) error {
-	// insert the new user into the database
-	res, err := db.c.Exec(`
-		INSERT INTO User(username)
-		VALUES (?)
-	`, dbUser.Username)
+	// check if the user is already registered
+	err := db.c.QueryRow(`
+		SELECT id
+		FROM User
+		WHERE username=?
+	`, dbUser.Username).Scan(&dbUser.Id)
 
 	if err != nil {
-		return err
+		// if there are no rows, the user was not registered
+		// hence it must be inserted into the database
+		if errors.Is(err, sql.ErrNoRows) {
+			// insert the new user into the database
+			res, err := db.c.Exec(`
+				INSERT INTO User(username)
+				VALUES (?)
+			`, dbUser.Username)
+
+			if err != nil {
+				return err
+			}
+
+			// get the user id
+			dbUserId, err := res.LastInsertId()
+
+			if err != nil {
+				return err
+			}
+
+			dbUser.Id = uint32(dbUserId)
+
+			return nil
+		} else {
+			return err
+		}
+	} else {
+		return nil
 	}
-
-	// get the user id
-	dbUserId, err := res.LastInsertId()
-
-	if err != nil {
-		return err
-	}
-
-	dbUser.Id = uint32(dbUserId)
-
-	return nil
 }
 
 func (db *appdbimpl) UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error {

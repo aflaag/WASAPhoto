@@ -10,8 +10,8 @@ const router = createRouter({
 	routes: [
 		{path: '/', component: HomeView},
 		{path: '/session', component: LoginView},
-		{path: '/stream', component: StreamView}, // TODO: DA CAMBIARE
-		{path: '/profile', component: ProfileView}, // TODO: DA CAMBIARE
+		{path: '/user/:uname/stream', component: StreamView},
+		{path: '/user/:uname', component: ProfileView}, // TODO: DA CAMBIARE
 		{path: '/self', component: SelfView}, // TODO: DA CAMBIARE
 	]
 })

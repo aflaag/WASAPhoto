@@ -4,34 +4,159 @@
             return {
                 errormsg: null,
                 loading: false,
-                some_data: null,
+
+				token: localStorage.getItem("token"),
+				uname: localStorage.getItem("uname"),
+
+				show_results: false,
+				search_query: null,
+				search_results: null,
+				empty_results: true,
+
+				empty_stream: true,
+				stream: null,
+
+				show_comments: false,
+				comments: null,
+				empty_comments: true,
+
+				show_likes: false,
+				likes: null,
+				empty_likes: true,
+
             }
         },
         methods: {
-            async refresh() {
-                this.loading = true;
-                this.errormsg = null;
-                try {
-                    let response = await this.$axios.get("/stream"); // TODO: DA CAMBIARE
-                    this.some_data = response.data;
-                } catch (e) {
-                    this.errormsg = e.toString();
-                }
-                this.loading = false;
-            },
+            async search() {
+				if (this.search_query != "") {
+					try {
+						let response = await this.$axios.get("/user/" + this.uname + "/users?username=" + this.search_query, {
+							headers: {
+								Authorization: "Bearer " + this.token,
+							}
+						});
+
+						this.search_results = response.data;
+
+						this.show_results = true;
+
+						if (this.search_results.users.length > 0) {
+							this.empty_results = false;
+						}
+					} catch (e) {
+                        if (e.response && e.response.status === 500) {
+                            this.errormsg = "Something went wrong while trying to find results.";
+                        } else {
+                            this.errormsg = e.toString();
+                        }
+					}
+				}
+			},
+			async getStream() {
+				try {
+					let response = await this.$axios.get("/user/" + this.uname + "/stream", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+					this.stream = response.data;
+					
+					if (this.stream.photos.length > 0) {
+						this.empty_stream = false;
+					}
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
+			async getPhotoComments(photoUserUsername, photoId) {
+				try {
+					let response = await this.$axios.get("/user/" + photoUserUsername + "/photos/" + photoId + "/comments", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+					this.comments = response.data;
+
+					this.show_comments = true;
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
+			// async putLike(photoUserUsername, photoId) {
+			// 	try {
+			// 		let response = await this.$axios.put("/user/" + photoUserUsername + "/photos/" + photoId + "/likes/" + this.uname, {
+			// 			headers: {
+			// 				Authorization: "Bearer " + this.token,
+			// 			}
+			// 		});
+
+			// 		this.comments = response.data;
+
+			// 		this.show_comments = true;
+			// 	} catch (e) {
+			// 		if (e.response && e.response.status === 500) {
+			// 			this.errormsg = "Something went wrong while trying to register the like.";
+			// 		} else if (e.response && e.response.status == 401) {
+			// 			this.errormgs = "Forbidden access"
+			// 		} else {
+			// 			this.errormsg = e.toString();
+			// 		}
+			// 	}
+			// },
+			async getPhotoLikes(photoUserUsername, photoId) {
+				try {
+					let response = await this.$axios.get("/user/" + photoUserUsername + "/photos/" + photoId + "/likes", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+					this.likes = response.data;
+
+					this.show_likes = true;
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to register the like.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
         },
         mounted() {
-            this.refresh()
-        }
+			this.getStream()
+		}
 }
 </script>
 
 <template>
     <div class="everything">
-        <div class="header-div">
-            <p class="header">Your stream</p>
+		<div class="header-div">
+			<p class="header">Your stream</p>
 
-            <input class="bar" placeholder="Search a profile" style="margin-top: 2%;">
+			<div class="search-div">
+				<input class="bar" placeholder="Search a profile" style="" v-model="search_query">
+
+				<button class="button" @click="search" style="width: 9%; height: 70%;">
+					<img class="button-image" src="/assets/search.svg"/>
+				</button>
+			</div>
 
 			<div class="left-right-corner">
 				<img class="user-icon" src="/assets/user-small.svg">
@@ -39,114 +164,56 @@
 			</div>
         </div>
 
-		<div class="horizontal-scroll-panel">
-			<div class="post-card">
-				<div class="post-card-header">
-					<p class="post-card-username">walter4c</p>
+		<div v-if="!this.empty_stream" class="horizontal-scroll-panel">
+			<div class="post-card" v-for="photo in this.stream.photos" :key="photo.id">
+				<div class="post-card-header" style="margin-top: 0px">
+					<RouterLink :to="'/user/' + photo.user.username" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
+						<p class="post-card-username">{{photo.user.username}}</p>
+					</RouterLink>
 				</div>
 
-				<div class="post-photo-div">
+				<div class="post-photo-div" style="">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/cupolone.jpg">
+					<img class="post-photo-img" src="/assets/cupolone.jpg"> <!-- TODO: DA FARE -->
 				</div>
 
 				<div class="post-card-footer">
-					<div class="post-photo-utils">
-						<img  src="/assets/like-liked.svg">
-					</div>
+					<!-- <button @click="putLike(photo.user.username, photo.id)" class="button" style="margin-bottom: 40px"> -->
+						<div class="post-photo-utils" style="margin-right: 10px;">
+							<img src="/assets/like-not-liked.svg"/>
+						</div>
+					<!-- </button> -->
 
-					<p>2.6k</p>
+					<button @click="getPhotoLikes(photo.user.username, photo.id)" class="button" style="margin: 5px 10px 0px 0px;">
+						<p>{{photo.like_count}}</p>
+					</button>
 
-					<div class="post-photo-utils">
-						<img src="/assets/comment.svg">
-					</div>
+					<button @click="getPhotoComments(photo.user.username, photo.id)" class="button" style="margin-bottom: 45px; margin-right: 8px">
+						<div class="post-photo-utils">
+							<img src="/assets/comment.svg"/>
+						</div>
+					</button>
 
-					<p>1.5k</p>
+					<p>{{photo.comment_count}}</p>
 				</div>
 			</div>
+		</div>
 
-			<div class="post-card">
-				<div class="post-card-header">
-					<p class="post-card-username">enginemode1</p>
-				</div>
-
-				<div class="post-photo-div">
-					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/salisburgo.jpg">
-				</div>
-
-				<div class="post-card-footer">
-					<div class="post-photo-utils">
-						<img  src="/assets/like-liked.svg">
-					</div>
-
-					<p>2.6k</p>
-
-					<div class="post-photo-utils">
-						<img src="/assets/comment.svg">
-					</div>
-
-					<p>1.5k</p>
-				</div>
-			</div>
-
-			<div class="post-card">
-				<div class="post-card-header">
-					<p class="post-card-username">enginemode1</p>
-				</div>
-
-				<div class="post-photo-div">
-					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/salisburgo.jpg">
-				</div>
-
-				<div class="post-card-footer">
-					<div class="post-photo-utils">
-						<img  src="/assets/like-liked.svg">
-					</div>
-
-					<p>2.6k</p>
-
-					<div class="post-photo-utils">
-						<img src="/assets/comment.svg">
-					</div>
-
-					<p>1.5k</p>
-				</div>
-			</div>
-
-			<div class="post-card">
-				<div class="post-card-header">
-					<p class="post-card-username">enginemode1</p>
-				</div>
-
-				<div class="post-photo-div">
-					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/salisburgo.jpg">
-				</div>
-
-				<div class="post-card-footer">
-					<div class="post-photo-utils">
-						<img  src="/assets/like-liked.svg">
-					</div>
-
-					<p>2.6k</p>
-
-					<div class="post-photo-utils">
-						<img src="/assets/comment.svg">
-					</div>
-
-					<p>1.5k</p>
-				</div>
+		<div v-if="this.empty_stream" class="horizontal-scroll-panel">
+			<div style="display: flex; justify-content: center; margin-top: 13%">
+				<p style="color: #485696; font-size: 300%">Find new users and follow your friends!</p>
 			</div>
 		</div>
     </div>
 
-	<!-- <div class="overlay">
+	<div v-if="this.show_comments" class="overlay">
 		<div class="comment-box">
-			<img class="cross" src="/assets/cross.svg"/>
+			<button class="button" @click="this.show_comments = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
 
-			<div class="comment-scroll-panel">
+			<!-- TODO: DA FARE -->
+			<div v-if="!this.empty_comments" class="comment-scroll-panel">
 				<div class="comment">
 					<div class="comment-header">
 						<div class="comment-op">
@@ -162,178 +229,70 @@
 
 					<div class="heightless-line"></div>
 				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="comment-text">
-						<p>Lucian ammazzati</p>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="comment-text">
-						<p>Lucian ammazzati</p>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="comment-text">
-						<p>Lucian ammazzati</p>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="comment-text">
-						<p>Lucian ammazzati</p>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="comment-text">
-						<p>Lucian ammazzati</p>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
 			</div>
 
-			<div class="comment-input-box">
+			<div v-if="!this.empty_comments" class="comment-input-box">
             	<input class="comment-bar" placeholder="Leave a comment!">
 			</div>
+
+			<div v-if="this.empty_likes" class="nothing-div">
+				Nothing here!
+			</div>
 		</div>
-	</div> -->
+	</div>
 
-	<div class="overlay">
+	<div v-if="this.show_likes" class="overlay">
 		<div class="comment-box">
-			<img class="cross" src="/assets/cross.svg"/>
-
-			<div class="search-scroll-panel">
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
+			<button class="button" @click="this.show_likes = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
+						
+			<div v-if="!this.empty_likes" class="search-scroll-panel">
+				<div v-for="like in this.likes.users" :key="result.id">
+					<div class="comment">
+						<div class="comment-header">
+							<div class="comment-op">
+								<RouterLink :to="'/user/' + like.username" class="nav-link">
+									<p>{{like.username}}</p>
+								</RouterLink>
+							</div>
 						</div>
+
+						<div class="heightless-line"></div>
 					</div>
-
-					<div class="heightless-line"></div>
 				</div>
+			</div>
 
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
+			<div v-if="this.empty_likes" class="nothing-div">
+				Nothing here!
+			</div>
+		</div>
+	</div>
+
+	<div v-if="this.show_results" class="overlay">
+		<div class="comment-box">
+			<button class="button" @click="this.show_results = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
+						
+			<div v-if="!this.empty_results" class="search-scroll-panel">
+				<div v-for="result in this.search_results.users" :key="result.id">
+					<div class="comment">
+						<div class="comment-header">
+							<div class="comment-op">
+								<RouterLink :to="'/user/' + result.username" class="nav-link">
+									<p>{{result.username}}</p>
+								</RouterLink>
+							</div>
 						</div>
+
+						<div class="heightless-line"></div>
 					</div>
-
-					<div class="heightless-line"></div>
 				</div>
+			</div>
 
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
+			<div v-if="this.empty_results" class="nothing-div">
+				Nothing here!
 			</div>
 		</div>
 	</div>
@@ -345,6 +304,26 @@
         justify-content: center;
         align-items: center;
     }
+
+	.nothing-div {
+		display: flex;
+		justify-content: center;
+
+		margin-top: 28%;
+		
+		font-size: 200%;
+		color: #485696;
+	}
+
+	.search-div {
+		display: flex;
+		justify-content: space-between;
+
+		width: 37%;
+		height: 20%;
+
+		margin-top: 2%;
+	}
 
 	.overlay {
 		position: absolute;

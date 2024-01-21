@@ -7,7 +7,7 @@ import (
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
 	// Login
-	rt.router.POST("/session", rt.wrap(rt.session)) // DONE
+	rt.router.POST("/session", rt.wrap(rt.session)) // DONE DONE
 
 	// Ban
 	rt.router.GET("/user/:uname/ban", rt.wrap(rt.getBanList))                 // DONE
@@ -37,10 +37,10 @@ func (rt *_router) Handler() http.Handler {
 	// User
 	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile))            // DONE
 	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName)) // DONE
-	rt.router.GET("/user/:uname/users", rt.wrap(rt.getUsers))            // DONE
+	rt.router.GET("/user/:uname/users", rt.wrap(rt.getUsers))            // DONE DONE
 
 	// Stream
-	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream)) // DONE
+	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream)) // DONE DONE
 
 	// Liveness
 	rt.router.GET("/liveness", rt.liveness) // TODO:

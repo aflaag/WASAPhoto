@@ -62,8 +62,6 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/User" }
-        "400": { $ref: "#/components/responses/BadRequest" }
-        "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
   
   /user/{uname}/ban:
@@ -471,11 +469,10 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Stream" }
-        "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uname}/search/{query_name}:
+  /user/{uname}/search/{query_name}: # TODO: CAMBIALO
     parameters:
       - { $ref: "#/components/parameters/uname" }
       - { $ref: "#/components/parameters/query_name" }
@@ -494,7 +491,6 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UserList" }
-        "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 

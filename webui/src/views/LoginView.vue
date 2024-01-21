@@ -4,25 +4,41 @@
             return {
                 errormsg: null,
                 loading: false,
-                some_data: null,
+
+                username: null,
+
+                user: null,
             }
         },
         methods: {
-            async refresh() {
-                this.loading = true;
-                this.errormsg = null;
-                try {
-                    let response = await this.$axios.get("/session");
-                    this.some_data = response.data;
-                } catch (e) {
-                    this.errormsg = e.toString();
+            async doLogin() {
+                if (this.username === "") {
+                    this.errormsg = "The username is empty";
+                } else {
+                    try {
+                        let response = await this.$axios.post("/session", {
+                            username: this.username,
+                        });
+
+                        this.user = response.data;
+
+                        localStorage.setItem("token", this.user.id);
+                        localStorage.setItem("uname", this.user.username);
+
+                        this.$router.push({path: "/user/" + this.user.username + "/stream"});
+                    } catch (e) {
+                        if (e.response && e.response.status === 500) {
+                            this.errormsg = "Something went wrong while trying to login.";
+                        } else if (e.response && e.response.status == 401) {
+                            this.errormgs = "Forbidden access"
+                        } else {
+                            this.errormsg = e.toString();
+                        }
+                    }
                 }
-                this.loading = false;
             },
         },
-        mounted() {
-            this.refresh()
-        }
+        mounted() {}
 }
 </script>
 
@@ -38,10 +54,10 @@
             </div>
 
             <div class="bar-section-div">
-                <input class="bar" placeholder="Enter your username!">
+                <input v-model="username" class="bar" placeholder="Enter your username!"/>
 
-                <button class="button">
-                    <img class="button-image" src="/assets/arrow.svg" width="80px" height="60px">
+                <button class="button" @click="doLogin">
+                    <img class="button-image" src="/assets/arrow.svg"/>
                 </button>
             </div>
         </div>
@@ -94,12 +110,12 @@
     }
 
     .bar {
-        background-color: #C6DDFF;
+        background-color: #c6ddff;
 
         border-radius: 50px;
         border: 6px solid #485696;
 
-        width: 550px;
+        width: 600px;
         height: 60px;
 
         margin-right: 2%;
@@ -107,12 +123,12 @@
         font-size: 170%;
         color: #485696;
 
-        box-sizing: boder-box;
+        box-sizing: border-box;
         padding: 0 30px 0 30px;
     }
 
     ::placeholder {
-        color: #8A8A8A;
+        color: #8a8a8a;
 
         opacity: 1;
     }
@@ -129,5 +145,9 @@
         font: inherit;
         cursor: pointer;
         outline: inherit;
+    }
+
+    .button-image {
+        width: 96%;
     }
 </style>
