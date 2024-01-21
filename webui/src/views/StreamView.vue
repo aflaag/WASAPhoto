@@ -34,8 +34,8 @@
             <input class="bar" placeholder="Search a profile" style="margin-top: 2%;">
 
 			<div class="left-right-corner">
-				<img class="user-icon" src="assets/user-small.svg">
-				<img class="logout-icon" src="assets/logout.svg">
+				<img class="user-icon" src="/assets/user-small.svg">
+				<img class="logout-icon" src="/assets/logout.svg">
 			</div>
         </div>
 
@@ -47,18 +47,18 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="assets/cupolone.jpg">
+					<img class="post-photo-img" src="/assets/cupolone.jpg">
 				</div>
 
 				<div class="post-card-footer">
 					<div class="post-photo-utils">
-						<img  src="assets/like-liked.svg">
+						<img  src="/assets/like-liked.svg">
 					</div>
 
 					<p>2.6k</p>
 
 					<div class="post-photo-utils">
-						<img src="assets/comment.svg">
+						<img src="/assets/comment.svg">
 					</div>
 
 					<p>1.5k</p>
@@ -72,18 +72,18 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="assets/salisburgo.jpg">
+					<img class="post-photo-img" src="/assets/salisburgo.jpg">
 				</div>
 
 				<div class="post-card-footer">
 					<div class="post-photo-utils">
-						<img  src="assets/like-liked.svg">
+						<img  src="/assets/like-liked.svg">
 					</div>
 
 					<p>2.6k</p>
 
 					<div class="post-photo-utils">
-						<img src="assets/comment.svg">
+						<img src="/assets/comment.svg">
 					</div>
 
 					<p>1.5k</p>
@@ -97,18 +97,18 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="assets/salisburgo.jpg">
+					<img class="post-photo-img" src="/assets/salisburgo.jpg">
 				</div>
 
 				<div class="post-card-footer">
 					<div class="post-photo-utils">
-						<img  src="assets/like-liked.svg">
+						<img  src="/assets/like-liked.svg">
 					</div>
 
 					<p>2.6k</p>
 
 					<div class="post-photo-utils">
-						<img src="assets/comment.svg">
+						<img src="/assets/comment.svg">
 					</div>
 
 					<p>1.5k</p>
@@ -122,18 +122,18 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="assets/salisburgo.jpg">
+					<img class="post-photo-img" src="/assets/salisburgo.jpg">
 				</div>
 
 				<div class="post-card-footer">
 					<div class="post-photo-utils">
-						<img  src="assets/like-liked.svg">
+						<img  src="/assets/like-liked.svg">
 					</div>
 
 					<p>2.6k</p>
 
 					<div class="post-photo-utils">
-						<img src="assets/comment.svg">
+						<img src="/assets/comment.svg">
 					</div>
 
 					<p>1.5k</p>
@@ -144,7 +144,7 @@
 
 	<!-- <div class="overlay">
 		<div class="comment-box">
-			<img class="cross" src="assets/cross.svg"/>
+			<img class="cross" src="/assets/cross.svg"/>
 
 			<div class="comment-scroll-panel">
 				<div class="comment">
@@ -153,7 +153,7 @@
 							<p>enginemode1</p>
 						</div>
 
-						<img class="delete-comment" src="assets/delete.svg"/>
+						<img class="delete-comment" src="/assets/delete.svg"/>
 					</div>
 
 					<div class="comment-text">
@@ -242,7 +242,7 @@
 
 	<div class="overlay">
 		<div class="comment-box">
-			<img class="cross" src="assets/cross.svg"/>
+			<img class="cross" src="/assets/cross.svg"/>
 
 			<div class="search-scroll-panel">
 				<div class="comment">

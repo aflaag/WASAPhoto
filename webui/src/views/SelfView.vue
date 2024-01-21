@@ -35,9 +35,9 @@
                 </div>
 
                 <div class="option-buttons-div">
-                    <img class="follow-icon" src="assets/post.svg">
+                    <img class="follow-icon" src="/assets/post.svg">
 
-                    <img class="ban-icon" src="assets/username.svg">
+                    <img class="ban-icon" src="/assets/username.svg">
                 </div>
             </div>
 
@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <img class="user-icon" src="assets/home.svg">
+            <img class="user-icon" src="/assets/home.svg">
         </div>
 
 		<div class="horizontal-scroll-panel">
@@ -66,23 +66,23 @@
 				<div class="post-card-header">
 					<p class="post-card-username">walter4c</p>
 
-					<img class="delete-photo" src="assets/delete.svg"/>
+					<img class="delete-photo" src="/assets/delete.svg"/>
 				</div>
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="assets/cupolone.jpg">
+					<img class="post-photo-img" src="/assets/cupolone.jpg">
 				</div>
 
 				<div class="post-card-footer">
 					<div class="post-photo-utils">
-						<img src="assets/like-liked.svg">
+						<img src="/assets/like-liked.svg">
 					</div>
 
 					<p>2.6k</p>
 
 					<div class="post-photo-utils">
-						<img src="assets/comment.svg">
+						<img src="/assets/comment.svg">
 					</div>
 
 					<p>1.5k</p>
@@ -96,18 +96,18 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="assets/salisburgo.jpg">
+					<img class="post-photo-img" src="/assets/salisburgo.jpg">
 				</div>
 
 				<div class="post-card-footer">
 					<div class="post-photo-utils">
-						<img  src="assets/like-liked.svg">
+						<img  src="/assets/like-liked.svg">
 					</div>
 
 					<p>2.6k</p>
 
 					<div class="post-photo-utils">
-						<img src="assets/comment.svg">
+						<img src="/assets/comment.svg">
 					</div>
 
 					<p>1.5k</p>

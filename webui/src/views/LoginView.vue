@@ -34,14 +34,14 @@
 
         <div class="center-div">
             <div class="user-icon-div">
-                <img class="user-icon" src="assets/user.svg">
+                <img class="user-icon" src="/assets/user.svg">
             </div>
 
             <div class="bar-section-div">
                 <input class="bar" placeholder="Enter your username!">
 
                 <button class="button">
-                    <img class="button-image" src="assets/arrow.svg" width="80px" height="60px">
+                    <img class="button-image" src="/assets/arrow.svg" width="80px" height="60px">
                 </button>
             </div>
         </div>

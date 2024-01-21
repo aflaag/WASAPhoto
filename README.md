@@ -4,6 +4,7 @@
 
 ### OpenAPI
 
+- cambia la ricerca di utenti
 - RIMUOVI rev LRTKPS
 
 ### Backend
