@@ -13,8 +13,6 @@
   - controlla se ho risolto il ciclo
   - vieta la possibilità di fare self-follow e self-ban
 
-- FIXA LA COSA DELL'UPDATE DELLO USERNAME CON LA UNIQUENESS
-
 ### Frontend
 
 ## Domande

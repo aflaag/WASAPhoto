@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
@@ -81,6 +82,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 }
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+	// get the user performint the action from the resource parameter
 	oldUser, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
 
 	if err != nil {
@@ -90,6 +92,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	newUserLogin := LoginDefault()
 
+	// get the user's new username
 	err = json.NewDecoder(r.Body).Decode(&newUserLogin)
 
 	newUser := UserDefault()
@@ -105,13 +108,19 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	err = rt.db.UpdateUser(oldUser.UserIntoDatabaseUser(), newUser.UserIntoDatabaseUser())
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		// check whether the new username was already taken
+		if strings.HasPrefix(err.Error(), "UNIQUE constraint failed") {
+			newUser.Username = oldUser.Username
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // 200
 
+	// return the updated user with their new username
 	_ = json.NewEncoder(w).Encode(newUser)
 }
 

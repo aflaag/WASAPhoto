@@ -58,7 +58,7 @@ type AppDatabase interface {
 	DeletePhoto(dbPhoto DatabasePhoto) error                                     // DONE
 	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error         // DONE
 	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error      // DONE
-	GetPhotoCount(dbUser DatabaseUser) (int, error)                              // TODO
+	GetPhotoCount(dbUser DatabaseUser) (int, error)                              // DONE
 
 	// Like
 	InsertLike(dbUser DatabaseUser, dbPhoto DatabasePhoto) error                      // DONE
@@ -78,7 +78,7 @@ type AppDatabase interface {
 	GetDatabaseUser(userId uint32) (DatabaseUser, error)                              // DONE
 	GetDatabaseUserFromDatabaseLogin(dbLogin DatabaseLogin) (DatabaseUser, error)     // DONE
 	InsertUser(dbUser *DatabaseUser) error                                            // DONE
-	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error                  // TODO:
+	UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error                  // DONE
 	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) // DONE
 
 	// Liveness

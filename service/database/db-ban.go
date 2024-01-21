@@ -45,7 +45,7 @@ func (db *appdbimpl) DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) e
 func (db *appdbimpl) CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error) {
 	checkBan := true
 
-	// check wether the first user has banned the second user
+	// check whether the first user has banned the second user
 	err := db.c.QueryRow(`
 		SELECT EXISTS(
 			SELECT 1
