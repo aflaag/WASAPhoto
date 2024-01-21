@@ -134,7 +134,8 @@ func (rt *_router) getUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	// get the query from the resource parameter
-	query := ps.ByName("query_uname")
+	// query := ps.ByName("query_uname")
+	query := r.URL.Query().Get("username")
 
 	queryLogin := LoginDefault()
 	queryLogin.Username = query
