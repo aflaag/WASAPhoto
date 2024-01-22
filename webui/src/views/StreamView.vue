@@ -19,7 +19,8 @@
 				empty_stream: true,
 				stream: null,
 
-				comments: {},
+				show_comments: false,
+				comments: null,
 				empty_comments: true,
 
 				show_likes: false,
@@ -86,8 +87,8 @@
 
 					this.comments = response.data;
 
-					localStorage.setItem("show_comments", true);
-					// this.show_comments = true;
+					// localStorage.setItem("show_comments", true);
+					this.show_comments = true;
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
@@ -238,6 +239,40 @@
 					<p>{{photo.comment_count}}</p>
 				</div>
 
+	<div v-if="this.show_comments" class="overlay" style="position: absolute;">
+		<div class="comment-box">
+			<button class="button" @click="this.show_comments = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
+
+			<div v-if="!this.empty_comments" class="comment-scroll-panel">
+				<div class="comment">
+					<div class="comment-header">
+						<div class="comment-op">
+							<p>enginemode1</p>
+						</div>
+
+						<img class="delete-comment" src="/assets/delete.svg"/>
+					</div>
+
+					<div class="comment-text">
+						<p>lesgoooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooo</p>
+					</div>
+
+					<div class="heightless-line"></div>
+				</div>
+			</div>
+
+			<div v-if="!this.empty_comments" class="comment-input-box">
+				<input class="comment-bar" placeholder="Leave a comment!">
+			</div>
+
+			<div v-if="this.empty_comments" class="nothing-div">
+				Nothing here!
+			</div>
+		</div>
+	</div>
+
 			</div>
 		</div>
 
@@ -248,7 +283,7 @@
 		</div>
     </div>
 
-	<CommentBox v-if="shouldShowComments" id="logviewer" :log="this.comments" :token="this.token"></CommentBox>
+	<!-- <CommentBox id="logviewer" :log="this.comments" :token="this.token"></CommentBox> -->
 
 	<!-- <div v-if="this.show_comments" class="overlay">
 		<div class="comment-box">
