@@ -66,6 +66,12 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 			return dbStream, err
 		}
 
+		err = db.GetPhotoLikeStatus(&dbPhoto, dbUser)
+
+		if err != nil {
+			return dbStream, err
+		}
+
 		dbStream.Photos = append(dbStream.Photos, dbPhoto)
 	}
 

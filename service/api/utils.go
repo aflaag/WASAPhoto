@@ -8,8 +8,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// TODO: RIORDINA LE FUNZIONI QUA DENTRO CHE NON SI CAPISCE NIENTE
-
 func GetBearerToken(authRaw string) (int, error) {
 	re := regexp.MustCompile(`[-]?\d[\d,]*[\.]?[\d{2}]*`)
 

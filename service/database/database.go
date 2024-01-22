@@ -58,6 +58,7 @@ type AppDatabase interface {
 	DeletePhoto(dbPhoto DatabasePhoto) error                                     // DONE
 	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error         // DONE
 	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error      // DONE
+	GetPhotoLikeStatus(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error // DONE
 	GetPhotoCount(dbUser DatabaseUser) (int, error)                              // DONE
 
 	// Like

@@ -85,6 +85,7 @@ type Photo struct {
 	Date         string `json:"date"`
 	LikeCount    int    `json:"like_count"`
 	CommentCount int    `json:"comment_count"`
+	LikeStatus bool `json:"like_status"`
 }
 
 func PhotoDefault() Photo {
@@ -95,6 +96,7 @@ func PhotoDefault() Photo {
 		Date:         "",
 		LikeCount:    0,
 		CommentCount: 0,
+		LikeStatus: false,
 	}
 }
 
@@ -106,6 +108,7 @@ func PhotoFromDatabasePhoto(dbPhoto database.DatabasePhoto) Photo {
 		Date:         dbPhoto.Date,
 		LikeCount:    dbPhoto.LikeCount,
 		CommentCount: dbPhoto.CommentCount,
+		LikeStatus: dbPhoto.LikeStatus,
 	}
 }
 
@@ -117,6 +120,7 @@ func (photo *Photo) PhotoIntoDatabasePhoto() database.DatabasePhoto {
 		Date:         photo.Date,
 		LikeCount:    photo.LikeCount,
 		CommentCount: photo.CommentCount,
+		LikeStatus: photo.LikeStatus,
 	}
 }
 

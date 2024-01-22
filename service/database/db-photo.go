@@ -36,11 +36,39 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (Data
 
 	// get the comment count
 	err = db.GetPhotoCommentCount(&dbPhoto, dbUser)
+	
+	if err != nil {
+		return dbPhoto, err
+	}
+
+	// get the like status
+	err = db.GetPhotoLikeStatus(&dbPhoto, dbUser)
 
 	return dbPhoto, err
 }
 
+func (db *appdbimpl) GetPhotoLikeStatus(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error {
+	// check whether the first user has banned the second user
+	err := db.c.QueryRow(`
+		SELECT EXISTS(
+			SELECT 1
+			FROM like
+			WHERE user=?
+			AND photo=?
+		)
+	`, dbUser.Id, dbPhoto.Id).Scan(&dbPhoto.LikeStatus)
+
+	// if no table rows are found, then there is no row
+	// containing the like, hence the user has not liked the photo
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil
+	}
+
+	return err
+}
+
 func (db *appdbimpl) InsertPhoto(dbPhoto *DatabasePhoto) error {
+	// insert the photo into the database
 	res, err := db.c.Exec(`
 		INSERT INTO Photo(user, url, date)
 		VALUES (?, ?, ?)

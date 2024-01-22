@@ -1,5 +1,8 @@
 <script>
+	import CommentBox from "../components/CommentBox.vue";
+
     export default {
+		components: { CommentBox },
         data: function() {
             return {
                 errormsg: null,
@@ -16,14 +19,12 @@
 				empty_stream: true,
 				stream: null,
 
-				show_comments: false,
-				comments: null,
+				comments: {},
 				empty_comments: true,
 
 				show_likes: false,
 				likes: null,
 				empty_likes: true,
-
             }
         },
         methods: {
@@ -75,9 +76,9 @@
 					}
 				}
 			},
-			async getPhotoComments(photoUserUsername, photoId) {
+			async getPhotoComments(photo) {
 				try {
-					let response = await this.$axios.get("/user/" + photoUserUsername + "/photos/" + photoId + "/comments", {
+					let response = await this.$axios.get("/user/" + photo.user.username + "/photos/" + photo.id + "/comments", {
 						headers: {
 							Authorization: "Bearer " + this.token,
 						}
@@ -85,7 +86,8 @@
 
 					this.comments = response.data;
 
-					this.show_comments = true;
+					localStorage.setItem("show_comments", true);
+					// this.show_comments = true;
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
@@ -96,30 +98,51 @@
 					}
 				}
 			},
-			// async putLike(photoUserUsername, photoId) {
-			// 	try {
-			// 		let response = await this.$axios.put("/user/" + photoUserUsername + "/photos/" + photoId + "/likes/" + this.uname, {
-			// 			headers: {
-			// 				Authorization: "Bearer " + this.token,
-			// 			}
-			// 		});
+			async updateLike(photo) {
+				if (!photo.like_status) {
+					try {
+						let _ = await this.$axios.put("/user/" + photo.user.username + "/photos/" + photo.id + "/likes/" + this.uname, {}, {
+							headers: {
+								Authorization: "Bearer " + this.token,
+							}
+						});
 
-			// 		this.comments = response.data;
+						photo.like_count += 1;
+					} catch (e) {
+						console.log(this.token);
+						if (e.response && e.response.status === 500) {
+							this.errormsg = "Something went wrong while trying to register the like.";
+						} else if (e.response && e.response.status == 401) {
+							this.errormgs = "Forbidden access"
+						} else {
+							this.errormsg = e.toString();
+						}
+					}
+				} else {
+					try {
+						let _ = await this.$axios.delete("/user/" + photo.user.username + "/photos/" + photo.id + "/likes/" + this.uname, {
+							headers: {
+								Authorization: "Bearer " + this.token,
+							}
+						});
 
-			// 		this.show_comments = true;
-			// 	} catch (e) {
-			// 		if (e.response && e.response.status === 500) {
-			// 			this.errormsg = "Something went wrong while trying to register the like.";
-			// 		} else if (e.response && e.response.status == 401) {
-			// 			this.errormgs = "Forbidden access"
-			// 		} else {
-			// 			this.errormsg = e.toString();
-			// 		}
-			// 	}
-			// },
-			async getPhotoLikes(photoUserUsername, photoId) {
+						photo.like_count -= 1;
+					} catch (e) {
+						if (e.response && e.response.status === 500) {
+							this.errormsg = "Something went wrong while trying to remove the like.";
+						} else if (e.response && e.response.status == 401) {
+							this.errormgs = "Forbidden access"
+						} else {
+							this.errormsg = e.toString();
+						}
+					}
+				}
+
+				photo.like_status = !photo.like_status;
+			},
+			async getPhotoLikes(photo) {
 				try {
-					let response = await this.$axios.get("/user/" + photoUserUsername + "/photos/" + photoId + "/likes", {
+					let response = await this.$axios.get("/user/" + photo.user.username + "/photos/" + photo.id + "/likes", {
 						headers: {
 							Authorization: "Bearer " + this.token,
 						}
@@ -128,9 +151,13 @@
 					this.likes = response.data;
 
 					this.show_likes = true;
+
+					if (this.likes.users.length > 0) {
+						this.empty_likes = false;
+					}
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
-						this.errormsg = "Something went wrong while trying to register the like.";
+						this.errormsg = "Something went wrong while trying to retrieve likes.";
 					} else if (e.response && e.response.status == 401) {
 						this.errormgs = "Forbidden access"
 					} else {
@@ -140,7 +167,20 @@
 			},
         },
         mounted() {
-			this.getStream()
+			this.getStream();
+		},
+		computed: {
+			shouldShowComments() {
+				console.log("test");
+
+				if (localStorage.getItem("show_comments") === "true") {
+					return true;
+				} else {
+					return false;
+				}
+			},
+		},
+		watch: {
 		}
 }
 </script>
@@ -172,23 +212,24 @@
 					</RouterLink>
 				</div>
 
-				<div class="post-photo-div" style="">
+				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
 					<img class="post-photo-img" src="/assets/cupolone.jpg"> <!-- TODO: DA FARE -->
 				</div>
 
-				<div class="post-card-footer">
-					<!-- <button @click="putLike(photo.user.username, photo.id)" class="button" style="margin-bottom: 40px"> -->
+				<div class="post-card-footer" style="margin-top: 7px">
+					<button @click="updateLike(photo);" class="button" style="margin-bottom: 60px; margin-left: 20px">
 						<div class="post-photo-utils" style="margin-right: 10px;">
-							<img src="/assets/like-not-liked.svg"/>
+							<img v-if="!photo.like_status" src="/assets/like-not-liked.svg"/>
+							<img v-if="photo.like_status" src="/assets/like-liked.svg"/>
 						</div>
-					<!-- </button> -->
+					</button>
 
-					<button @click="getPhotoLikes(photo.user.username, photo.id)" class="button" style="margin: 5px 10px 0px 0px;">
+					<button @click="getPhotoLikes(photo)" class="button" style="margin: 5px 20px 0px 10px;">
 						<p>{{photo.like_count}}</p>
 					</button>
 
-					<button @click="getPhotoComments(photo.user.username, photo.id)" class="button" style="margin-bottom: 45px; margin-right: 8px">
+					<button @click="getPhotoComments(photo)" class="button" style="margin-bottom: 45px; margin-right: 8px">
 						<div class="post-photo-utils">
 							<img src="/assets/comment.svg"/>
 						</div>
@@ -196,6 +237,7 @@
 
 					<p>{{photo.comment_count}}</p>
 				</div>
+
 			</div>
 		</div>
 
@@ -206,13 +248,14 @@
 		</div>
     </div>
 
-	<div v-if="this.show_comments" class="overlay">
+	<CommentBox v-if="shouldShowComments" id="logviewer" :log="this.comments" :token="this.token"></CommentBox>
+
+	<!-- <div v-if="this.show_comments" class="overlay">
 		<div class="comment-box">
 			<button class="button" @click="this.show_comments = false;" style="display:flex">
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 
-			<!-- TODO: DA FARE -->
 			<div v-if="!this.empty_comments" class="comment-scroll-panel">
 				<div class="comment">
 					<div class="comment-header">
@@ -232,14 +275,14 @@
 			</div>
 
 			<div v-if="!this.empty_comments" class="comment-input-box">
-            	<input class="comment-bar" placeholder="Leave a comment!">
+				<input class="comment-bar" placeholder="Leave a comment!">
 			</div>
 
-			<div v-if="this.empty_likes" class="nothing-div">
+			<div v-if="this.empty_comments" class="nothing-div">
 				Nothing here!
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div v-if="this.show_likes" class="overlay">
 		<div class="comment-box">
@@ -248,7 +291,7 @@
 			</button>
 						
 			<div v-if="!this.empty_likes" class="search-scroll-panel">
-				<div v-for="like in this.likes.users" :key="result.id">
+				<div v-for="like in this.likes.users" :key="like.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">

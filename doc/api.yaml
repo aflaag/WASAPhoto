@@ -548,7 +548,6 @@ components:
           pattern: "https:\\/\\/ph04.github.io\\/WASAPhoto\\/Mario\\/photos\\/\\d+"
           minLength: 32
           maxLength: 100
-          example: "https://ph04.github.io/WASAPhoto/Mario/photos/1234"
         date:
           type: string
           description: The date when the photo was published.
@@ -566,6 +565,10 @@ components:
           description: The amount of comments of the photo.
           minimum: 0
           example: 1000
+        like_status:
+          type: boolean
+          description: True if and only if the user has liked the photo
+          example: true
     
     Comment:
       title: Comment

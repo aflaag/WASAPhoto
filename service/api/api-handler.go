@@ -37,10 +37,10 @@ func (rt *_router) Handler() http.Handler {
 	// User
 	rt.router.GET("/user/:uname", rt.wrap(rt.getUserProfile))            // DONE
 	rt.router.PUT("/user/:uname/setusername", rt.wrap(rt.setMyUserName)) // DONE
-	rt.router.GET("/user/:uname/users", rt.wrap(rt.getUsers))            // DONE DONE
+	rt.router.GET("/user/:uname/users", rt.wrap(rt.getUsers))            // DONE
 
 	// Stream
-	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream)) // DONE DONE
+	rt.router.GET("/user/:uname/stream", rt.wrap(rt.getMyStream)) // DONE
 
 	// Liveness
 	rt.router.GET("/liveness", rt.liveness) // TODO:

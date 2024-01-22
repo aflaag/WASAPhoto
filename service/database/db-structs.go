@@ -29,6 +29,7 @@ type DatabasePhoto struct {
 	Date         string       `json:"date"`
 	LikeCount    int          `json:"like_count"`
 	CommentCount int          `json:"comment_count"`
+	LikeStatus bool `json:"like_status"`
 }
 
 func DatabasePhotoDefault() DatabasePhoto {
@@ -39,6 +40,7 @@ func DatabasePhotoDefault() DatabasePhoto {
 		Date:         "",
 		LikeCount:    0,
 		CommentCount: 0,
+		LikeStatus: false,
 	}
 }
 

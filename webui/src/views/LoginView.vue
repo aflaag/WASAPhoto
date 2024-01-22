@@ -18,7 +18,7 @@
                     try {
                         let response = await this.$axios.post("/session", {
                             username: this.username,
-                        });
+                        }, {});
 
                         this.user = response.data;
 
