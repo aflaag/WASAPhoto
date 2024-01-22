@@ -30,82 +30,60 @@ export default {
 		},
 	},
 	mounted() {
-    },
-    computed: {
-        setComments() {
-            localStorage.setItem("show_comments", "false");
-        },
     }
 }
 </script>
 
 <template>
-    <div class="overlay">
-		<div class="comment-box">
-			<button class="button" @click="setComments" style="display:flex">
-				<img class="cross" src="/assets/cross.svg"/>
-			</button>
+	<div class="modal modal-xl" tabindex="-1">
+		<div class="modal-dialog comment-box" style="margin-top: 170px">
+			<div class="modal-content">
+				<div class="modal-header">
+                    <button class="button" style="display:flex;" data-bs-dismiss="modal">
+                        <img class="cross" src="/assets/cross.svg"/>
+                    </button>
+				</div>
+				<div class="modal-body" >
+					<div class="comment-scroll-panel" style="height: 500px; position: absolute; margin-top: -50px; margin-left: -15px">
+						<div class="comment" v-for="comment in log" :key="comment.id">
+                            <div class="comment-header">
+                                <div class="comment-op">
+                                    <p>enginemode1</p>
+                                </div>
 
-			<!-- <div v-if="!this.empty_comments" class="comment-scroll-panel">
-                <div class="comment-scroll-panel">
-                    <div class="comment" v-for="comment in log.comments" :key="comment.id">
-                        <div class="comment-header">
-                            <div class="comment-op">
-                                <p>enginemode1</p>
+                                <img class="delete-comment" src="/assets/delete.svg"/>
                             </div>
 
-                            <img class="delete-comment" src="/assets/delete.svg"/>
-                        </div>
+                            <div class="comment-text">
+                                <p>lesgoooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooo</p>
+                            </div>
 
-                        <div class="comment-text">
-                            <p>lesgoooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooo</p>
-                        </div>
+                            <div class="heightless-line"></div>
+						</div>
+					</div>
+				</div>
 
-                        <div class="heightless-line"></div>
-                    </div>
+                <div class="comment-input-box">
+                    <input class="comment-bar" placeholder="Leave a comment!">
                 </div>
-            </div>
-
-			<div v-if="!this.empty_comments" class="comment-input-box">
-				<input class="comment-bar" placeholder="Leave a comment!">
 			</div>
-
-			<div v-if="this.empty_comments" class="nothing-div">
-				Nothing here!
-			</div> -->
 		</div>
 	</div>
-
-    <!-- <div class="overlay">
-
-        <div class="modal modal-xl" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Comments</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-4" v-for="comment in log.comments" :key="comment.id">
-                                <div class="card">
-                                    <div class="card-body">
-                                    </div>
-                                </div>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </template>
 
 <style>
-/* .modal textarea {
-	font-family: "DejaVu Sans Mono", monospace;
-} */
+    .modal-content {
+		position: relative;
+
+		width: 100%;
+		height: 100%;
+
+		border-radius: 30px;
+
+		background-color: #e7e7e7;
+
+		font-size: 90%;
+
+		z-index: 1;
+    }
 </style>

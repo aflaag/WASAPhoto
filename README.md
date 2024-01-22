@@ -18,6 +18,7 @@
 ### Frontend
 
 - fixa lo scroll verticale sull'horiontal scroll panel
+- pulsante per lasciare il commento
 
 ## Domande
 
