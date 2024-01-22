@@ -19,18 +19,19 @@
 				empty_stream: true,
 				stream: null,
 
-				// show_comments: false,
 				comments: {},
 				empty_comments: true,
 
 				show_likes: false,
 				likes: null,
 				empty_likes: true,
+
+				modal: null,
             }
         },
         methods: {
             async search() {
-				if (this.search_query != "") {
+				if (this.search_query !== "") {
 					try {
 						let response = await this.$axios.get("/user/" + this.uname + "/users?username=" + this.search_query, {
 							headers: {
@@ -87,8 +88,8 @@
 
 					this.comments = response.data;
 
-					const modal = new bootstrap.Modal(document.getElementById('logviewer'));
-					modal.show();
+					this.modal = new bootstrap.Modal(document.getElementById('logviewer'));
+					this.modal.show();
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
@@ -110,7 +111,6 @@
 
 						photo.like_count += 1;
 					} catch (e) {
-						console.log(this.token);
 						if (e.response && e.response.status === 500) {
 							this.errormsg = "Something went wrong while trying to register the like.";
 						} else if (e.response && e.response.status == 401) {
@@ -166,6 +166,15 @@
 					}
 				}
 			},
+			async logout() {
+				localStorage.removeItem("token");
+				localStorage.removeItem("uname");
+
+                this.$router.push({path: "/session"});
+			},
+			async profile() {
+                this.$router.push({path: "/user/" + this.uname});
+			}
         },
         mounted() {
 			this.getStream();
@@ -187,8 +196,13 @@
 			</div>
 
 			<div class="left-right-corner">
-				<img class="user-icon" src="/assets/user-small.svg">
-				<img class="logout-icon" src="/assets/logout.svg">
+				<button @click="profile" class="button">
+					<img class="user-icon" src="/assets/user-small.svg">
+				</button>
+
+				<button @click="logout" class="button">
+					<img class="logout-icon" src="/assets/logout.svg">
+				</button>
 			</div>
         </div>
 
@@ -224,6 +238,8 @@
 					</button>
 
 					<p>{{photo.comment_count}}</p>
+
+					<CommentBox id="logviewer" :comments="this.comments" :photo="photo" :modal="this.modal"></CommentBox>
 				</div>
 			</div>
 		</div>
@@ -234,42 +250,6 @@
 			</div>
 		</div>
     </div>
-
-	<CommentBox id="logviewer" :log="this.comments.comments" :token="this.token"></CommentBox>
-
-	<!-- <div v-if="this.show_comments" class="overlay">
-		<div class="comment-box">
-			<button class="button" @click="this.show_comments = false;" style="display:flex">
-				<img class="cross" src="/assets/cross.svg"/>
-			</button>
-
-			<div v-if="!this.empty_comments" class="comment-scroll-panel">
-				<div class="comment">
-					<div class="comment-header">
-						<div class="comment-op">
-							<p>enginemode1</p>
-						</div>
-
-						<img class="delete-comment" src="/assets/delete.svg"/>
-					</div>
-
-					<div class="comment-text">
-						<p>lesgoooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooo ooooooooooooooooooooooooooooooooooo</p>
-					</div>
-
-					<div class="heightless-line"></div>
-				</div>
-			</div>
-
-			<div v-if="!this.empty_comments" class="comment-input-box">
-				<input class="comment-bar" placeholder="Leave a comment!">
-			</div>
-
-			<div v-if="this.empty_comments" class="nothing-div">
-				Nothing here!
-			</div>
-		</div>
-	</div> -->
 
 	<div v-if="this.show_likes" class="overlay">
 		<div class="comment-box">
@@ -291,10 +271,6 @@
 						<div class="heightless-line"></div>
 					</div>
 				</div>
-			</div>
-
-			<div v-if="this.empty_likes" class="nothing-div">
-				Nothing here!
 			</div>
 		</div>
 	</div>
@@ -382,11 +358,11 @@
 	}
 
 	.delete-comment {
-		width: 5%;
-		height: 5%;
+		width: 100%;
+		/* border: solid 2px red; */
 
 		margin-left: 3%;
-		margin-top: -0.5%
+		margin-top: -4%
 	}
 
 	.cross {
@@ -407,7 +383,8 @@
         border-radius: 0px;
         border: 0px solid rgba(0, 0, 0, 0);
 
-        width: 93%;
+        width: 83%;
+		/* width: 100px; */
 		height: 50%;
 
         font-size: 110%;

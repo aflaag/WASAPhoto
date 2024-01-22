@@ -11,7 +11,7 @@
             }
         },
         methods: {
-            async doLogin() {
+            async login() {
                 if (this.username === "") {
                     this.errormsg = "The username is empty";
                 } else {
@@ -56,7 +56,7 @@
             <div class="bar-section-div">
                 <input v-model="username" class="bar" placeholder="Enter your username!"/>
 
-                <button class="button" @click="doLogin">
+                <button class="button" @click="login">
                     <img class="button-image" src="/assets/arrow.svg"/>
                 </button>
             </div>
