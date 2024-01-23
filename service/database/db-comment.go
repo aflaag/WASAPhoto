@@ -100,6 +100,7 @@ func (db *appdbimpl) GetCommentList(dbPhoto DatabasePhoto, dbUser DatabaseUser) 
 			FROM ban
 			WHERE second_user=?
 		)
+		ORDER BY date
 	`, dbPhoto.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {

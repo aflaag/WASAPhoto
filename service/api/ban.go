@@ -25,6 +25,13 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	// check whether the user performing the ban and the user
+	// to be banned are the same
+	if user.Id == bannedUser.Id {
+		http.Error(w, ErrSelfBan.Error(), http.StatusBadRequest)
+		return
+	}
+
 	// insert the ban into the database
 	err = rt.db.InsertBan(user.UserIntoDatabaseUser(), bannedUser.UserIntoDatabaseUser())
 

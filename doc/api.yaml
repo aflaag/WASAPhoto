@@ -7,7 +7,7 @@ info:
     email: bandiera.1985878@studenti.uniroma1.it
     url: https://github.com/ph04
   license:
-    name: TODO
+    name: MIT
   description: |-
     Each user will be presented with a stream of photos in reverse chronological order, with information
     about when it was uploaded (date and time) and how many likes and comments it has. 

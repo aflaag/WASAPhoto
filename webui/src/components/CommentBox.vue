@@ -37,7 +37,9 @@
                         if (e.response && e.response.status === 500) {
                             this.errormsg = "Something went wrong while trying to post the comment.";
                         } else if (e.response && e.response.status == 401) {
-                            this.errormgs = "Forbidden access"
+                            this.errormsg = "Forbidden access";
+                            
+                            this.$router.replace({path: "/404"});
                         } else {
                             this.errormsg = e.toString();
                         }
@@ -59,7 +61,9 @@
                     if (e.response && e.response.status === 500) {
                         this.errormsg = "Something went wrong while trying to delete the comment.";
                     } else if (e.response && e.response.status == 401) {
-                        this.errormgs = "Forbidden access"
+                        this.errormsg = "Forbidden access";
+                        
+                        this.$router.replace({path: "/404"});
                     } else {
                         this.errormsg = e.toString();
                     }

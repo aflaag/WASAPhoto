@@ -34,8 +34,6 @@
                     } catch (e) {
                         if (e.response && e.response.status === 500) {
                             this.errormsg = "Something went wrong while trying to login.";
-                        } else if (e.response && e.response.status == 401) {
-                            this.errormgs = "Forbidden access"
                         } else {
                             this.errormsg = e.toString();
                         }
@@ -59,7 +57,7 @@
             </div>
 
             <div class="bar-section-div">
-                <input v-model="this.username" class="bar" placeholder="Enter your username!"/>
+                <input v-model="this.username" class="bar" placeholder="Enter your username!" style="text-align: center;"/>
 
                 <button class="button" @click="login">
                     <img class="button-image" src="/assets/arrow.svg"/>

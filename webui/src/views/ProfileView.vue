@@ -50,7 +50,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to fetch the photo's comments.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -70,7 +72,9 @@
 						if (e.response && e.response.status === 500) {
 							this.errormsg = "Something went wrong while trying to register the like.";
 						} else if (e.response && e.response.status == 401) {
-							this.errormgs = "Forbidden access"
+							this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -88,7 +92,9 @@
 						if (e.response && e.response.status === 500) {
 							this.errormsg = "Something went wrong while trying to remove the like.";
 						} else if (e.response && e.response.status == 401) {
-							this.errormgs = "Forbidden access"
+							this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -116,7 +122,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve likes.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -137,7 +145,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to register the follow.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -158,7 +168,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to remove the follow.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -177,7 +189,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to register the ban.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -196,7 +210,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to remove the ban.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -229,7 +245,10 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve profile information.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});;
+
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -250,7 +269,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve the followers.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -271,7 +292,9 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve the following.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}

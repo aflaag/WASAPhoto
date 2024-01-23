@@ -22,6 +22,7 @@ func (db *appdbimpl) GetDatabaseStream(dbUser DatabaseUser) (DatabaseStream, err
 				WHERE second_user=?
 			)
 		)
+		ORDER BY date DESC
 	`, dbUser.Id, dbUser.Id)
 
 	if errors.Is(err, sql.ErrNoRows) {

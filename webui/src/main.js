@@ -4,6 +4,7 @@ import router from './router'
 import axios from './services/axios.js'
 import ErrorMsg from './components/ErrorMsg.vue'
 import CommentBox from './components/CommentBox.vue'
+import SuccessMsg from './components/SuccessMsg.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 
 import './assets/dashboard.css'
@@ -14,5 +15,6 @@ app.config.globalProperties.$axios = axios;
 app.component("ErrorMsg", ErrorMsg);
 app.component("LoadingSpinner", LoadingSpinner);
 app.component("CommentBox", CommentBox);
+app.component("SuccessMsg", SuccessMsg);
 app.use(router)
 app.mount('#app')

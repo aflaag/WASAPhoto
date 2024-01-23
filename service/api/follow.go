@@ -25,6 +25,13 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	// check whether the user performing the following and the user
+	// to be followed are the same
+	if user.Id == followedUser.Id {
+		http.Error(w, ErrSelfFollow.Error(), http.StatusBadRequest)
+		return
+	}
+
 	// insert the following into the database
 	err = rt.db.InsertFollow(user.UserIntoDatabaseUser(), followedUser.UserIntoDatabaseUser())
 

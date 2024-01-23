@@ -168,6 +168,7 @@ func (db *appdbimpl) GetPhotos(dbProfile *DatabaseProfile, dbUser DatabaseUser) 
 		SELECT id
 		FROM photo
 		WHERE user=?
+		ORDER BY date DESC
 	`, dbProfile.User.Id)
 
 	if err != nil {

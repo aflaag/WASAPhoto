@@ -1,12 +1,14 @@
 <script>
 	import CommentBox from "../components/CommentBox.vue";
 	import ErrorMsg from "../components/ErrorMsg.vue";
+	import SuccessMsg from "../components/SuccessMsg.vue";
 
     export default {
-		components: { CommentBox, ErrorMsg },
+		components: { CommentBox, ErrorMsg, SuccessMsg },
         data: function() {
             return {
                 errormsg: null,
+				successmsg: null,
                 loading: false,
 
 				token: localStorage.getItem("token"),
@@ -37,6 +39,8 @@
         },
         methods: {
 			async updateLike(photo) {
+				this.successmsg = null;
+
 				if (!photo.like_status) {
 					try {
 						let _ = await this.$axios.put("/user/" + photo.user.username + "/photos/" + photo.id + "/likes/" + this.uname, {}, {
@@ -50,7 +54,9 @@
 						if (e.response && e.response.status === 500) {
 							this.errormsg = "Something went wrong while trying to register the like.";
 						} else if (e.response && e.response.status == 401) {
-							this.errormgs = "Forbidden access"
+							this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -68,7 +74,9 @@
 						if (e.response && e.response.status === 500) {
 							this.errormsg = "Something went wrong while trying to remove the like.";
 						} else if (e.response && e.response.status == 401) {
-							this.errormgs = "Forbidden access"
+							this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -78,6 +86,8 @@
 				photo.like_status = !photo.like_status;
 			},
 			async getPhotoLikes(photo) {
+				this.successmsg = null;
+
 				try {
 					let response = await this.$axios.get("/user/" + photo.user.username + "/photos/" + photo.id + "/likes", {
 						headers: {
@@ -96,16 +106,22 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve likes.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
 				}
 			},
 			async home() {
+				this.successmsg = null;
+
                 this.$router.push({path: "/user/" + this.uname + "/stream"});
 			},
             async getProfileInfo() {
+				this.successmsg = null;
+
                 try {
 					let response = await this.$axios.get("/user/" + this.uname, {
 						headers: {
@@ -129,13 +145,17 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve profile information.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
 				}
             },
             async getFollowers() {
+				this.successmsg = null;
+
                 try {
 					let response = await this.$axios.get("/user/" + this.uname + "/followers", {
 						headers: {
@@ -150,13 +170,17 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve the followers.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
 				}
             },
             async getFollowing() {
+				this.successmsg = null;
+
                 try {
 					let response = await this.$axios.get("/user/" + this.uname + "/following", {
 						headers: {
@@ -171,16 +195,80 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve the following.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
 				}
             },
-			async uploadPhoto() {
+			async doUploadRequest(photoUrl) {
+				try {
+					if (photoUrl != null) {
+						return await this.$axios.post("/user/" + this.uname + "/upload", {
+							url: photoUrl,
+						}, {
+							headers: {
+								Authorization: "Bearer " + this.token,
+							}
+						});
+					}	
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to upload the photo.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormsg = "Forbidden access";
 
+						this.$router.replace({path: "/404"});
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
+			async uploadPhoto() {
+				try {
+					const file = this.$refs.imageInput.files[0];
+
+					if (file) {
+						const reader = new FileReader();
+
+						let photoUrl = null;
+
+						reader.onload = (e) => {
+							photoUrl = e.target.result;
+
+							this.doUploadRequest(photoUrl)
+								.then(response => {
+									this.photos.unshift(response.data);
+
+									if (this.photos.length > 0) {
+										this.empty_photos = false;
+									}
+
+									this.photo_count += 1;
+
+									this.successmsg = "Photo uploaded correctly!";
+								})
+						};
+
+						reader.readAsDataURL(file);
+					}
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to upload the photo.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
 			},
 			async deletePhoto(photo) {
+				this.successmsg = null;
+
 				try {
 					let _ = await this.$axios.delete("/user/" + this.uname + "/photos/" + photo.id, {
 						headers: {
@@ -199,13 +287,17 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to remove the photo.";
 					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
 				}
 			},
             async changeUsername() {
+				this.successmsg = null;
+
 				if (this.newUsername != "") {
 					if (this.newUsername === this.uname) {
 						this.show_change = false;
@@ -240,7 +332,9 @@
 							if (e.response && e.response.status === 500) {
 								this.errormsg = "Something went wrong while trying to register the ban.";
 							} else if (e.response && e.response.status == 401) {
-								this.errormgs = "Forbidden access"
+								this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
 							} else {
 								this.errormsg = e.toString();
 							}
@@ -263,14 +357,15 @@
                     <p v-if="!this.show_change" class="header">{{this.uname}}</p>
 
 					<div v-if="this.show_change" style="display: flex; justify-content: center; margin: auto; margin-bottom: 15px; margin-left: -25px">
-	                    <input v-model="this.newUsername" class="comment-bar" placeholder="Change it!" style=" font-weight: 800; font-size: 500%; color: #485696;">
+	                    <input v-model="this.newUsername" class="comment-bar" placeholder="Change it!" style=" font-weight: 800; font-size: 500%; color: #485696; text-align: center;">
 					</div>
                 </div>
 
                 <div class="option-buttons-div">
-                    <button @click="uploadPhoto" class="button">
-                        <img class="follow-icon" src="/assets/upload.svg">
-                    </button>
+					<div style="background-color: #485696; width: 341px; height: 59px; border-radius: 15px;">
+						<label for="image" class="btn" style="color: #e7e7e7; font-size: 190%; width: 341px; height: 59px;">Upload photo</label>
+						<input type="file" id="image" name="image" accept="image/*" required class="form-input" ref="imageInput" @change="uploadPhoto" style="visibility: hidden;">
+					</div>
 
                     <button v-if="!this.show_change_confirm" @click="this.show_change = true; this.show_change_confirm = true;" class="button">
                         <img class="ban-icon" src="/assets/username.svg">
@@ -308,13 +403,14 @@
             </button>
         </div>
 
+		<SuccessMsg v-if="successmsg" :msg="successmsg"></SuccessMsg>
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 
 		<div v-if="!this.empty_photos" class="horizontal-scroll-panel">
 			<div class="post-card" v-for="photo in this.photos" :key="photo.id">
 				<div class="post-card-header" style="margin-top: 0px">
 					<RouterLink :to="'/user/' + photo.user.username" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
-						<p class="post-card-username">{{photo.user.username}}</p>
+						<p class="post-card-username">{{this.uname}}</p>
 					</RouterLink>
 
 					<button @click="deletePhoto(photo)" class="button" style="display: flex; width: 50px; margin-left: 2%; margin-top: -2%">
@@ -324,7 +420,7 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/cupolone.jpg"> <!-- TODO: DA FARE -->
+					<img :src="photo.url" class="post-photo-img">
 				</div>
 
 				<div class="post-card-footer" style="margin-top: 7px">
