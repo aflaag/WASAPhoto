@@ -206,7 +206,7 @@
 				}
 			},
             async changeUsername() {
-				if (this.newUsername !== "") {
+				if (this.newUsername !== null) {
 					if (this.newUsername === this.uname) {
 						this.show_change = false;
 						this.show_change_confirm = false;
