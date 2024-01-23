@@ -15,7 +15,7 @@
         },
         methods: {
             async login() {
-                if (this.username === null) {
+                if (this.username == null || this.username === "") {
                     this.errormsg = "The username is empty";
                 } else {
                     try {
