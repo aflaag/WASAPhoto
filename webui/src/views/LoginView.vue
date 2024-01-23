@@ -1,5 +1,8 @@
 <script>
+	import ErrorMsg from "../components/ErrorMsg.vue";
+
     export default {
+        components: { ErrorMsg },
         data: function() {
             return {
                 errormsg: null,
@@ -12,7 +15,7 @@
         },
         methods: {
             async login() {
-                if (this.username === "") {
+                if (this.username === null) {
                     this.errormsg = "The username is empty";
                 } else {
                     try {
@@ -24,6 +27,8 @@
 
                         localStorage.setItem("token", this.user.id);
                         localStorage.setItem("uname", this.user.username);
+
+                        this.errormsg = "";
 
                         this.$router.push({path: "/user/" + this.user.username + "/stream"});
                     } catch (e) {
@@ -54,7 +59,7 @@
             </div>
 
             <div class="bar-section-div">
-                <input v-model="username" class="bar" placeholder="Enter your username!"/>
+                <input v-model="this.username" class="bar" placeholder="Enter your username!"/>
 
                 <button class="button" @click="login">
                     <img class="button-image" src="/assets/arrow.svg"/>
@@ -62,6 +67,8 @@
             </div>
         </div>
     </div>
+
+	<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 </template>
 
 <style>

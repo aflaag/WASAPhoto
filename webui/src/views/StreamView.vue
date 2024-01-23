@@ -1,8 +1,9 @@
 <script>
 	import CommentBox from "../components/CommentBox.vue";
+	import ErrorMsg from "../components/ErrorMsg.vue";
 
     export default {
-		components: { CommentBox },
+		components: { CommentBox, ErrorMsg },
         data: function() {
             return {
                 errormsg: null,
@@ -199,6 +200,8 @@
 				</button>
 			</div>
         </div>
+
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 
 		<div v-if="!this.empty_stream" class="horizontal-scroll-panel">
 			<div class="post-card" v-for="photo in this.stream.photos" :key="photo.id">

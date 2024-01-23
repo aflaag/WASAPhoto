@@ -1,8 +1,9 @@
 <script>
 	import CommentBox from "../components/CommentBox.vue";
+	import ErrorMsg from "../components/ErrorMsg.vue";
 
     export default {
-		components: { CommentBox },
+		components: { CommentBox, ErrorMsg },
         data: function() {
             return {
                 errormsg: null,
@@ -209,6 +210,8 @@
 					if (this.newUsername === this.uname) {
 						this.show_change = false;
 						this.show_change_confirm = false;
+
+						this.errormsg = "";
 					} else {
 						try {
 
@@ -230,6 +233,8 @@
 
 								this.show_change = false;
 								this.show_change_confirm = false;
+
+								this.errormsg = "";
 							}
 						} catch (e) {
 							if (e.response && e.response.status === 500) {
@@ -302,6 +307,8 @@
                 <img class="user-icon" src="/assets/home.svg">
             </button>
         </div>
+
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 
 		<div v-if="!this.empty_photos" class="horizontal-scroll-panel">
 			<div class="post-card" v-for="photo in this.photos" :key="photo.id">
@@ -423,6 +430,8 @@
 			</div>
 		</div>
 	</div>
+
+	<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 </template>
 
 <style>
