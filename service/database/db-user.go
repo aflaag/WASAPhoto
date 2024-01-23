@@ -80,6 +80,7 @@ func (db *appdbimpl) InsertUser(dbUser *DatabaseUser) error {
 }
 
 func (db *appdbimpl) UpdateUser(oldDbUser DatabaseUser, newDbUser DatabaseUser) error {
+	// update the username in the database
 	res, err := db.c.Exec(`
 		UPDATE User
 		SET username=?

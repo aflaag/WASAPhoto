@@ -20,11 +20,9 @@
 				stream: null,
 
 				comments: {},
-				empty_comments: true,
 
 				show_likes: false,
 				likes: null,
-				empty_likes: true,
 
 				modal: null,
             }
@@ -33,7 +31,7 @@
             async search() {
 				if (this.search_query !== "") {
 					try {
-						let response = await this.$axios.get("/user/" + this.uname + "/users?username=" + this.search_query, {
+						let response = await this.$axios.get("/user/" + this.uname + "/users?query_name=" + this.search_query, {
 							headers: {
 								Authorization: "Bearer " + this.token,
 							}
@@ -152,10 +150,6 @@
 					this.likes = response.data;
 
 					this.show_likes = true;
-
-					if (this.likes.users.length > 0) {
-						this.empty_likes = false;
-					}
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to retrieve likes.";
@@ -170,7 +164,7 @@
 				localStorage.removeItem("token");
 				localStorage.removeItem("uname");
 
-                this.$router.push({path: "/session"});
+                this.$router.push({path: "/"});
 			},
 			async profile() {
                 this.$router.push({path: "/user/" + this.uname});
@@ -257,12 +251,12 @@
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 						
-			<div v-if="!this.empty_likes" class="search-scroll-panel">
+			<div class="search-scroll-panel">
 				<div v-for="like in this.likes.users" :key="like.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink :to="'/user/' + like.username" class="nav-link">
+								<RouterLink @click="this.show_likes = false;" :to="'/user/' + like.username" class="nav-link">
 									<p>{{like.username}}</p>
 								</RouterLink>
 							</div>
@@ -286,7 +280,7 @@
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink :to="'/user/' + result.username" class="nav-link">
+								<RouterLink @click="this.show_results = false;" :to="'/user/' + result.username" class="nav-link">
 									<p>{{result.username}}</p>
 								</RouterLink>
 							</div>

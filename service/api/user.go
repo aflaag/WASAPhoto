@@ -53,6 +53,17 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	profile.User = profileUser
 
+	dbProfile := profile.ProfileIntoDatabaseProfile()
+
+	err = rt.db.GetPhotos(&dbProfile, dbUser)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	profile = ProfileFromDatabaseProfile(dbProfile)
+
 	profile.PhotoCount, err = rt.db.GetPhotoCount(profileUser.UserIntoDatabaseUser())
 
 	if err != nil {
@@ -68,6 +79,20 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	profile.FollowingCount, err = rt.db.GetFollowingCount(profileUser.UserIntoDatabaseUser(), dbUser)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	profile.FollowStatus, err = rt.db.GetFollowStatus(dbUser, profileUser.UserIntoDatabaseUser())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	profile.BanStatus, err = rt.db.CheckBan(dbUser, profileUser.UserIntoDatabaseUser())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -134,8 +159,7 @@ func (rt *_router) getUsers(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	// get the query from the resource parameter
-	// query := ps.ByName("query_uname")
-	query := r.URL.Query().Get("username")
+	query := r.URL.Query().Get("query_name")
 
 	queryLogin := LoginDefault()
 	queryLogin.Username = query

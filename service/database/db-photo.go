@@ -36,7 +36,7 @@ func (db *appdbimpl) GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (Data
 
 	// get the comment count
 	err = db.GetPhotoCommentCount(&dbPhoto, dbUser)
-	
+
 	if err != nil {
 		return dbPhoto, err
 	}
@@ -159,6 +159,49 @@ func (db *appdbimpl) GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser Databas
 	if errors.Is(err, sql.ErrNoRows) {
 		return ErrPhotoDoesNotExist
 	}
+
+	return err
+}
+
+func (db *appdbimpl) GetPhotos(dbProfile *DatabaseProfile, dbUser DatabaseUser) error {
+	rows, err := db.c.Query(`
+		SELECT id
+		FROM photo
+		WHERE user=?
+	`, dbProfile.User.Id)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return ErrUserDoesNotExist
+		}
+
+		return err
+	}
+
+	// build the results list
+	for rows.Next() {
+		newDbPhoto := DatabasePhotoDefault()
+
+		err = rows.Scan(&newDbPhoto.Id)
+
+		if err != nil {
+			return err
+		}
+
+		newDbPhoto, err = db.GetDatabasePhoto(newDbPhoto.Id, dbUser)
+
+		if err != nil {
+			return err
+		}
+
+		dbProfile.Photos = append(dbProfile.Photos, newDbPhoto)
+	}
+
+	if rows.Err() != nil {
+		return err
+	}
+
+	_ = rows.Close()
 
 	return err
 }

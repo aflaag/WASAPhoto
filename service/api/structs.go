@@ -85,7 +85,7 @@ type Photo struct {
 	Date         string `json:"date"`
 	LikeCount    int    `json:"like_count"`
 	CommentCount int    `json:"comment_count"`
-	LikeStatus bool `json:"like_status"`
+	LikeStatus   bool   `json:"like_status"`
 }
 
 func PhotoDefault() Photo {
@@ -96,7 +96,7 @@ func PhotoDefault() Photo {
 		Date:         "",
 		LikeCount:    0,
 		CommentCount: 0,
-		LikeStatus: false,
+		LikeStatus:   false,
 	}
 }
 
@@ -108,7 +108,7 @@ func PhotoFromDatabasePhoto(dbPhoto database.DatabasePhoto) Photo {
 		Date:         dbPhoto.Date,
 		LikeCount:    dbPhoto.LikeCount,
 		CommentCount: dbPhoto.CommentCount,
-		LikeStatus: dbPhoto.LikeStatus,
+		LikeStatus:   dbPhoto.LikeStatus,
 	}
 }
 
@@ -120,7 +120,7 @@ func (photo *Photo) PhotoIntoDatabasePhoto() database.DatabasePhoto {
 		Date:         photo.Date,
 		LikeCount:    photo.LikeCount,
 		CommentCount: photo.CommentCount,
-		LikeStatus: photo.LikeStatus,
+		LikeStatus:   photo.LikeStatus,
 	}
 }
 
@@ -203,36 +203,50 @@ func CommentArrayIntoDatabaseCommentArray(array []Comment) []database.DatabaseCo
 }
 
 type Profile struct {
-	User           User `json:"user"`
-	PhotoCount     int  `json:"photo_count"`
-	FollowersCount int  `json:"followers_count"`
-	FollowingCount int  `json:"following_count"`
+	User           User    `json:"user"`
+	Photos         []Photo `json:"photos"`
+	PhotoCount     int     `json:"photo_count"`
+	FollowersCount int     `json:"followers_count"`
+	FollowingCount int     `json:"following_count"`
+	FollowStatus   bool    `json:"follow_status"`
+	BanStatus      bool    `json:"ban_status"`
 }
 
 func ProfileDefault() Profile {
+	emptyArray := make([]Photo, 0)
+
 	return Profile{
 		User:           UserDefault(),
+		Photos:         emptyArray,
 		PhotoCount:     0,
 		FollowersCount: 0,
 		FollowingCount: 0,
+		FollowStatus:   false,
+		BanStatus:      false,
 	}
 }
 
 func ProfileFromDatabaseProfile(dbProfile database.DatabaseProfile) Profile {
 	return Profile{
 		User:           UserFromDatabaseUser(dbProfile.User),
+		Photos:         PhotoArrayFromDatabasePhotoArray(dbProfile.Photos),
 		PhotoCount:     dbProfile.PhotoCount,
 		FollowersCount: dbProfile.PhotoCount,
 		FollowingCount: dbProfile.FollowingCount,
+		FollowStatus:   dbProfile.FollowStatus,
+		BanStatus:      dbProfile.BanStatus,
 	}
 }
 
-func (profile *Profile) CommentIntoDatabaseComment() database.DatabaseProfile {
+func (profile *Profile) ProfileIntoDatabaseProfile() database.DatabaseProfile {
 	return database.DatabaseProfile{
 		User:           profile.User.UserIntoDatabaseUser(),
+		Photos:         PhotoArrayIntoDatabasePhotoArray(profile.Photos),
 		PhotoCount:     profile.PhotoCount,
 		FollowersCount: profile.PhotoCount,
 		FollowingCount: profile.FollowingCount,
+		FollowStatus:   profile.FollowStatus,
+		BanStatus:      profile.BanStatus,
 	}
 }
 

@@ -29,7 +29,7 @@ type DatabasePhoto struct {
 	Date         string       `json:"date"`
 	LikeCount    int          `json:"like_count"`
 	CommentCount int          `json:"comment_count"`
-	LikeStatus bool `json:"like_status"`
+	LikeStatus   bool         `json:"like_status"`
 }
 
 func DatabasePhotoDefault() DatabasePhoto {
@@ -40,7 +40,7 @@ func DatabasePhotoDefault() DatabasePhoto {
 		Date:         "",
 		LikeCount:    0,
 		CommentCount: 0,
-		LikeStatus: false,
+		LikeStatus:   false,
 	}
 }
 
@@ -63,18 +63,26 @@ func DatabaseCommentDefault() DatabaseComment {
 }
 
 type DatabaseProfile struct {
-	User           DatabaseUser `json:"user"`
-	PhotoCount     int          `json:"photo_count"`
-	FollowersCount int          `json:"followers_count"`
-	FollowingCount int          `json:"following_count"`
+	User           DatabaseUser    `json:"user"`
+	Photos         []DatabasePhoto `json:"photos"`
+	PhotoCount     int             `json:"photo_count"`
+	FollowersCount int             `json:"followers_count"`
+	FollowingCount int             `json:"following_count"`
+	FollowStatus   bool            `json:"follow_status"`
+	BanStatus      bool            `json:"ban_status"`
 }
 
 func DatabaseProfileDefault() DatabaseProfile {
+	emptyArray := make([]DatabasePhoto, 0)
+
 	return DatabaseProfile{
 		User:           DatabaseUserDefault(),
+		Photos:         emptyArray,
 		PhotoCount:     0,
 		FollowersCount: 0,
 		FollowingCount: 0,
+		FollowStatus:   false,
+		BanStatus:      false,
 	}
 }
 

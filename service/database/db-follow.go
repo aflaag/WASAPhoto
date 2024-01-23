@@ -186,3 +186,26 @@ func (db *appdbimpl) GetFollowingList(followingDbUser DatabaseUser, dbUser Datab
 
 	return dbUserList, err
 }
+
+func (db *appdbimpl) GetFollowStatus(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error) {
+	followStatus := false
+
+	// check whether the first user follows the second user
+	err := db.c.QueryRow(`
+		SELECT EXISTS(
+			SELECT 1
+			FROM follow
+			WHERE first_user=?
+			AND second_user=?
+		)
+	`, firstDbUser.Id, secondDbUser.Id).Scan(&followStatus)
+
+	// if no table rows are found, then there is no row
+	// containing the ban, hence the first user has not
+	// banned the second user
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	}
+
+	return followStatus, err
+}

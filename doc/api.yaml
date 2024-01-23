@@ -472,11 +472,11 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
-  /user/{uname}/search/{query_name}: # TODO: CAMBIALO
+  /user/{uname}/users:
     parameters:
       - { $ref: "#/components/parameters/uname" }
       - { $ref: "#/components/parameters/query_name" }
-    
+
     get:
       security:
         - bearerAuth: []
@@ -602,6 +602,12 @@ components:
       type: object
       properties:
         user: { $ref: "#/components/schemas/User" }
+        photos:
+          type: array
+          description: The photos the user has posted
+          items: { $ref: "#/components/schemas/Photo" }
+          minItems: 0
+          maxItems: 1000
         photo_count:
           type: integer
           description: The amount of photos the user has posted.
@@ -617,6 +623,14 @@ components:
           description: The amount of users the user follows.
           minimum: 0
           example: 1000
+        follow_status:
+          type: boolean
+          description: True if the user performing the action follows the user.
+          example: true
+        ban_status:
+          type: boolean
+          description: True if the user performing the action has banned the user.
+          example: true
   
     Stream:
       title: Stream
@@ -694,7 +708,7 @@ components:
       schema: { $ref: "#/components/schemas/Comment" }
     query_name:
       name: query_name
-      in: path
+      in: query
       description: The parameter that represents a search term.
       required: true
       schema: { $ref: "#/components/schemas/Login" }

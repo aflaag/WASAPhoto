@@ -45,12 +45,13 @@ type AppDatabase interface {
 	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error)                   // DONE
 
 	// Follow
-	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
-	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error             // DONE
-	GetFollowersCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error)  // DONE
-	GetFollowingCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error)  // DONE
-	GetFollowersList(followersDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
-	GetFollowingList(followingDbUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error                          // DONE
+	DeleteFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error                          // DONE
+	GetFollowersCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error)               // DONE
+	GetFollowingCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error)               // DONE
+	GetFollowersList(followersDbUser DatabaseUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	GetFollowingList(followingDbUser DatabaseUser, dbUser DatabaseUser) (DatabaseUserList, error) // DONE
+	GetFollowStatus(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error)            // DONE
 
 	// Photo
 	GetDatabasePhoto(photoId uint32, dbUser DatabaseUser) (DatabasePhoto, error) // DONE
@@ -58,7 +59,8 @@ type AppDatabase interface {
 	DeletePhoto(dbPhoto DatabasePhoto) error                                     // DONE
 	GetPhotoLikeCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error         // DONE
 	GetPhotoCommentCount(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error      // DONE
-	GetPhotoLikeStatus(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error // DONE
+	GetPhotoLikeStatus(dbPhoto *DatabasePhoto, dbUser DatabaseUser) error        // DONE
+	GetPhotos(dbProfile *DatabaseProfile, dbUser DatabaseUser) error             // DONE
 	GetPhotoCount(dbUser DatabaseUser) (int, error)                              // DONE
 
 	// Like
