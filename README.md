@@ -12,8 +12,6 @@
 
 - CONTROLLA GLI ERRORI
 
-- controlla se ho realmente fixato l'update dell'username che non me lo ricordio
-
 - decisioni da prendere se gestire o meno
   - se seguo una persona, devo vederlo tra i miei seguiti indipendentemente se la persona che seguo mi ha bannato o meno
   - controlla se ho risolto il ciclo
@@ -22,6 +20,11 @@
 ### Frontend
 
 - CONTROLLA GLI ERRORI
+
+- tasto delete photo
+- lista dei bannati nel self
+- ordina i commenti
+- ordina le foto
 
 - fixa lo scroll verticale sull'horiontal scroll panel
 

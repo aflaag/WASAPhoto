@@ -90,7 +90,7 @@
 					this.modal.show();
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
-						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
+						this.errormsg = "Something went wrong while trying to fetch the photo's comments.";
 					} else if (e.response && e.response.status == 401) {
 						this.errormgs = "Forbidden access"
 					} else {
@@ -167,7 +167,7 @@
                 this.$router.push({path: "/"});
 			},
 			async profile() {
-                this.$router.push({path: "/user/" + this.uname});
+                this.$router.push({path: "/user/self"});
 			}
         },
         mounted() {

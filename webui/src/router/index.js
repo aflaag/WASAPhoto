@@ -11,7 +11,7 @@ const router = createRouter({
 		{path: '/', component: LoginView},
 		{path: '/user/:uname/stream', component: StreamView},
 		{path: '/user/:uname', component: ProfileView},
-		{path: '/self', component: SelfView}, // TODO: DA CAMBIARE
+		{path: '/user/self', component: SelfView},
 	]
 })
 

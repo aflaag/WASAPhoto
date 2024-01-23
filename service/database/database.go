@@ -42,7 +42,6 @@ type AppDatabase interface {
 	InsertBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error             // DONE
 	DeleteBan(dbUser DatabaseUser, bannedDbUser DatabaseUser) error             // DONE
 	CheckBan(firstDbUser DatabaseUser, secondDbUser DatabaseUser) (bool, error) // DONE
-	GetBanList(dbUser DatabaseUser) (DatabaseUserList, error)                   // DONE
 
 	// Follow
 	InsertFollow(dbUser DatabaseUser, followedDbUser DatabaseUser) error                          // DONE

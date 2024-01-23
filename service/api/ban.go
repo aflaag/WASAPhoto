@@ -8,32 +8,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) getBanList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	// authenticate the user performing the action
-	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)
-
-	if err != nil {
-		http.Error(w, err.Error(), code)
-		return
-	}
-
-	// get the list of banned users from the database
-	dbBanList, err := rt.db.GetBanList(user.UserIntoDatabaseUser())
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	banList := UserListFromDatabaseUserList(dbBanList)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK) // 200
-
-	// return the list of banned users
-	_ = json.NewEncoder(w).Encode(banList)
-}
-
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// authenticate the user performing the action
 	user, code, err := rt.AuthenticateUserFromParameter("uname", r, ps)

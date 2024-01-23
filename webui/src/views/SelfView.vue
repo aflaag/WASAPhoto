@@ -1,29 +1,253 @@
 <script>
+	import CommentBox from "../components/CommentBox.vue";
+
     export default {
+		components: { CommentBox },
         data: function() {
             return {
                 errormsg: null,
                 loading: false,
-                some_data: null,
+
+				token: localStorage.getItem("token"),
+				uname: localStorage.getItem("uname"),
+
+				comments: {},
+
+				show_likes: false,
+				likes: null,
+
+				modal: null,
+
+                photos: null,
+                empty_photos: true,
+
+                photo_count: 0,
+                followers_count: 0,
+                following_count: 0,
+
+                show_followers: false,
+                show_following: false,
+
+				newUsername: "",
+
+				show_change: false,
+				show_change_confirm: false,
             }
         },
         methods: {
-            async refresh() {
-                this.loading = true;
-                this.errormsg = null;
+			async updateLike(photo) {
+				if (!photo.like_status) {
+					try {
+						let _ = await this.$axios.put("/user/" + photo.user.username + "/photos/" + photo.id + "/likes/" + this.uname, {}, {
+							headers: {
+								Authorization: "Bearer " + this.token,
+							}
+						});
+
+						photo.like_count += 1;
+					} catch (e) {
+						if (e.response && e.response.status === 500) {
+							this.errormsg = "Something went wrong while trying to register the like.";
+						} else if (e.response && e.response.status == 401) {
+							this.errormgs = "Forbidden access"
+						} else {
+							this.errormsg = e.toString();
+						}
+					}
+				} else {
+					try {
+						let _ = await this.$axios.delete("/user/" + photo.user.username + "/photos/" + photo.id + "/likes/" + this.uname, {
+							headers: {
+								Authorization: "Bearer " + this.token,
+							}
+						});
+
+						photo.like_count -= 1;
+					} catch (e) {
+						if (e.response && e.response.status === 500) {
+							this.errormsg = "Something went wrong while trying to remove the like.";
+						} else if (e.response && e.response.status == 401) {
+							this.errormgs = "Forbidden access"
+						} else {
+							this.errormsg = e.toString();
+						}
+					}
+				}
+
+				photo.like_status = !photo.like_status;
+			},
+			async getPhotoLikes(photo) {
+				try {
+					let response = await this.$axios.get("/user/" + photo.user.username + "/photos/" + photo.id + "/likes", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+					this.likes = response.data;
+
+					this.show_likes = true;
+
+					if (this.likes.users.length > 0) {
+						this.empty_likes = false;
+					}
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to retrieve likes.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
+			async home() {
+                this.$router.push({path: "/user/" + this.uname + "/stream"});
+			},
+            async getProfileInfo() {
                 try {
-                    let response = await this.$axios.get("/stream"); // TODO: DA CAMBIARE
-                    this.some_data = response.data;
-                } catch (e) {
-                    this.errormsg = e.toString();
-                }
-                this.loading = false;
+					let response = await this.$axios.get("/user/" + this.uname, {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+                    this.show_follow = !response.data.follow_status;
+                    this.show_ban = !response.data.ban_status;
+
+                    this.photos = response.data.photos;
+
+					if (this.photos.length > 0) {
+						this.empty_photos = false;
+					}
+
+                    this.photo_count = response.data.photo_count;
+                    this.followers_count = response.data.followers_count;
+                    this.following_count = response.data.following_count;
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to retrieve profile information.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+            },
+            async getFollowers() {
+                try {
+					let response = await this.$axios.get("/user/" + this.uname + "/followers", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+                    this.followers = response.data;
+
+                    this.show_followers = true;
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to retrieve the followers.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+            },
+            async getFollowing() {
+                try {
+					let response = await this.$axios.get("/user/" + this.uname + "/following", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+                    this.following = response.data;
+
+                    this.show_following = true;
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to retrieve the following.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+            },
+			async uploadPhoto() {
+
+			},
+			async deletePhoto(photo) {
+				try {
+					let _ = await this.$axios.delete("/user/" + this.uname + "/photos/" + photo.id, {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+                    this.photos = this.photos.filter(function (p) { return p.id !== photo.id});
+
+					this.photo_count -= 1;
+
+					if (this.photos.length === 0) {
+						this.empty_photos = true;
+					}
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to remove the photo.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormgs = "Forbidden access"
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
+            async changeUsername() {
+				if (this.newUsername !== "") {
+					if (this.newUsername === this.uname) {
+						this.show_change = false;
+						this.show_change_confirm = false;
+					} else {
+						try {
+
+							let response = await this.$axios.put("/user/" + this.uname + "/setusername", {
+								username: this.newUsername
+							}, {
+								headers: {
+									Authorization: "Bearer " + this.token,
+								}
+							});
+
+							let usernameResponse = response.data.username;
+
+							if (usernameResponse === this.uname) {
+								this.errormsg = "This username is already taken."
+							} else {
+								this.uname = usernameResponse;
+								localStorage.setItem("uname", usernameResponse);
+
+								this.show_change = false;
+								this.show_change_confirm = false;
+							}
+						} catch (e) {
+							if (e.response && e.response.status === 500) {
+								this.errormsg = "Something went wrong while trying to register the ban.";
+							} else if (e.response && e.response.status == 401) {
+								this.errormgs = "Forbidden access"
+							} else {
+								this.errormsg = e.toString();
+							}
+						}
+					}
+				}
             },
         },
         mounted() {
-            this.refresh()
+            this.getProfileInfo()
         }
-}
+    }
 </script>
 
 <template>
@@ -31,90 +255,174 @@
         <div class="header-div">
             <div class="username-div">
                 <div style="display: flex; justify-content: center;">
-                    <p class="header">a.flag_</p>
+                    <p v-if="!this.show_change" class="header">{{this.uname}}</p>
+
+					<div v-if="this.show_change" style="display: flex; justify-content: center; margin: auto; margin-bottom: 15px; margin-left: -25px">
+	                    <input v-model="this.newUsername" class="comment-bar" placeholder="Change it!" style=" font-weight: 800; font-size: 500%; color: #485696;">
+					</div>
                 </div>
 
                 <div class="option-buttons-div">
-                    <img class="follow-icon" src="/assets/post.svg">
+                    <button @click="uploadPhoto" class="button">
+                        <img class="follow-icon" src="/assets/upload.svg">
+                    </button>
 
-                    <img class="ban-icon" src="/assets/username.svg">
+                    <button v-if="!this.show_change_confirm" @click="this.show_change = true; this.show_change_confirm = true;" class="button">
+                        <img class="ban-icon" src="/assets/username.svg">
+                    </button>
+
+                    <button v-if="this.show_change_confirm" @click="changeUsername" class="button">
+                        <img class="ban-icon" src="/assets/change.svg">
+                    </button>
                 </div>
             </div>
 
             <div class="numbers-div">
                 <div class="numbers-block-div">
-                    <p class="numbers-block-numbers">52</p>
-                    <p>Photos</p>
+                    <p class="numbers-block-numbers">{{this.photo_count}}</p>
+                    <p style="margin-top: 3%">Photos</p>
                 </div>
 
-                <div class="numbers-block-div">
-                    <p class="numbers-block-numbers">0</p>
-                    <p style="margin-top: 3%">Followers</p>
-                </div>
+                <button @click="getFollowers" class="button">
+                    <div class="numbers-block-div">
+                        <p class="numbers-block-numbers">{{this.followers_count}}</p>
+                        <p style="margin-top: 3%">Followers</p>
+                    </div>
+                </button>
 
-                <div class="numbers-block-div">
-                    <p class="numbers-block-numbers">1504</p>
-                    <p style="margin-top: 3%">Following</p>
-                </div>
+                <button @click="getFollowing" class="button">
+                    <div class="numbers-block-div">
+                        <p class="numbers-block-numbers">{{this.following_count}}</p>
+                        <p style="margin-top: 3%">Following</p>
+                    </div>
+                </button>
             </div>
 
-            <img class="user-icon" src="/assets/home.svg">
+            <button @click="home" class="button">
+                <img class="user-icon" src="/assets/home.svg">
+            </button>
         </div>
 
-		<div class="horizontal-scroll-panel">
-			<div class="post-card">
-				<div class="post-card-header">
-					<p class="post-card-username">walter4c</p>
+		<div v-if="!this.empty_photos" class="horizontal-scroll-panel">
+			<div class="post-card" v-for="photo in this.photos" :key="photo.id">
+				<div class="post-card-header" style="margin-top: 0px">
+					<RouterLink :to="'/user/' + photo.user.username" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
+						<p class="post-card-username">{{photo.user.username}}</p>
+					</RouterLink>
 
-					<img class="delete-photo" src="/assets/delete.svg"/>
+					<button @click="deletePhoto(photo)" class="button" style="display: flex; width: 50px; margin-left: 2%; margin-top: -2%">
+						<img class="delete-comment" src="/assets/delete.svg"/>
+					</button>
 				</div>
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/cupolone.jpg">
+					<img class="post-photo-img" src="/assets/cupolone.jpg"> <!-- TODO: DA FARE -->
 				</div>
 
-				<div class="post-card-footer">
-					<div class="post-photo-utils">
-						<img src="/assets/like-liked.svg">
-					</div>
+				<div class="post-card-footer" style="margin-top: 7px">
+					<button @click="updateLike(photo);" class="button" style="margin-bottom: 60px; margin-left: 20px">
+						<div class="post-photo-utils" style="margin-right: 10px;">
+							<img v-if="!photo.like_status" src="/assets/like-not-liked.svg"/>
+							<img v-if="photo.like_status" src="/assets/like-liked.svg"/>
+						</div>
+					</button>
 
-					<p>2.6k</p>
+					<button @click="getPhotoLikes(photo)" class="button" style="margin: 5px 20px 0px 10px;">
+						<p>{{photo.like_count}}</p>
+					</button>
 
-					<div class="post-photo-utils">
-						<img src="/assets/comment.svg">
-					</div>
+					<button @click="getPhotoComments(photo)" class="button" style="margin-bottom: 45px; margin-right: 8px">
+						<div class="post-photo-utils">
+							<img src="/assets/comment.svg"/>
+						</div>
+					</button>
 
-					<p>1.5k</p>
-				</div>
-			</div>
+					<p>{{photo.comment_count}}</p>
 
-			<div class="post-card">
-				<div class="post-card-header">
-					<p class="post-card-username">walter4c</p>
-				</div>
-
-				<div class="post-photo-div">
-					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/salisburgo.jpg">
-				</div>
-
-				<div class="post-card-footer">
-					<div class="post-photo-utils">
-						<img  src="/assets/like-liked.svg">
-					</div>
-
-					<p>2.6k</p>
-
-					<div class="post-photo-utils">
-						<img src="/assets/comment.svg">
-					</div>
-
-					<p>1.5k</p>
+					<CommentBox id="logviewer" :comments="this.comments" :photo="photo" :modal="this.modal"></CommentBox>
 				</div>
 			</div>
 		</div>
+
+		<div v-if="this.empty_photos" class="horizontal-scroll-panel">
+			<div style="display: flex; justify-content: center; margin-top: 13%">
+				<p style="color: #485696; font-size: 300%">Find new users and follow your friends!</p>
+			</div>
+		</div>
     </div>
+
+	<div v-if="this.show_likes" class="overlay" style="margin-top: -214px">
+		<div class="comment-box">
+			<button class="button" @click="this.show_likes = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
+						
+			<div class="search-scroll-panel">
+				<div v-for="like in this.likes.users" :key="like.id">
+					<div class="comment">
+						<div class="comment-header">
+							<div class="comment-op">
+								<RouterLink :to="'/user/' + like.username" class="nav-link">
+									<p>{{like.username}}</p>
+								</RouterLink>
+							</div>
+						</div>
+
+						<div class="heightless-line"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div v-if="this.show_followers" class="overlay" style="margin-top: -214px">
+		<div class="comment-box">
+			<button class="button" @click="this.show_followers = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
+						
+			<div class="search-scroll-panel">
+				<div v-for="follower in this.followers.users" :key="follower.id">
+					<div class="comment">
+						<div class="comment-header">
+							<div class="comment-op">
+								<RouterLink @click="this.show_followers = false;" :to="'/user/' + follower.username" class="nav-link">
+									<p>{{follower.username}}</p>
+								</RouterLink>
+							</div>
+						</div>
+
+						<div class="heightless-line"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div v-if="this.show_following" class="overlay" style="margin-top: -214px">
+		<div class="comment-box">
+			<button class="button" @click="this.show_following = false;" style="display:flex">
+				<img class="cross" src="/assets/cross.svg"/>
+			</button>
+						
+			<div class="search-scroll-panel">
+				<div v-for="following in this.following.users" :key="following.id">
+					<div class="comment">
+						<div class="comment-header">
+							<div class="comment-op">
+								<RouterLink @click="this.show_following = false;" :to="'/user/' + following.username" class="nav-link">
+									<p>{{following.username}}</p>
+								</RouterLink>
+							</div>
+						</div>
+
+						<div class="heightless-line"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style>
@@ -274,5 +582,9 @@
 
 	.post-card-header p {
 		margin-left: 6%;
+	}
+
+	::placeholder {
+		text-align: center;
 	}
 </style>

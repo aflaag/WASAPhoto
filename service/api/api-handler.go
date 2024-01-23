@@ -10,7 +10,6 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session", rt.wrap(rt.session)) // DONE DONE
 
 	// Ban
-	rt.router.GET("/user/:uname/ban", rt.wrap(rt.getBanList))                 // DONE
 	rt.router.PUT("/user/:uname/ban/:banned_uname", rt.wrap(rt.banUser))      // DONE
 	rt.router.DELETE("/user/:uname/ban/:banned_uname", rt.wrap(rt.unbanUser)) // DONE
 

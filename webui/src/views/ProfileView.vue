@@ -11,9 +11,6 @@
 				token: localStorage.getItem("token"),
 				uname: localStorage.getItem("uname"),
 
-				empty_stream: true,
-				stream: null,
-
 				comments: {},
 
 				show_likes: false,
@@ -36,29 +33,6 @@
             }
         },
         methods: {
-			async getStream() {
-				try {
-					let response = await this.$axios.get("/user/" + this.uname + "/stream", {
-						headers: {
-							Authorization: "Bearer " + this.token,
-						}
-					});
-
-					this.stream = response.data;
-					
-					if (this.stream.photos.length > 0) {
-						this.empty_stream = false;
-					}
-				} catch (e) {
-					if (e.response && e.response.status === 500) {
-						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
-					} else if (e.response && e.response.status == 401) {
-						this.errormgs = "Forbidden access"
-					} else {
-						this.errormsg = e.toString();
-					}
-				}
-			},
 			async getPhotoComments(photo) {
 				try {
 					let response = await this.$axios.get("/user/" + photo.user.username + "/photos/" + photo.id + "/comments", {
@@ -73,7 +47,7 @@
 					this.modal.show();
 				} catch (e) {
 					if (e.response && e.response.status === 500) {
-						this.errormsg = "Something went wrong while trying to fetch the user's stream.";
+						this.errormsg = "Something went wrong while trying to fetch the photo's comments.";
 					} else if (e.response && e.response.status == 401) {
 						this.errormgs = "Forbidden access"
 					} else {
