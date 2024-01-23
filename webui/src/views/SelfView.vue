@@ -206,7 +206,7 @@
 				}
 			},
             async changeUsername() {
-				if (this.newUsername !== null) {
+				if (this.newUsername != "") {
 					if (this.newUsername === this.uname) {
 						this.show_change = false;
 						this.show_change_confirm = false;
@@ -430,8 +430,6 @@
 			</div>
 		</div>
 	</div>
-
-	<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 </template>
 
 <style>

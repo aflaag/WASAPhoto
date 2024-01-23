@@ -8,15 +8,15 @@
                 errormsg: null,
                 loading: false,
 
-                username: null,
+                username: "",
 
                 user: null,
             }
         },
         methods: {
             async login() {
-                if (this.username == null || this.username === "") {
-                    this.errormsg = "The username is empty";
+                if (this.username === "") {
+                    this.errormsg = "The username can't be empty";
                 } else {
                     try {
                         let response = await this.$axios.post("/session", {
