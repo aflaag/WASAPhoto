@@ -238,7 +238,7 @@
 		<div v-if="!this.empty_stream" class="horizontal-scroll-panel">
 			<div class="post-card" v-for="photo in this.stream.photos" :key="photo.id">
 				<div class="post-card-header" style="margin-top: 0px">
-					<RouterLink :to="'/user/' + photo.user.username" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
+					<RouterLink :to="photo.user.username !== this.uname ? '/user/' + photo.user.username : '/user/self'" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
 						<p class="post-card-username">{{photo.user.username}}</p>
 					</RouterLink>
 				</div>
@@ -291,7 +291,7 @@
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_likes = false;" :to="'/user/' + like.username" class="nav-link">
+								<RouterLink @click="this.show_likes = false;" :to="like.username !== this.uname ? '/user/' + like.username : '/user/self'" class="nav-link">
 									<p>{{like.username}}</p>
 								</RouterLink>
 							</div>
@@ -315,7 +315,7 @@
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_results = false;" :to="'/user/' + result.username" class="nav-link">
+								<RouterLink @click="this.show_results = false;" :to="result.username !== this.uname ? '/user/' + result.username : '/user/self'" class="nav-link">
 									<p>{{result.username}}</p>
 								</RouterLink>
 							</div>

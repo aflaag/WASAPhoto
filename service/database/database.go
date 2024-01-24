@@ -84,7 +84,7 @@ type AppDatabase interface {
 	GetUserList(dbUser DatabaseUser, dbLogin DatabaseLogin) (DatabaseUserList, error) // DONE
 
 	// Liveness
-	Ping() error // TODO:
+	Ping() error // DONE
 }
 
 type appdbimpl struct {

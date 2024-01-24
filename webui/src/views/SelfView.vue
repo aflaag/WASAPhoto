@@ -454,8 +454,8 @@
 
 		<div v-if="!this.empty_photos" class="horizontal-scroll-panel">
 			<div class="post-card" v-for="photo in this.photos" :key="photo.id">
-				<div class="post-card-header" style="margin-top: 0px">
-					<RouterLink :to="'/user/' + photo.user.username" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
+				<div class="post-card-header" style="margin-top: 0px;">
+					<RouterLink :to="photo.user.username !== this.uname ? '/user/' + photo.user.username : '/user/self'" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
 						<p class="post-card-username">{{this.uname}}</p>
 					</RouterLink>
 
@@ -512,7 +512,7 @@
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink :to="'/user/' + like.username" class="nav-link">
+								<RouterLink @click="this.show_likes = false;" :to="like.username !== this.uname ? '/user/' + like.username : '/user/self'" class="nav-link">
 									<p>{{like.username}}</p>
 								</RouterLink>
 							</div>
@@ -536,7 +536,7 @@
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_followers = false;" :to="'/user/' + follower.username" class="nav-link">
+								<RouterLink @click="this.show_followers = false;" :to="follower.username !== this.uname ? '/user/' + follower.username : '/user/self'" class="nav-link">
 									<p>{{follower.username}}</p>
 								</RouterLink>
 							</div>
@@ -560,7 +560,7 @@
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_following = false;" :to="'/user/' + following.username" class="nav-link">
+								<RouterLink @click="this.show_following = false;" :to="following.username !== this.uname ? '/user/' + following.username : '/user/self'" class="nav-link">
 									<p>{{following.username}}</p>
 								</RouterLink>
 							</div>
@@ -661,7 +661,7 @@
 
         color: #485696;
 
-		font-size: 300%;
+		font-size: 250%;
 	}
 
 	.post-photo-div {
@@ -697,7 +697,11 @@
 		/* border: solid 3px blue; */
 
 		/* margin-left: -100%; */
-		margin-top: -100%;
+		margin-top: -100.5%;
+	}
+
+	.post-card-username {
+		border: solid 5px #e7e7e7;
 	}
 
 	.post-card-footer {
