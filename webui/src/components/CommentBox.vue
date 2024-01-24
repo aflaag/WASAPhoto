@@ -87,11 +87,11 @@
 					<div class="comment-scroll-panel" style="height: 500px; position: absolute; margin-top: -50px; margin-left: -15px">
 						<div class="comment" v-for="comment in comments.comments" :key="comment.id">
                             <div class="comment-header">
-								<RouterLink @click="modal.hide()" :to="comment.user.username !== this.uname ? '/user/' + comment.user.username : '/user/self'" class="nav-link">
+								<RouterLink @click="modal.hide()" :to="comment.user.username !== uname ? '/user/' + comment.user.username : '/user/self'" class="nav-link">
 									<p>{{comment.user.username}}</p>
 								</RouterLink>
 
-                                <button v-if="comment.user.username === this.uname" @click="deleteComment(comments.comments, comment, photo)" class="button" style="display: flex; width: 50px; margin-left: 2%; margin-top: -2%">
+                                <button v-if="comment.user.username === uname" @click="deleteComment(comments.comments, comment, photo)" class="button" style="display: flex; width: 50px; margin-left: 2%; margin-top: -2%">
                                     <img class="delete-comment" src="/assets/delete.svg"/>
                                 </button>
                             </div>

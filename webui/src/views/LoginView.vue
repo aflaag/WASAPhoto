@@ -59,7 +59,7 @@
             </div>
 
             <div class="bar-section-div">
-                <input v-model="this.username" class="bar" placeholder="Enter your username!" style="text-align: center;"/>
+                <input v-model="username" class="bar" placeholder="Enter your username!" style="text-align: center;"/>
 
                 <button class="button" @click="login">
                     <img class="button-image" src="/assets/arrow.svg"/>

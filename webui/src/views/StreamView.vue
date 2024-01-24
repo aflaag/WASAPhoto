@@ -235,10 +235,10 @@
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 
-		<div v-if="!this.empty_stream" class="horizontal-scroll-panel">
-			<div class="post-card" v-for="photo in this.stream.photos" :key="photo.id">
+		<div v-if="!empty_stream" class="horizontal-scroll-panel">
+			<div class="post-card" v-for="photo in stream.photos" :key="photo.id">
 				<div class="post-card-header" style="margin-top: 0px">
-					<RouterLink :to="photo.user.username !== this.uname ? '/user/' + photo.user.username : '/user/self'" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
+					<RouterLink :to="photo.user.username !== uname ? '/user/' + photo.user.username : '/user/self'" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
 						<p class="post-card-username">{{photo.user.username}}</p>
 					</RouterLink>
 				</div>
@@ -268,30 +268,30 @@
 
 					<p>{{photo.comment_count}}</p>
 
-					<CommentBox id="logviewer" :comments="this.comments" :photo="photo" :modal="this.modal"></CommentBox>
+					<CommentBox id="logviewer" :comments="comments" :photo="photo" :modal="modal"></CommentBox>
 				</div>
 			</div>
 		</div>
 
-		<div v-if="this.empty_stream" class="horizontal-scroll-panel">
+		<div v-if="empty_stream" class="horizontal-scroll-panel">
 			<div style="display: flex; justify-content: center; margin-top: 13%">
 				<p style="color: #485696; font-size: 300%">Find new users and follow your friends!</p>
 			</div>
 		</div>
     </div>
 
-	<div v-if="this.show_likes" class="overlay">
+	<div v-if="show_likes" class="overlay">
 		<div class="comment-box">
-			<button class="button" @click="this.show_likes = false;" style="display:flex">
+			<button class="button" @click="show_likes = false;" style="display:flex">
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 						
 			<div class="search-scroll-panel">
-				<div v-for="like in this.likes.users" :key="like.id">
+				<div v-for="like in likes.users" :key="like.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_likes = false;" :to="like.username !== this.uname ? '/user/' + like.username : '/user/self'" class="nav-link">
+								<RouterLink @click="show_likes = false;" :to="like.username !== uname ? '/user/' + like.username : '/user/self'" class="nav-link">
 									<p>{{like.username}}</p>
 								</RouterLink>
 							</div>
@@ -304,18 +304,18 @@
 		</div>
 	</div>
 
-	<div v-if="this.show_results" class="overlay">
+	<div v-if="show_results" class="overlay">
 		<div class="comment-box">
-			<button class="button" @click="this.show_results = false;" style="display:flex">
+			<button class="button" @click="show_results = false;" style="display:flex">
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 						
-			<div v-if="!this.empty_results" class="search-scroll-panel">
-				<div v-for="result in this.search_results.users" :key="result.id">
+			<div v-if="!empty_results" class="search-scroll-panel">
+				<div v-for="result in search_results.users" :key="result.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_results = false;" :to="result.username !== this.uname ? '/user/' + result.username : '/user/self'" class="nav-link">
+								<RouterLink @click="show_results = false;" :to="result.username !== uname ? '/user/' + result.username : '/user/self'" class="nav-link">
 									<p>{{result.username}}</p>
 								</RouterLink>
 							</div>
@@ -326,7 +326,7 @@
 				</div>
 			</div>
 
-			<div v-if="this.empty_results" class="nothing-div">
+			<div v-if="empty_results" class="nothing-div">
 				Nothing here!
 			</div>
 		</div>

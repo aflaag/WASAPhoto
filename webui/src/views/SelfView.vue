@@ -400,10 +400,10 @@
         <div class="header-div">
             <div class="username-div">
                 <div style="display: flex; justify-content: center;">
-                    <p v-if="!this.show_change" class="header">{{this.uname}}</p>
+                    <p v-if="!show_change" class="header">{{uname}}</p>
 
-					<div v-if="this.show_change" style="display: flex; justify-content: center; margin: auto; margin-bottom: 15px; margin-left: -25px">
-	                    <input v-model="this.newUsername" class="comment-bar" placeholder="Change it!" style=" font-weight: 800; font-size: 500%; color: #485696; text-align: center;">
+					<div v-if="show_change" style="display: flex; justify-content: center; margin: auto; margin-bottom: 15px; margin-left: -25px">
+	                    <input v-model="newUsername" class="comment-bar" placeholder="Change it!" style=" font-weight: 800; font-size: 500%; color: #485696; text-align: center;">
 					</div>
                 </div>
 
@@ -413,11 +413,11 @@
 						<input type="file" id="image" name="image" accept="image/*" required class="form-input" ref="imageInput" @change="uploadPhoto" style="visibility: hidden;">
 					</div>
 
-                    <button v-if="!this.show_change_confirm" @click="this.show_change = true; this.show_change_confirm = true;" class="button">
+                    <button v-if="!show_change_confirm" @click="show_change = true; show_change_confirm = true;" class="button">
                         <img class="ban-icon" src="/assets/username.svg">
                     </button>
 
-                    <button v-if="this.show_change_confirm" @click="changeUsername" class="button">
+                    <button v-if="show_change_confirm" @click="changeUsername" class="button">
                         <img class="ban-icon" src="/assets/change.svg">
                     </button>
                 </div>
@@ -425,20 +425,20 @@
 
             <div class="numbers-div">
                 <div class="numbers-block-div">
-                    <p class="numbers-block-numbers">{{this.photo_count}}</p>
+                    <p class="numbers-block-numbers">{{photo_count}}</p>
                     <p style="margin-top: 3%">Photos</p>
                 </div>
 
                 <button @click="getFollowers" class="button">
                     <div class="numbers-block-div">
-                        <p class="numbers-block-numbers">{{this.followers_count}}</p>
+                        <p class="numbers-block-numbers">{{followers_count}}</p>
                         <p style="margin-top: 3%">Followers</p>
                     </div>
                 </button>
 
                 <button @click="getFollowing" class="button">
                     <div class="numbers-block-div">
-                        <p class="numbers-block-numbers">{{this.following_count}}</p>
+                        <p class="numbers-block-numbers">{{following_count}}</p>
                         <p style="margin-top: 3%">Following</p>
                     </div>
                 </button>
@@ -452,11 +452,11 @@
 		<SuccessMsg v-if="successmsg" :msg="successmsg"></SuccessMsg>
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 
-		<div v-if="!this.empty_photos" class="horizontal-scroll-panel">
-			<div class="post-card" v-for="photo in this.photos" :key="photo.id">
+		<div v-if="!empty_photos" class="horizontal-scroll-panel">
+			<div class="post-card" v-for="photo in photos" :key="photo.id">
 				<div class="post-card-header" style="margin-top: 0px;">
-					<RouterLink :to="photo.user.username !== this.uname ? '/user/' + photo.user.username : '/user/self'" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
-						<p class="post-card-username">{{this.uname}}</p>
+					<RouterLink :to="photo.user.username !== uname ? '/user/' + photo.user.username : '/user/self'" class="nav-link" style="margin-left: 20px; margin-top: 6px; height: 80px;">
+						<p class="post-card-username">{{uname}}</p>
 					</RouterLink>
 
 					<button @click="deletePhoto(photo)" class="button" style="display: flex; width: 50px; margin-left: 2%; margin-top: -2%">
@@ -489,30 +489,30 @@
 
 					<p>{{photo.comment_count}}</p>
 
-					<CommentBox id="logviewer" :comments="this.comments" :photo="photo" :modal="this.modal"></CommentBox>
+					<CommentBox id="logviewer" :comments="comments" :photo="photo" :modal="modal"></CommentBox>
 				</div>
 			</div>
 		</div>
 
-		<div v-if="this.empty_photos" class="horizontal-scroll-panel">
+		<div v-if="empty_photos" class="horizontal-scroll-panel">
 			<div style="display: flex; justify-content: center; margin-top: 13%">
 				<p style="color: #485696; font-size: 300%">Find new users and follow your friends!</p>
 			</div>
 		</div>
     </div>
 
-	<div v-if="this.show_likes" class="overlay" style="margin-top: -214px">
+	<div v-if="show_likes" class="overlay" style="margin-top: -214px">
 		<div class="comment-box">
-			<button class="button" @click="this.show_likes = false;" style="display:flex">
+			<button class="button" @click="show_likes = false;" style="display:flex">
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 						
 			<div class="search-scroll-panel">
-				<div v-for="like in this.likes.users" :key="like.id">
+				<div v-for="like in likes.users" :key="like.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_likes = false;" :to="like.username !== this.uname ? '/user/' + like.username : '/user/self'" class="nav-link">
+								<RouterLink @click="show_likes = false;" :to="like.username !== uname ? '/user/' + like.username : '/user/self'" class="nav-link">
 									<p>{{like.username}}</p>
 								</RouterLink>
 							</div>
@@ -525,18 +525,18 @@
 		</div>
 	</div>
 
-    <div v-if="this.show_followers" class="overlay" style="margin-top: -214px">
+    <div v-if="show_followers" class="overlay" style="margin-top: -214px">
 		<div class="comment-box">
-			<button class="button" @click="this.show_followers = false;" style="display:flex">
+			<button class="button" @click="show_followers = false;" style="display:flex">
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 						
 			<div class="search-scroll-panel">
-				<div v-for="follower in this.followers.users" :key="follower.id">
+				<div v-for="follower in followers.users" :key="follower.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_followers = false;" :to="follower.username !== this.uname ? '/user/' + follower.username : '/user/self'" class="nav-link">
+								<RouterLink @click="show_followers = false;" :to="follower.username !== uname ? '/user/' + follower.username : '/user/self'" class="nav-link">
 									<p>{{follower.username}}</p>
 								</RouterLink>
 							</div>
@@ -549,18 +549,18 @@
 		</div>
 	</div>
 
-    <div v-if="this.show_following" class="overlay" style="margin-top: -214px">
+    <div v-if="show_following" class="overlay" style="margin-top: -214px">
 		<div class="comment-box">
-			<button class="button" @click="this.show_following = false;" style="display:flex">
+			<button class="button" @click="show_following = false;" style="display:flex">
 				<img class="cross" src="/assets/cross.svg"/>
 			</button>
 						
 			<div class="search-scroll-panel">
-				<div v-for="following in this.following.users" :key="following.id">
+				<div v-for="following in following.users" :key="following.id">
 					<div class="comment">
 						<div class="comment-header">
 							<div class="comment-op">
-								<RouterLink @click="this.show_following = false;" :to="following.username !== this.uname ? '/user/' + following.username : '/user/self'" class="nav-link">
+								<RouterLink @click="show_following = false;" :to="following.username !== uname ? '/user/' + following.username : '/user/self'" class="nav-link">
 									<p>{{following.username}}</p>
 								</RouterLink>
 							</div>
