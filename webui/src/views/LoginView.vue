@@ -1,6 +1,8 @@
-<script>
+<script setup>
 	import ErrorMsg from "../components/ErrorMsg.vue";
+</script>
 
+<script>
     export default {
         components: { ErrorMsg },
         data: function() {

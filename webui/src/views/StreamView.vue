@@ -1,7 +1,9 @@
-<script>
+<script setup>
 	import CommentBox from "../components/CommentBox.vue";
 	import ErrorMsg from "../components/ErrorMsg.vue";
+</script>
 
+<script>
     export default {
 		components: { CommentBox, ErrorMsg },
         data: function() {
