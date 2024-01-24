@@ -50,6 +50,10 @@
 					} catch (e) {
                         if (e.response && e.response.status === 500) {
                             this.errormsg = "Something went wrong while trying to find results.";
+						} else if (e.response && e.response.status == 401) {
+							this.errormsg = "Forbidden access";
+
+							this.$router.replace({path: "/404"});
                         } else {
                             this.errormsg = e.toString();
                         }
@@ -100,6 +104,10 @@
 						this.errormsg = "Forbidden access";
 
 						this.$router.replace({path: "/404"});
+					} else if (e.response && e.response.status == 404) {
+						this.errormsg = "Page not found";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -121,7 +129,11 @@
 						} else if (e.response && e.response.status == 401) {
 							this.errormsg = "Forbidden access";
 
-						this.$router.replace({path: "/404"});
+							this.$router.replace({path: "/404"});
+						} else if (e.response && e.response.status == 404) {
+							this.errormsg = "Page not found";
+
+							this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -141,7 +153,11 @@
 						} else if (e.response && e.response.status == 401) {
 							this.errormsg = "Forbidden access";
 
-						this.$router.replace({path: "/404"});
+							this.$router.replace({path: "/404"});
+						} else if (e.response && e.response.status == 404) {
+							this.errormsg = "Page not found";
+
+							this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -166,6 +182,10 @@
 						this.errormsg = "Something went wrong while trying to retrieve likes.";
 					} else if (e.response && e.response.status == 401) {
 						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
+					} else if (e.response && e.response.status == 404) {
+						this.errormsg = "Page not found";
 
 						this.$router.replace({path: "/404"});
 					} else {

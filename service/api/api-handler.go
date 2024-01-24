@@ -7,7 +7,7 @@ import (
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
 	// Login
-	rt.router.POST("/session", rt.wrap(rt.session)) // DONE DONE
+	rt.router.POST("/session", rt.wrap(rt.session)) // DONE
 
 	// Ban
 	rt.router.PUT("/user/:uname/ban/:banned_uname", rt.wrap(rt.banUser))      // DONE

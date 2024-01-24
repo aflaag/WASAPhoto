@@ -55,6 +55,10 @@
 						this.errormsg = "Forbidden access";
 
 						this.$router.replace({path: "/404"});
+					} else if (e.response && e.response.status == 404) {
+						this.errormsg = "Page not found";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -76,7 +80,11 @@
 						} else if (e.response && e.response.status == 401) {
 							this.errormsg = "Forbidden access";
 
-						this.$router.replace({path: "/404"});
+							this.$router.replace({path: "/404"});
+						} else if (e.response && e.response.status == 404) {
+							this.errormsg = "Page not found";
+
+							this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -96,7 +104,11 @@
 						} else if (e.response && e.response.status == 401) {
 							this.errormsg = "Forbidden access";
 
-						this.$router.replace({path: "/404"});
+							this.$router.replace({path: "/404"});
+						} else if (e.response && e.response.status == 404) {
+							this.errormsg = "Page not found";
+
+							this.$router.replace({path: "/404"});
 						} else {
 							this.errormsg = e.toString();
 						}
@@ -127,6 +139,10 @@
 						this.errormsg = "Forbidden access";
 
 						this.$router.replace({path: "/404"});
+					} else if (e.response && e.response.status == 404) {
+						this.errormsg = "Page not found";
+
+						this.$router.replace({path: "/404"});
 					} else {
 						this.errormsg = e.toString();
 					}
@@ -148,6 +164,10 @@
 						this.errormsg = "Something went wrong while trying to register the follow.";
 					} else if (e.response && e.response.status == 401) {
 						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
+					} else if (e.response && e.response.status == 400) {
+						this.errormsg = "Bad request";
 
 						this.$router.replace({path: "/404"});
 					} else {
@@ -191,6 +211,10 @@
 					if (e.response && e.response.status === 500) {
 						this.errormsg = "Something went wrong while trying to register the ban.";
 					} else if (e.response && e.response.status == 401) {
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
+					} else if (e.response && e.response.status == 400) {
 						this.errormsg = "Forbidden access";
 
 						this.$router.replace({path: "/404"});
