@@ -68,18 +68,32 @@ func (db *appdbimpl) GetFollowersCount(profileDbUser DatabaseUser, dbUser Databa
 func (db *appdbimpl) GetFollowingCount(profileDbUser DatabaseUser, dbUser DatabaseUser) (int, error) {
 	var followingCount int
 
-	// get the number of users followed by
-	// the user performing the action
-	err := db.c.QueryRow(`
-		SELECT COUNT(*)
-		FROM follow
-		WHERE first_user=?
-		AND second_user NOT IN (
-			SELECT first_user
-			FROM ban
-			WHERE second_user=?
-		)
-	`, profileDbUser.Id, dbUser.Id).Scan(&followingCount)
+	var err error
+
+	// check whether the user performing the action
+	// is the same user of whom the following list is requested
+	if profileDbUser.Id != dbUser.Id {
+		// get the number of users followed by
+		// the user performing the action
+		err = db.c.QueryRow(`
+			SELECT COUNT(*)
+			FROM follow
+			WHERE first_user=?
+			AND second_user NOT IN (
+				SELECT first_user
+				FROM ban
+				WHERE second_user=?
+			)
+		`, profileDbUser.Id, dbUser.Id).Scan(&followingCount)
+	} else {
+		// get the number of users followed by
+		// the user performing the action
+		err = db.c.QueryRow(`
+			SELECT COUNT(*)
+			FROM follow
+			WHERE first_user=?
+		`, profileDbUser.Id, dbUser.Id).Scan(&followingCount)
+	}
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return followingCount, ErrUserDoesNotExist
@@ -141,21 +155,39 @@ func (db *appdbimpl) GetFollowersList(followersDbUser DatabaseUser, dbUser Datab
 func (db *appdbimpl) GetFollowingList(followingDbUser DatabaseUser, dbUser DatabaseUser) (DatabaseUserList, error) {
 	dbUserList := DatabaseUserListDefault()
 
-	// get the table of the followed
-	rows, err := db.c.Query(`
-		SELECT id, username
-		FROM User
-		WHERE id IN (
-			SELECT second_user
-			FROM follow
-			WHERE first_user=?
-		)
-		AND id NOT IN (
-			SELECT first_user
-			FROM ban
-			WHERE second_user=?
-		)
-	`, followingDbUser.Id, dbUser.Id)
+	var rows *sql.Rows
+	var err error
+
+	// check whether the user performing the action
+	// is the same user of whom the following list is requested
+	if followingDbUser.Id != dbUser.Id {
+		// get the table of the followed
+		// without the users who banned the user performing the action
+		rows, err = db.c.Query(`
+			SELECT id, username
+			FROM User
+			WHERE id IN (
+				SELECT second_user
+				FROM follow
+				WHERE first_user=?
+			)
+			AND id NOT IN (
+				SELECT first_user
+				FROM ban
+				WHERE second_user=?
+			)
+		`, followingDbUser.Id, dbUser.Id)
+	} else {
+		rows, err = db.c.Query(`
+			SELECT id, username
+			FROM User
+			WHERE id IN (
+				SELECT second_user
+				FROM follow
+				WHERE first_user=?
+			)
+		`, followingDbUser.Id)
+	}
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return dbUserList, ErrUserDoesNotExist

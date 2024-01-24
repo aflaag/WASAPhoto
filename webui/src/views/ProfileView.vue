@@ -372,7 +372,7 @@
 
 				<div class="post-photo-div">
 					<div class="post-photo-bg"></div>
-					<img class="post-photo-img" src="/assets/cupolone.jpg"> <!-- TODO: DA FARE -->
+					<img :src="photo.url" class="post-photo-img">
 				</div>
 
 				<div class="post-card-footer" style="margin-top: 7px">

@@ -38,6 +38,30 @@
             }
         },
         methods: {
+			async getPhotoComments(photo) {
+				try {
+					let response = await this.$axios.get("/user/" + this.uname + "/photos/" + photo.id + "/comments", {
+						headers: {
+							Authorization: "Bearer " + this.token,
+						}
+					});
+
+					this.comments = response.data;
+
+					this.modal = new bootstrap.Modal(document.getElementById('logviewer'));
+					this.modal.show();
+				} catch (e) {
+					if (e.response && e.response.status === 500) {
+						this.errormsg = "Something went wrong while trying to fetch the photo's comments.";
+					} else if (e.response && e.response.status == 401) {
+						this.errormsg = "Forbidden access";
+
+						this.$router.replace({path: "/404"});
+					} else {
+						this.errormsg = e.toString();
+					}
+				}
+			},
 			async updateLike(photo) {
 				this.successmsg = null;
 
