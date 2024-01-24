@@ -708,8 +708,9 @@
 		display: flex;
 		font-weight: 800;
 
-		/* border: solid 1px green; */
+		border: solid 5px #e7e7e7;
 		height: 14%;
+		border-radius: 50px;
 	}
 
 	.post-photo-utils {
