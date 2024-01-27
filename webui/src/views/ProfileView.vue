@@ -33,6 +33,8 @@
 
                 show_followers: false,
                 show_following: false,
+
+				current_photo: {},
             }
         },
         methods: {
@@ -45,6 +47,7 @@
 					});
 
 					this.comments = response.data;
+					this.current_photo = photo;
 
 					this.modal = new bootstrap.Modal(document.getElementById('logviewer'));
 					this.modal.show();
@@ -421,7 +424,7 @@
 
 					<p>{{photo.comment_count}}</p>
 
-					<CommentBox id="logviewer" :comments="comments" :photo="photo" :modal="modal"></CommentBox>
+					<CommentBox id="logviewer" :comments="comments" :photo="current_photo" :modal="modal"></CommentBox>
 				</div>
 			</div>
 		</div>
